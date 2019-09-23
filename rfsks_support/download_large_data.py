@@ -1,0 +1,270 @@
+import sys, os
+from obspy.clients.fdsn import Client
+from rfsks_support.other_support import avg, date2time, write_station_file
+from obspy import read_inventory
+import pandas as pd
+from obspy import UTCDateTime as UTC
+from rf import RFStream
+import numpy as np
+from rfsks_support.rfsks_extras import retrieve_waveform, multi_download
+from rfsks_support.plotting_map import plot_merc, station_map, events_map
+import multiprocessing
+
+
+
+
+class downloadDataclass:
+    
+    def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile=None,fig_frmt="png",method='RF'):
+        self.inventoryfile = inventoryfile
+        self.inventorytxtfile = inventorytxtfile
+        self.inv = None
+        self.client = []
+        if len(client) != 0:
+            for cl in client:
+                self.client.append(cl)
+        self.minlongitude = minlongitude
+        self.maxlongitude = maxlongitude
+        self.minlatitude = minlatitude
+        self.maxlatitude = maxlatitude
+        self.clon = avg(self.minlongitude,self.maxlongitude)
+        self.clat = avg(self.minlatitude,self.maxlatitude)
+        self.fig_frmt = fig_frmt
+        self.method = method.upper()
+        if self.method=='RF':
+            self.minradius,self.maxradius=30,90
+        elif self.method=='SKS':
+            self.minradius,self.maxradius=90,120
+        else:
+            print("Illegal method input")
+            sys.exit()
+
+    ## Defining get_stnxml
+    def get_stnxml(self,network='*', station="*"):
+        print('--> Retrieving station information')
+        ninvt=0
+        while ninvt < len(self.client):
+            client = Client(self.client[ninvt])
+            print(f'----> from {self.client[ninvt]}')
+            try:
+                invt = client.get_stations(network=network, station=station, channel="BHZ,BHE,BHN", level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
+                inventory = invt
+                break
+            except Exception as e:
+                print(e)
+                print(f'------> No stations found for the given parameters for {self.client[ninvt]}')
+            ninvt+=1
+            # sys.exit()
+        if len(self.client)>1:
+            for cl in self.client[ninvt+1:]:
+                print(f'----> from {cl}')
+                try:
+                    client = Client(cl)
+                    invt = client.get_stations(network=network, station=station, channel="BHZ,BHE,BHN", level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
+                    inventory +=invt
+                except Exception as e:
+                    print("------> {} <-- client: {}".format(e.args[0].split('\n')[0],cl))
+        print(self.inventoryfile)
+        inventory.write(self.inventoryfile, 'STATIONXML')
+        self.inv = inventory
+        if self.inventorytxtfile:
+            inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
+        else:
+            print("No file written")
+    ## inventory_catalog
+    def obtain_events(self, catalogxmlloc,catalogtxtloc,minmagnitude=5.5,maxmagnitude=9.5):
+        tot_evnt_stns = 0
+        if not self.inv:
+            print("--> Reading station inventory to obtain events catalog")
+            try:
+                # Read the station inventory
+                self.inv = read_inventory(self.inventoryfile, format="STATIONXML")
+            except:
+                print("No available data")
+                sys.exit()
+        # list all the events during the station active time
+        self.staNamesNet,staLats,staLons=[],[],[]
+        # self.allcatalogxml = []
+        for net in self.inv:
+            for sta in net:
+                network = net.code #network name
+                station = sta.code #station name
+                print(f"--> Retrieving event info for {network}-{station}")
+                self.staNamesNet.append(f"{network}_{station}")
+
+                sta_lat = sta.latitude #station latitude
+                staLats.append(sta_lat)
+
+                sta_lon = sta.longitude #station longitude
+                staLons.append(sta_lon)
+
+                sta_sdate = sta.start_date #station start date
+                sta_edate = sta.end_date #station end date
+                if not sta_edate:
+                    sta_edate = UTC("2599-12-31T23:59:59")
+
+                stime, etime = date2time(sta_sdate,sta_edate) #station start and end time in UTC
+
+
+                catalogxml = catalogxmlloc+f'{network}-{station}-rf_events.xml' #xml catalog
+                # self.allcatalogxml.append(catalogxml)
+                catalogtxt = catalogtxtloc+f'{network}-{station}-events-info-{self.method}.txt' #txt catalog
+                if not os.path.exists(catalogxml) and not os.path.exists(catalogtxt):
+                    kwargs = {'starttime': stime, 'endtime': etime, 
+                                    'latitude': sta_lat, 'longitude': sta_lon,
+                                    'minradius': self.minradius, 'maxradius': self.maxradius,
+                                    'minmagnitude': minmagnitude, 'maxmagnitude': maxmagnitude}
+                    client = Client('IRIS')
+                    try:
+                        catalog = client.get_events(**kwargs)
+                    except Exception as e:
+                        print(e)
+                        sys.exit()
+                    catalog.write(catalogxml, 'QUAKEML') #writing xml catalog
+
+                    print('----> Catalog obtained for: ', network, station, sta_sdate, sta_edate, f'total events: {len(catalog)}')
+                    tot_evnt_stns += len(catalog)
+
+                    evtimes,evlats,evlons,evdps,evmgs,evmgtps=[],[],[],[],[],[]
+                    print("----> Writing the event data into a text file")
+
+                    with open(catalogtxt, 'w') as f:
+                        for cat in catalog:
+                            try:
+                                evtime,evlat,evlon,evdp,evmg,evmgtp=cat.origins[0].time,cat.origins[0].latitude,cat.origins[0].longitude,cat.origins[0].depth/1000,cat.magnitudes[0].mag,cat.magnitudes[0].magnitude_type
+                                evtimes.append(str(evtime))
+                                evlats.append(float(evlat))
+                                evlons.append(float(evlon))
+                                evdps.append(float(evdp))
+                                evmgs.append(float(evmg))
+                                evmgtps.append(str(evmgtp))
+
+                                f.write('{} | {:9.4f}, {:9.4f} | {:5.1f} | {:5.1f} {:4s}\n'.format(evtime,evlat,evlon,evdp,evmg,evmgtp)) #writing txt catalog
+                            except Exception as e:
+                                print(e)
+                    print("------> Finished writing the event data into a text and xml file")
+                else:
+                    print(f"----> {catalogxml} and {catalogtxt} already exists!")
+
+        ################################## Download
+    def download_data(self, catalogxmlloc,catalogtxtloc,datafileloc,tot_evnt_stns, plot_stations=True, plot_events=True,dest_map="./",locations=[""]):
+        if not self.inv:
+            print("--> Reading station inventory to obtain events catalog")
+            try:
+                # Read the station inventory
+                self.inv = read_inventory(self.inventoryfile, format="STATIONXML")
+            except:
+                print("No available data")
+                sys.exit()
+        print(f"--> Total data files to download: {tot_evnt_stns}")
+        rem_dl = tot_evnt_stns
+        succ_dl,num_try = 0, 0 
+        rf_stalons,sks_stalons = [],[]
+        rf_stalats, sks_stalats = [], []
+        rf_staNetNames, sks_staNetNames = [],[]
+
+        all_stns_df = pd.read_csv(self.inventorytxtfile,sep="|")
+        all_sta_lats=all_stns_df['Latitude'].values
+        all_sta_lons=all_stns_df['Longitude'].values
+        all_sta_nms=all_stns_df['Station'].values
+        all_sta_nets=all_stns_df['#Network'].values
+        
+        #Retrive waveform data for the events
+        for slat,slon,stn,net in zip(all_sta_lats,all_sta_lons,all_sta_nms,all_sta_nets):
+
+            catfile = catalogtxtloc+f"{net}-{stn}-events-info-{self.method}.txt"
+            cattxtnew = catalogtxtloc+f"{net}-{stn}-events-info-available-{self.method}.txt"
+            
+            if self.method == 'RF':
+                print(f"\n--> Searching and downloading data for {self.method}; {net}-{stn}")
+                rfdatafile = datafileloc+f'{net}-{stn}-rf_profile_data.h5'
+                if os.path.exists(catfile) and not os.path.exists(rfdatafile) and tot_evnt_stns > 0:
+                    stream = RFStream()
+
+                    df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
+                    evmg = [float(val.split()[0]) for val in df['evmg']]
+                    evmgtp = [str(val.split()[1]) for val in df['evmg']]
+                    
+                    fcat = open(cattxtnew,'w')
+                    for evtime,evdp,elat,elon,em,emt in zip(df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):
+                        rem_dl -= 1
+                        num_try += 1
+                        
+                        print(f"----> Retrieving data for {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                        strm,res = multi_download(self.client,self.inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons = rf_stalons,stalats = rf_stalats,staNetNames = rf_staNetNames,phase='P',locations=locations)
+                        if strm:
+                            stream.extend(strm)
+
+                        if res:
+                            succ_dl+=1
+            
+                    if not len(stream):
+                        print(f"----> No data for {rfdatafile}")
+                    stream.write(rfdatafile, 'H5')
+                    fcat.close()
+                ### Event map plot
+                # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-rf.txt'
+                if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-RF-events_map.png"):
+                    df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
+                    if df.shape[0]:
+                        evmg = [float(val.split()[0]) for val in df['evmg']]
+                        print(f"----> Plotting events for {net} {stn}")
+                        events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-RF')
+        
+
+                        
+            if self.method == 'SKS':
+                print(f"\n--> Searching and downloading data for {self.method}; {net}-{stn}")
+
+                sksdatafile = datafileloc+f'{net}-{stn}-sks_profile_data.h5'
+                if os.path.exists(catfile) and not os.path.exists(sksdatafile) and tot_evnt_stns > 0:
+                    stream = RFStream()
+
+                    df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
+                    evmg = [float(val.split()[0]) for val in df['evmg']]
+                    evmgtp = [str(val.split()[1]) for val in df['evmg']]
+                    # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-sks.txt'
+                    fcat = open(cattxtnew,'w')
+                    for i,evtime,evdp,elat,elon,em,emt in zip(range(len(df['evtime'])),df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):
+                        rem_dl -= 1
+                        num_try += 1
+                        print(f"----> Retrieving data for {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                        strm,res = multi_download(self.client,self.inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons = sks_stalons,stalats = sks_stalats,staNetNames = sks_staNetNames,phase='SKS',locations=locations)
+                        if strm:
+                            stream.extend(strm)
+                        if res:
+                            succ_dl+=1
+                    if not len(stream):
+                        print(f"----> No data for {sksdatafile}")
+
+                    stream.write(sksdatafile, 'H5')
+                    fcat.close()
+                ### Event map plot
+                # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-sks.txt'
+                if os.path.exists(cattxtnew) and plot_events:
+                    df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
+                    if df.shape[0]:
+                        evmg = [float(val.split()[0]) for val in df['evmg']]
+                        print(f"----> Plotting events for {net} {stn}")
+                        events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-SKS')
+
+
+        if plot_stations and self.method == 'RF' and len(rf_stalons):
+            print("----> Plotting station map")
+            map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
+            station_map(map, stns_lon=rf_stalons, stns_lat=rf_stalats,stns_name= rf_staNetNames,figname="RF_stations", destination=dest_map,figfrmt=self.fig_frmt)
+
+
+        if plot_stations and self.method == 'SKS' and len(sks_stalons):
+            print("----> Plotting station map")
+            map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
+            station_map(map, stns_lon=sks_stalons, stns_lat=sks_stalats,stns_name= sks_staNetNames,figname="SKS_stations", destination=dest_map,figfrmt=self.fig_frmt)
+        ## Write the retrieved station catalog
+        if self.method == 'RF':
+            write_station_file(self.inventorytxtfile,rf_staNetNames,outfile=catalogtxtloc+'all_stations_rf_retrieved.txt')
+        elif self.method == 'SKS':
+            write_station_file(self.inventorytxtfile,sks_staNetNames,outfile=catalogtxtloc+'all_stations_sks_retrieved.txt')
+        
+
+        
+
