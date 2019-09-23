@@ -69,13 +69,13 @@ The other parameters are defined in the code and should be modified with caution
 
 ### Procedure:
 
-#### Search the events that satisfy some critera (defined input_parameters.txt).
+* Search the events that satisfy some critera (defined input_parameters.txt).
 
-#### Search all stations for which data are available (defined input_parameters.txt).
+* Search all stations for which data are available (defined input_parameters.txt).
 
-#### Download the waveforms.
+* Download the waveforms.
 
-#### This is an automated procedure that may be time consuming if a large dataset is selected.
+* This is an automated procedure that may be time consuming if a large dataset is selected.
 
 
 ## Process the data following:
