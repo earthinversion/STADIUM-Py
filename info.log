@@ -1,0 +1,97 @@
+2019-09-23 18:30:22,399 - __main__ - INFO - Running the program for makeRF: 1; makeSKS: 1
+2019-09-23 18:30:22,401 - __main__ - INFO - WORKING ON RF
+2019-09-23 18:30:22,401 - __main__ - INFO - WORKING ON RF
+2019-09-23 18:30:22,402 - __main__ - INFO - # Initializing the downloadDataclass
+2019-09-23 18:30:22,402 - __main__ - INFO - # Initializing the downloadDataclass
+2019-09-23 18:30:22,404 - rfsks_support.download_large_data - INFO - --> Reading station inventory to obtain events catalog
+2019-09-23 18:30:22,448 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,449 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
+2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
+2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
+2019-09-23 18:30:22,451 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,451 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
+2019-09-23 18:30:22,452 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,452 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
+2019-09-23 18:30:22,452 - __main__ - INFO - 
+## Computing RF
+2019-09-23 18:30:22,454 - __main__ - INFO - 
+
+2019-09-23 18:30:22,454 - __main__ - INFO - ## Operating plot_RF method
+2019-09-23 18:30:22,454 - rfsks_support.rf_support - INFO - --> Plotting the receiver functions
+2019-09-23 18:30:22,455 - __main__ - INFO - 
+
+2019-09-23 18:30:22,456 - __main__ - INFO - ## Operating plot_priercingpoints_RF method
+2019-09-23 18:30:22,459 - __main__ - INFO - [Errno 2] File b'results/InfoRF/all_stations_rf_retrieved.txt' does not exist: b'results/InfoRF/all_stations_rf_retrieved.txt'
+2019-09-23 18:30:22,459 - __main__ - INFO - 
+WORKING ON SKS
+2019-09-23 18:30:22,460 - __main__ - INFO - 
+# Initializing the downloadDataclass
+2019-09-23 18:30:22,461 - rfsks_support.download_large_data - INFO - --> Reading station inventory to obtain events catalog
+2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
+2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
+2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
+2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
+2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
+2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
+2019-09-23 18:30:22,542 - __main__ - INFO - 
+
+2019-09-23 18:30:22,542 - __main__ - INFO - ## Pre-processing
+2019-09-23 18:30:22,543 - rfsks_support.sks_support - INFO - Cut the traces around the SKS arrival
+2019-09-23 18:30:22,544 - rfsks_support.sks_support - INFO - ['results/dataSKS/GE-STU-sks_profile_data.h5']
+2019-09-23 18:30:22,988 - rfsks_support.sks_support - INFO - Calculating SKS arrival times for results/dataSKS/GE-STU-sks_profile_data.h5
+2019-09-23 18:30:22,992 - root - INFO - Working on 1/41
+2019-09-23 18:30:25,027 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1994-05-10T06:36:28.610000Z: BHN,BHE
+2019-09-23 18:30:27,065 - root - INFO - Working on 2/41
+2019-09-23 18:30:28,766 - root - INFO - Working on 3/41
+2019-09-23 18:30:30,141 - root - INFO - Working on 4/41
+2019-09-23 18:30:31,362 - root - INFO - Working on 5/41
+2019-09-23 18:30:32,486 - root - INFO - Working on 6/41
+2019-09-23 18:30:33,679 - root - INFO - Working on 7/41
+2019-09-23 18:30:34,824 - root - INFO - Working on 8/41
+2019-09-23 18:30:35,954 - root - INFO - Working on 9/41
+2019-09-23 18:30:37,134 - root - INFO - Working on 10/41
+2019-09-23 18:30:38,247 - root - INFO - Working on 11/41
+2019-09-23 18:30:39,494 - root - INFO - Working on 12/41
+2019-09-23 18:30:40,783 - root - INFO - Working on 13/41
+2019-09-23 18:30:42,007 - root - INFO - Working on 14/41
+2019-09-23 18:30:43,409 - root - INFO - Working on 15/41
+2019-09-23 18:30:45,096 - root - INFO - Working on 16/41
+2019-09-23 18:30:46,717 - root - INFO - Working on 17/41
+2019-09-23 18:30:48,192 - root - INFO - Working on 18/41
+2019-09-23 18:30:49,999 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1995-04-23T05:07:58.060000Z: BHN,BHE
+2019-09-23 18:30:50,873 - root - INFO - Working on 19/41
+2019-09-23 18:30:52,023 - root - INFO - Working on 20/41
+2019-09-23 18:30:53,215 - root - INFO - Working on 21/41
+2019-09-23 18:30:54,460 - root - INFO - Working on 22/41
+2019-09-23 18:30:55,640 - root - INFO - Working on 23/41
+2019-09-23 18:30:57,205 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1995-07-30T05:11:23.370000Z: BHN,BHE
+2019-09-23 18:30:58,095 - root - INFO - Working on 24/41
+2019-09-23 18:30:59,249 - root - INFO - Working on 25/41
+2019-09-23 18:31:00,464 - root - INFO - Working on 26/41
+2019-09-23 18:31:01,588 - root - INFO - Working on 27/41
+2019-09-23 18:31:02,705 - root - INFO - Working on 28/41
+2019-09-23 18:31:03,906 - root - INFO - Working on 29/41
+2019-09-23 18:31:05,124 - root - INFO - Working on 30/41
+2019-09-23 18:31:06,352 - root - INFO - Working on 31/41
+2019-09-23 18:31:07,592 - root - INFO - Working on 32/41
+2019-09-23 18:31:09,184 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1996-01-01T08:05:09.560000Z: BHN,BHE
+2019-09-23 18:31:10,070 - root - INFO - Working on 33/41
+2019-09-23 18:31:11,292 - root - INFO - Working on 34/41
+2019-09-23 18:31:12,464 - root - INFO - Working on 35/41
+2019-09-23 18:31:13,756 - root - INFO - Working on 36/41
+2019-09-23 18:31:14,940 - root - INFO - Working on 37/41
+2019-09-23 18:31:16,144 - root - INFO - Working on 38/41
+2019-09-23 18:31:17,378 - root - INFO - Working on 39/41
+2019-09-23 18:31:18,508 - root - INFO - Working on 40/41
+2019-09-23 18:31:19,639 - root - INFO - Working on 41/41

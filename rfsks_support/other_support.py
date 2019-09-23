@@ -3,8 +3,30 @@ import shutil
 import numpy as np
 from obspy import UTCDateTime as UTC
 import pandas as pd
+import logging
+import logging.config
+logger = logging.getLogger(__name__)
 
+import yaml
 
+def setup_logging(
+    default_path='rfsks_support/logging.yaml',
+    default_level=logging.INFO,
+    env_key='LOG_CFG'
+):
+    """Setup logging configuration
+
+    """
+    path = default_path
+    value = os.getenv(env_key, None)
+    if value:
+        path = value
+    if os.path.exists(path):
+        with open(path, 'rt') as f:
+            config = yaml.safe_load(f.read())
+        logging.config.dictConfig(config)
+    else:
+        logging.basicConfig(level=default_level)
 
 
 def create_dir(direc):
@@ -14,9 +36,9 @@ def create_dir(direc):
     try:
         os.makedirs(direc, exist_ok=True)
     except OSError:
-        print ("--> Creation of the directory {} failed".format(direc))
+        logger.info("--> Creation of the directory {} failed".format(direc))
     else:
-        print ("--> Successfully created the directory {}".format(direc))
+        logger.info("--> Successfully created the directory {}".format(direc))
 
 def rem_dir(direc):
     '''
@@ -24,6 +46,18 @@ def rem_dir(direc):
     '''
     if os.path.exists(direc):
         shutil.rmtree(direc)
+
+def read_directories(res_dir):
+    dirs = pd.read_csv("rfsks_support/directories_names.txt",sep="|",index_col ='DIR_VAR')
+    dirs['DIR_NAME'] = np.array([res_dir+val for val in dirs['DIR_NAME'].values])
+    newdirname=[]
+    for direc in dirs['DIR_NAME']:
+        if direc[-1]!="/":
+            newdirname.append(f"{direc}/")
+        else:
+            newdirname.append(f"{direc}")
+    dirs['DIR_NAME']= np.array(newdirname)
+    return dirs
 
 
 avg = lambda num1,num2: (int(num1)+int(num2))/2.0

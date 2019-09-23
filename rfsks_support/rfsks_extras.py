@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 # plt.style.use('ggplot')
 plt.style.use('seaborn')
+import logging
+
 
 
 
@@ -55,6 +57,7 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
 
     .. _tqdm: https://pypi.python.org/pypi/tqdm
     """
+    logger = logging.getLogger(__name__)
     from rf.rfstream import rfstats, RFStream
     method = phase[-1].upper()
     if request_window is None:
@@ -74,14 +77,15 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
             args = (seedid[:-1] + stations[seedid], origin_time)
             coords = inventory.get_coordinates(*args)
             # print(f"Station coords are {coords}")
-        except:  # station not available at that time
-            # print("Station not available at given time")
+        except Exception as exception:  # station not available at that time
+            logger.error("Station not available at given time", exc_info=True)
             continue
         try:
             stats = rfstats(station=coords, event=event, phase=phase, **kwargs)
         except:
+            logger.warning(f"Unable to read for: {event}")
             pass
-            # print(f"Error: {event}")
+            
         if not stats:
             continue
         net, sta, loc, cha = seedid.split('.')
@@ -93,7 +97,7 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
         try:
             stream = get_waveforms(**kws)
         except:  # no data available
-            # print(f"No data available for {event}")
+            # logger.warning(f"No data available for {event}")
             continue
         stream.trim(starttime, endtime)
         stream.merge()
@@ -102,10 +106,12 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
             from warnings import warn
             warn(f'Need 3 component seismograms. {len(stream)} components '
                  'detected for event {event.resource_id}, station {seedid}.')
+            logger.warning(f'Need 3 component seismograms. {len(stream)} components '
+                 'detected for event {event.resource_id}, station {seedid}.')
             continue
         if any(isinstance(tr.data, np.ma.masked_array) for tr in stream):
             from warnings import warn
-            warn(f'Gaps or overlaps detected for event {event.resource_id}, station {seedid}.')
+            logger.warning(f'Gaps or overlaps detected for event {event.resource_id}, station {seedid}.')
             continue
         for tr in stream:
             tr.stats.update(stats)
@@ -132,6 +138,7 @@ def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",att
         return False
 
 def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons,stalats,staNetNames,phase='P',locations=[""]):
+    logger = logging.getLogger(__name__)
     strm = None
     j=0
     
@@ -145,7 +152,7 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
         t2 = UTC(str(evtime)) + int(arrivals[0].time + 60)
     sel_inv = inv.select(network=net).select(station=stn)[0][0]
     if not sel_inv.is_active(starttime=t1, endtime=t2):
-        print(f"------> Station not active during {evtime}")
+        logger.info(f"------> Station not active during {evtime}")
         strm, 0
     # process_id = os.getpid()
     while not strm:
@@ -158,7 +165,7 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
                     strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",loc=loc)
                     if strm:
                         break
-                except:
+                except Exception as exception:
                     pass
         elif phase=='SKS':
             for loc in locations:
@@ -166,7 +173,7 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
                     strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",attach_response=True,loc=loc)
                     if strm:
                         break
-                except:
+                except Exception as e:
                     pass
         if strm:
             fcat.write('{} | {:9.4f}, {:9.4f} | {:5.1f} | {:5.1f} {:4s} | {}\n'.format(evtime,elat,elon,evdp,em,emt,client[j]))
@@ -200,6 +207,7 @@ def plot_trigger(trace, cft, on_off, thr_on, thr_off,outfile):
     :param show: Do not call `plt.show()` at end of routine. That way,
         further modifications can be done to the figure before showing it.
     """
+    logger = logging.getLogger(__name__)
     from obspy.signal.trigger import trigger_onset
 
     df = trace.stats.sampling_rate
@@ -219,6 +227,7 @@ def plot_trigger(trace, cft, on_off, thr_on, thr_off,outfile):
                    label="Trigger Off")
         ax1.legend()
     except IndexError:
+        logger.error('IndexError', exc_info=True)
         pass
     ax2.axhline(thr_on, color='red', lw=1, ls='--')
     ax2.axhline(thr_off, color='blue', lw=1, ls='--')
@@ -230,56 +239,24 @@ def plot_trigger(trace, cft, on_off, thr_on, thr_off,outfile):
     # return on_off
 
 def plot_trace(trace2,trace_loc):
-    fig, ax = plt.subplots(3,1,figsize=(10,6),sharex=True)
-    ax[0].plot(trace2[0].times("matplotlib"), trace2[0].data, "r-",lw=0.5,label=trace2[0].stats.channel)
-    ax[0].legend(loc='best')
-    ax[1].plot(trace2[1].times("matplotlib"), trace2[1].data, "g-",lw=0.5,label=trace2[1].stats.channel)
-    ax[1].legend(loc='best')
-    ax[2].plot(trace2[2].times("matplotlib"), trace2[2].data, "b-",lw=0.5,label=trace2[2].stats.channel)
-    ax[2].legend(loc='best')
-    ax[2].xaxis_date()
-    fig.autofmt_xdate()
-    plt_id = f"{trace2[0].stats.network}-{trace2[0].stats.station}"
-    ax[0].set_title(plt_id+f" Onset: {trace2[0].stats.onset}")
-    
-    plt.savefig(trace_loc+f'{plt_id}-{trace2[0].stats.event_time}-RTZ.png',dpi=150,bbox_inches='tight')
-    plt.close('all')
+    logger = logging.getLogger(__name__)
+    try:
+        fig, ax = plt.subplots(3,1,figsize=(10,6),sharex=True)
+        ax[0].plot(trace2[0].times("matplotlib"), trace2[0].data, "r-",lw=0.5,label=trace2[0].stats.channel)
+        ax[0].legend(loc='best')
+        ax[1].plot(trace2[1].times("matplotlib"), trace2[1].data, "g-",lw=0.5,label=trace2[1].stats.channel)
+        ax[1].legend(loc='best')
+        ax[2].plot(trace2[2].times("matplotlib"), trace2[2].data, "b-",lw=0.5,label=trace2[2].stats.channel)
+        ax[2].legend(loc='best')
+        ax[2].xaxis_date()
+        fig.autofmt_xdate()
+        plt_id = f"{trace2[0].stats.network}-{trace2[0].stats.station}"
+        ax[0].set_title(plt_id+f" Onset: {trace2[0].stats.onset}")
+        
+        plt.savefig(trace_loc+f'{plt_id}-{trace2[0].stats.event_time}-RTZ.png',dpi=150,bbox_inches='tight')
+        plt.close('all')
+    except Exception as exception:
+        logger.error("Plot trace error", exc_info=True)
 
 
 
-def rotateNE_RT(trace,back_azimuth=None):
-    import obspy.signal.rotate as rotate
-    north_data = trace[1].data
-    east_data = trace[0].data
-    # Figure out back-azimuth.
-    if back_azimuth is None:
-        try:
-            back_azimuth = trace[1].stats.back_azimuth
-        except Exception:
-            msg = "No back-azimuth specified."
-            raise TypeError(msg)
-
-        # Do one of the two-component rotations.
-        input_1 = trace.select(component='N')
-        input_2 = trace.select(component='E')
-        for i_1, i_2 in zip(input_1, input_2):
-            dt = 0.5 * i_1.stats.delta
-            if (len(i_1) != len(i_2)) or \
-                    (abs(i_1.stats.starttime - i_2.stats.starttime) > dt) \
-                    or (i_1.stats.sampling_rate !=
-                        i_2.stats.sampling_rate):
-                msg = "All components need to have the same time span."
-                raise ValueError(msg)
-        for i_1, i_2 in zip(input_1, input_2):
-            output_1, output_2 = rotate.rotate_ne_rt(i_1.data, i_2.data, back_azimuth)
-            i_1.data = output_1
-            i_2.data = output_2
-            # Rename the components.
-            i_1.stats.channel = i_1.stats.channel[:-1] + \
-                'R'
-            i_2.stats.channel = i_2.stats.channel[:-1] + \
-                'T'
-            # Add the azimuth and inclination to the stats object.
-            for comp in (i_1, i_2):
-                comp.stats.back_azimuth = back_azimuth
-    return input_1,input_2

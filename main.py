@@ -1,20 +1,29 @@
 ### Some doc at: https://github.com/trichter/rf @cplegendre
-import os.path, sys
+import os, sys, glob
 import obspy
 import pandas as pd
 import numpy as np
 from obspy import read_inventory, read_events, UTCDateTime as UTC
-from rfsks_support.other_support import create_dir, rem_dir
+from rfsks_support.other_support import create_dir, rem_dir, read_directories, setup_logging
 import rfsks_support.rf_support as rfs
 import rfsks_support.sks_support as skss
 from rfsks_support.download_large_data import downloadDataclass
+#######################
+## Logging
 import logging, requests
+logfiles = glob.glob("*.log")
+for log in logfiles:
+    if os.path.exists(log):
+        os.remove(log)
+setup_logging()
 logger = logging.getLogger(__name__)
+
+############################
+
 
 inp = pd.read_csv("input_parameters.txt",sep="|",index_col ='PARAMETERS')
 res_dir = 'results/'
-dirs = pd.read_csv("directories_names.txt",sep="|",index_col ='DIR_VAR')
-dirs['DIR_NAME'] = np.array([res_dir+val for val in dirs['DIR_NAME'].values])
+dirs = read_directories(res_dir)
 
 
 ## Input parameters  ## General
@@ -60,7 +69,8 @@ maxmagnitudeSKS=float(inp.loc['maxmagnitudeSKS','VALUES'])
 download_data_RF = int(inp.loc['download_data_RF','VALUES'])
 download_data_SKS = int(inp.loc['download_data_SKS','VALUES'])
 
-## Defining paths for RF
+## Log
+logger.info(f"Running the program for makeRF: {makeRF}; makeSKS: {makeSKS}")
 
 
 
@@ -102,21 +112,23 @@ if not len(locations):
 #############################################################
 #############################################################
 if makeRF:
-    print("make Rf is ",makeRF)
-    print("WORKING ON RF")
-    print("# Initializing the downloadDataclass")
+    logger.info("WORKING ON RF")
+    logger.info("WORKING ON RF")
+    logger.info("# Initializing the downloadDataclass")
+    logger.info("# Initializing the downloadDataclass")
+
     rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF')
     ## Obtain inventory and events info
     if int(inp.loc['obtain_inventory','VALUES']):
         if not os.path.exists(invRFfile):
                 try:
                     logger.info("Trying to operate the get_stnxml method")
-                    print("\n")
-                    print("## Operating get_stnxml method")
+                    logger.info("\n")
+                    logger.info("## Operating get_stnxml method")
                     rf_data.get_stnxml(network=network, station=station)
                 except Exception as e:
                     logger.error('Error occurred ' + str(e))
-                    print("Timeout while requesting...Please try again after some time")
+                    logger.info("Timeout while requesting...Please try again after some time")
                     sys.exit()
         
         rf_data.obtain_events(catalogxmlloc=str(dirs.loc['RFinfoloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),minmagnitude=minmagnitudeRF,maxmagnitude=maxmagnitudeRF)
@@ -129,12 +141,12 @@ if makeRF:
             if not os.path.exists(invRFfile):
                 try:
                     logger.info("Trying get_stnxml method for RF")
-                    print("\n")
-                    print("## Operating get_stnxml method")
+                    logger.info("\n")
+                    logger.info("## Operating get_stnxml method")
                     rf_data.get_stnxml(network=network, station=station)
                 except requests.Timeout as err:
                     logger.error({"message": err.message})
-                    print("Timeout while requesting...Please try again after some time")
+                    logger.info("Timeout while requesting...Please try again after some time")
                     sys.exit()
 
             all_stations_df = pd.read_csv(RFsta, sep="|")
@@ -154,37 +166,37 @@ if makeRF:
                 total_events += int(pd.read_csv(catfile,sep="|",header=None).shape[0])
 
             if total_events:
-                print("\n")
-                print("## Operating download method")
+                logger.info("\n")
+                logger.info("## Operating download method")
                 rf_data.download_data(catalogxmlloc=str(dirs.loc['RFinfoloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),datafileloc=str(dirs.loc['dataRFfileloc','DIR_NAME']),tot_evnt_stns=total_events, plot_stations=plot_stations, plot_events=plot_events,dest_map=str(dirs.loc['RFstaevnloc','DIR_NAME']),locations=locations)
             else:
-                print("No events found!")
+                logger.info("No events found!")
 
     
 
     if plot_RF:
         try:
-            print("\n## Computing RF")
+            logger.info("\n## Computing RF")
             rfs.compute_rf(str(dirs.loc['dataRFfileloc','DIR_NAME']))
-            print("\n")
-            print("## Operating plot_RF method")
+            logger.info("\n")
+            logger.info("## Operating plot_RF method")
             rfs.plot_RF(str(dirs.loc['dataRFfileloc','DIR_NAME']),destImg=str(dirs.loc['plotRFloc','DIR_NAME']))
         except Exception as e:
-            print(e)
+            logger.info(e)
 
     if plot_ppoints:
         try:
-            print("\n")
-            print("## Operating plot_priercingpoints_RF method")
+            logger.info("\n")
+            logger.info("## Operating plot_priercingpoints_RF method")
             rfs.plot_pp_profile_map(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70,ndiv = int(inp.loc['num_profile_divs','VALUES']))
             # rfs.plot_pp_profile_map_new(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=catalogtxtloc,destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70)
 
             if plot_RF_profile:
-                print("\n")
-                print("## Operating plot_RF_profile method")
+                logger.info("\n")
+                logger.info("## Operating plot_RF_profile method")
                 rfs.plot_RF_profile(str(dirs.loc['dataRFfileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
         except Exception as e:
-            print(e)
+            logger.info(e)
 
 
 
@@ -196,21 +208,23 @@ if makeRF:
 #############################################################
 #############################################################
 if makeSKS:
-    print("\nWORKING ON SKS")
-    print("\n# Initializing the downloadDataclass")
+    # logger.info("\nWORKING ON SKS")
+    # logger.info("\n# Initializing the downloadDataclass")
+    logger.info("\nWORKING ON SKS")
+    logger.info("\n# Initializing the downloadDataclass")
     sks_data=downloadDataclass(inventoryfile=invSKSfile,inventorytxtfile=SKSsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='SKS')
 
     ## Obtain inventory and events info
     if int(inp.loc['obtain_inventory_SKS','VALUES']):
         if not os.path.exists(invSKSfile):
             try:
-                logging.info("Trying to operate the get_stnxml method")
-                print("\n")
-                print("## Operating get_stnxml method")
+                logger.info("Trying to operate the get_stnxml method")
+                logger.info("\n")
+                logger.info("## Operating get_stnxml method")
                 sks_data.get_stnxml(network=network, station=station)
             except requests.Timeout as err:
-                logging.error({"message": err.message})
-                print("Timeout while requesting...Please try again after some time")
+                logger.error({"message": err.message})
+                logger.info("Timeout while requesting...Please try again after some time")
                 sys.exit()
         
         sks_data.obtain_events(catalogxmlloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),minmagnitude=minmagnitudeSKS,maxmagnitude=maxmagnitudeSKS)
@@ -221,11 +235,11 @@ if makeSKS:
     if download_data_SKS:
         if not os.path.exists(invSKSfile):
             try:
-                print("\n")
-                print("## Operating get_stnxml method")
+                logger.info("\n")
+                logger.info("## Operating get_stnxml method")
                 sks_data.get_stnxml(network=network, station=station)
             except:
-                print("Timeout while requesting...Please try again after some time")
+                logger.info("Timeout while requesting...Please try again after some time")
                 sys.exit()
 
         all_stations_df = pd.read_csv(SKSsta, sep="|")
@@ -236,7 +250,7 @@ if makeSKS:
         for net, sta in zip(nets,stns):
             catfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+f"{net}-{sta}-events-info-SKS.txt"
             if not os.path.exists(catfile):
-                print(f"{catfile} does not exist!\nObtaining {catfile}")
+                logger.info(f"{catfile} does not exist!\nObtaining {catfile}")
                 sks_data.obtain_events(catalogxmlloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),minmagnitude=minmagnitudeSKS,maxmagnitude=maxmagnitudeSKS)
                 break
 
@@ -248,20 +262,20 @@ if makeSKS:
         if total_events:
             for net, sta in zip(nets,stns):
                 if not os.path.exists(str(dirs.loc['dataSKSfileloc','DIR_NAME'])+f"{net}-{sta}-sks_profile_data.h5"):
-                    print(f"Downloading {str(dirs.loc['dataSKSfileloc','DIR_NAME'])}+{net}-{sta}-sks_profile_data.h5")
-                    print("\n")
-                    print("## Operating download method")
+                    logger.info(f"Downloading {str(dirs.loc['dataSKSfileloc','DIR_NAME'])}+{net}-{sta}-sks_profile_data.h5")
+                    logger.info("\n")
+                    logger.info("## Operating download method")
                     sks_data.download_data(catalogxmlloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['SKSinfoloc','DIR_NAME']),datafileloc=str(dirs.loc['dataSKSfileloc','DIR_NAME']),tot_evnt_stns=total_events, plot_stations=plot_SKS_stations, plot_events=plot_SKS_events,dest_map=str(dirs.loc['SKSstaevnloc','DIR_NAME']))
                 else:
-                    print(str(dirs.loc['dataSKSfileloc','DIR_NAME'])+f"{net}-{sta}-sks_profile_data.h5"," already exists!")
+                    logger.info(f"{dirs.loc['dataSKSfileloc','DIR_NAME']} {net}-{sta}-sks_profile_data.h5 already exists!")
 
         else:
-            print("No events found!")
+            logger.info("No events found!")
 
 
     if picking_SKS:
-        print("\n")
-        print("## Pre-processing")
+        logger.info("\n")
+        logger.info("## Pre-processing")
         plot_traces_ENZ=int(inp.loc['plot_traces_ENZ','VALUES'])
         plot_traces_RTZ=int(inp.loc['plot_traces_RTZ','VALUES'])
         plot_trigger=int(inp.loc['plot_trigger','VALUES'])

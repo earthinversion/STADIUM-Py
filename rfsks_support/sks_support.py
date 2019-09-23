@@ -11,26 +11,36 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from obspy.core import read
 from obspy.taup import TauPyModel
-from rfsks_support.rfsks_extras import plot_trigger, plot_trace, rotateNE_RT
+from rfsks_support.rfsks_extras import plot_trigger, plot_trace
 from obspy.signal.trigger import recursive_sta_lta,classic_sta_lta,z_detect,carl_sta_trig,delayed_sta_lta, trigger_onset
 import splitwavepy as sw
+import logging
+
+
 
 
 
 ## Pre-processing
 def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=None,plot_measure_loc=1,method = 'None'):
-    print("--> Cut the traces around the SKS arrival")
+    logger = logging.getLogger(__name__)
+    logger.info("Cut the traces around the SKS arrival")
     sksfiles = glob.glob(dataSKSfileloc+'*-sks_profile_data.h5')
+    logger.info(sksfiles)
+    count=0
     for i,sksfile in enumerate(sksfiles):
         data = read_rf(sksfile, 'H5')
-        print(f"----> Calculating SKS arrival times for {sksfile}")
-        for stream3c in tqdm.tqdm(IterMultipleComponents(data, 'onset', 3)):
+        logger.info(f"Calculating SKS arrival times for {sksfile}")
+
+        
+        for stream3c in IterMultipleComponents(data, 'onset', 3):
+            count+=1
+            logging.info(f"Working on {count}/{int(len(data)/3)}")
             ## filter the trace
             st = stream3c.filter('bandpass', freqmin=0.01, freqmax=0.6)
             sps = st[0].stats.sampling_rate
             t = st[0].stats.starttime
             ## trim the trace
-            trace1 = st.trim(t + 30, t + 90)
+            trace1 = st.trim(t, t + 70)
 
             ## plot the ENZ
             if trace_loc_ENZ:
@@ -52,7 +62,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
             # method = 'None'
             ### operating on transverse component
             if method=="recursive_sta_lta":
-                # print(f"Method is {method}")
+                # logger.info(f"Method is {method}")
                 cft = recursive_sta_lta(trace1[1].data, int(1 * sps), int(5 * sps))
                 threshold = (2.5, 0.65)
                 on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
@@ -78,19 +88,20 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 threshold = (5, 10)
                 on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
             else:
-                print("No valid method specified")
+                logger.info("No valid method specified")
                 pass
 
             if on_off.shape[0]==1:
                 trig_on = on_off[:,0][0]-5
                 trig_off = on_off[:,1][0]+5
                 t = trace1[0].stats.starttime
-                print(trig_on,trig_off,UTC(trig_on),UTC(trig_off),t)
-                # print("------> Measure the splitting")
+                # logger.info(trig_on,trig_off,UTC(trig_on),UTC(trig_off),t)
+                # logger.info("------> Measure the splitting")
                 trace1.rotate('RT->NE')
                 trace2 = trace1
                 # trace2 = trace1.trim(UTC(trig_on), UTC(trig_off))
-                # print('\nTrace1',trace1[0].stats.channel,trace1[1].stats.channel,trace1[2].stats.channel)
+                # logger.info('\nTrace1',trace1[0].stats.channel,trace1[1].stats.channel,trace1[2].stats.channel)
+                logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
                 realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
                 measure = sw.EigenM(realdata)
                 

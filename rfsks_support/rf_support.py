@@ -9,18 +9,20 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
+import logging
 
 
 
 ### Compute RF
 def compute_rf(dataRFfileloc):
+    logger = logging.getLogger(__name__)
     all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
     for rfdatafile in all_rfdatafile:
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
         rffile = f'{network}-{station}-rf_profile_rfs.h5'
         if not os.path.exists(rffile):
-            print(f"--> Computing RF for {rfdatafile}")
+            logger.info(f"--> Computing RF for {rfdatafile}")
             data = read_rf(rfdatafile, 'H5')
             stream = RFStream()
             for stream3c in tqdm.tqdm(IterMultipleComponents(data, 'onset', 3)):
@@ -30,19 +32,20 @@ def compute_rf(dataRFfileloc):
                 try:
                     stream3c.rf()
                 except Exception as e:
-                    print(e)
+                    logger.error("Problem applying rf method", exc_info=True)
                 stream3c.moveout()
                 stream.extend(stream3c)
             stream.write(rffile, 'H5')
         else:
-            print(f"--> {rffile} already exists!")
+            logger.info(f"--> {rffile} already exists!")
 
 def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
-    print("--> Plotting the receiver functions")
+    logger = logging.getLogger(__name__)
+    logger.info("--> Plotting the receiver functions")
     rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
-        # print(stream[i].stats.network,stream[i].stats.station, stream[i].stats.channel)
+        # logger.info(stream[i].stats.network,stream[i].stats.station, stream[i].stats.channel)
 
         kw = {'trim': (-5, 20), 'fillcolors': ('black', 'gray'), 'trace_height': 0.1}
 
@@ -53,17 +56,18 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
                 plt.savefig(destImg + f"{stream[i].stats.station}"+'_L.'+fig_frmt)
                 stream.select(component='Q', station=stream[i].stats.station).sort(['back_azimuth']).plot_rf(**kw)
                 plt.savefig(destImg + f"{stream[i].stats.station}"+'_Q.'+fig_frmt)
-                print("----> Working on {}/{}, network: {} station name: {} total traces: {}".format(i+1,len(rffiles),stream[i].stats.network, stream[i].stats.station, num_trace))
+                logger.info("----> Working on {}/{}, network: {} station name: {} total traces: {}".format(i+1,len(rffiles),stream[i].stats.network, stream[i].stats.station, num_trace))
             except Exception as e:
-                print(e)
+                logger.error("Unexpected error", exc_info=True)
         else:
-            print("----> {} traces for network: {} station: {}".format(num_trace,stream[i].stats.network, stream[i].stats.station))
+            logger.info("----> {} traces for network: {} station: {}".format(num_trace,stream[i].stats.network, stream[i].stats.station))
 
 
 def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=70,fig_frmt="png",ndiv = 2):
+    logger = logging.getLogger(__name__)
     df = pd.read_csv(catalogtxtloc+'all_stations_rf_retrieved.txt',sep="|")
 
-    print("--> Plotting the piercing points on map")
+    logger.info("--> Plotting the piercing points on map")
     clon = df['Longitude'].mean()
     clat = df['Latitude'].mean()
     mnlon,mxlon,mnlat,mxlat = df['Longitude'].min(),df['Longitude'].max(),df['Latitude'].min(),df['Latitude'].max()
@@ -74,7 +78,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
     x,y = map(stream[0].stats.station_longitude, stream[0].stats.station_latitude)
     map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
     for rffile in rffiles[1:]:
-        print(f"----> for {rffile}")
+        logger.info(f"----> for {rffile}")
         st_tmp = read_rf(rffile, 'H5')
         stream += read_rf(rffile, 'H5')
         x,y = map(st_tmp[0].stats.station_longitude, st_tmp[0].stats.station_latitude)
@@ -111,12 +115,12 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                 boxes = get_profile_boxes((clat, clon), azimuth, np.linspace(initdiv, enddiv, int(np.abs(enddiv-initdiv)*5)), width=mxbin)
                 pstream = profile(tqdm.tqdm(stream), boxes)
                 if len(pstream):
-                    print(f"------> Calculated profile for azimuth {azimuth}: {outputfile}\n")
+                    logger.info(f"------> Calculated profile for azimuth {azimuth}: {outputfile}\n")
                     pstream.write(outputfile, 'H5')
                 else:
-                    print(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
+                    logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
             else:
-                print(f"----> {outputfile} already exists!")
+                logger.info(f"----> {outputfile} already exists!")
             divlocs = enddiv
 
     ## Profile 2
@@ -126,7 +130,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
     x,y = map(stream[0].stats.station_longitude, stream[0].stats.station_latitude)
     map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
     for rffile in rffiles[1:]:
-        print(f"----> for {rffile}")
+        logger.info(f"----> for {rffile}")
         st_tmp = read_rf(rffile, 'H5')
         stream += read_rf(rffile, 'H5')
         x,y = map(st_tmp[0].stats.station_longitude, st_tmp[0].stats.station_latitude)
@@ -140,23 +144,24 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
 
     outimagename = destination+'piercing_points_map_new.'+fig_frmt
     plt.savefig(outimagename,dpi=200,bbox_inches='tight')
-    print(f"----> Output image is {outimagename}")
+    logger.info(f"----> Output image is {outimagename}")
     plt.close('all')
 
 
 
 def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
-    print("--> Plotting the RF profile")
+    logger = logging.getLogger(__name__)
+    logger.info("--> Plotting the RF profile")
     plt.style.use('classic')
     for azimuth in [0,90]:
         inpfiles = glob.glob(profilefileloc+ f"rf_profile_profile{azimuth}_*.h5")
-        # print(inpfiles)
+        # logger.info(inpfiles)
         # inpfile = profilefileloc+ 'rf_profile_profile'+str(azimuth)+'.h5'
         for inpfile in inpfiles:
-            print(f"----> Working on {inpfile}")
+            logger.info(f"----> Working on {inpfile}")
             pstream = read_rf(inpfile)
             divparam = inpfile.split("_")[-1].split(".")[0]
-            # print(pstream)
+            # logger.info(pstream)
             pstream.trim2(trimrange[0], trimrange[1], 'onset')
             for chn in ['L','Q']:
                 plt.figure()
@@ -165,6 +170,6 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
                 plt.title(f'Channel: {chn} Azimuth {azimuth}')
                 outputimage = destination+f"{chn}_{azimuth}_{divparam}_profile_plot.png"
                 plt.savefig(outputimage,dpi=200,bbox_inches='tight')
-                print(f"------> Output image is {outputimage}")
+                logger.info(f"------> Output image is {outputimage}")
 
 
