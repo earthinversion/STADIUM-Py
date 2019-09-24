@@ -152,7 +152,7 @@ def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minm
         catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
         catfileout = catalogloc+f"{net}-{sta}-events-info-{method}-out.txt"
         rem_duplicate_lines(catfile,catfileout)
-        shutil.copyfile(catfileout,catfile)
+        shutil.move(catfileout,catfile)
         total_events += int(pd.read_csv(catfile,sep="|",header=None).shape[0])
       
 

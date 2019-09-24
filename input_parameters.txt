@@ -1,5 +1,5 @@
 PARAMETERS|VALUES|DESCRIPTION
-fresh_start|1
+fresh_start|0
 client|IRIS,GFZ,ORFEUS|enter all the clients separated by commas
 mnlong|6
 mxlong|15
@@ -27,7 +27,7 @@ plot_RF_profile|0
 ###########|####
 SKS|INPUT PARAMETERS
 ###########|####
-makeSKS|1
+makeSKS|0
 obtain_inventory_SKS|0
 download_data_SKS|1
 minradiusSKS|90  
