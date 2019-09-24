@@ -1,97 +1,920 @@
-2019-09-23 18:30:22,399 - __main__ - INFO - Running the program for makeRF: 1; makeSKS: 1
-2019-09-23 18:30:22,401 - __main__ - INFO - WORKING ON RF
-2019-09-23 18:30:22,401 - __main__ - INFO - WORKING ON RF
-2019-09-23 18:30:22,402 - __main__ - INFO - # Initializing the downloadDataclass
-2019-09-23 18:30:22,402 - __main__ - INFO - # Initializing the downloadDataclass
-2019-09-23 18:30:22,404 - rfsks_support.download_large_data - INFO - --> Reading station inventory to obtain events catalog
-2019-09-23 18:30:22,448 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,449 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
-2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
-2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,450 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
-2019-09-23 18:30:22,451 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,451 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
-2019-09-23 18:30:22,452 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,452 - rfsks_support.download_large_data - INFO - ----> results/InfoRF/GE-STU-rf_events.xml and results/InfoRF/GE-STU-events-info-RF.txt already exists!
-2019-09-23 18:30:22,452 - __main__ - INFO - 
-## Computing RF
-2019-09-23 18:30:22,454 - __main__ - INFO - 
+2019-09-24 17:58:33,152 - __main__ - INFO - Running the program for makeRF: 1; makeSKS: 1
+2019-09-24 17:58:33,157 - rfsks_support.other_support - INFO - --> Successfully created the directory results/dataRF/
+2019-09-24 17:58:33,157 - rfsks_support.other_support - INFO - --> Successfully created the directory results/InfoRF/
+2019-09-24 17:58:33,158 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesRF/RFplots/
+2019-09-24 17:58:33,158 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesRF/STA_EV/
+2019-09-24 17:58:33,158 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesRF/Profile/
+2019-09-24 17:58:33,159 - rfsks_support.other_support - INFO - --> Successfully created the directory results/InfoSKS/
+2019-09-24 17:58:33,160 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesSKS/STA_EV/
+2019-09-24 17:58:33,160 - rfsks_support.other_support - INFO - --> Successfully created the directory results/dataSKS/
+2019-09-24 17:58:33,160 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesSKS/Traces/ENZ/
+2019-09-24 17:58:33,161 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesSKS/Traces/RTZ/
+2019-09-24 17:58:33,161 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesSKS/Triggerplots/ENZ/
+2019-09-24 17:58:33,161 - rfsks_support.other_support - INFO - --> Successfully created the directory results/ImagesSKS/SKSmeasure/
+2019-09-24 17:58:33,162 - __main__ - INFO - WORKING ON RF
+2019-09-24 17:58:33,163 - __main__ - INFO - # Initializing the downloadDataclass
+2019-09-24 17:58:33,163 - __main__ - INFO - Downloading the RF data
+2019-09-24 17:58:33,164 - __main__ - INFO - results/InfoRF/all_stations_RF.txt does not exist...obtaining
+2019-09-24 17:58:33,164 - rfsks_support.other_support - INFO - Trying to operate the get_stnxml method
+2019-09-24 17:58:33,164 - rfsks_support.other_support - INFO - ## Operating get_stnxml method
+2019-09-24 17:58:33,164 - rfsks_support.download_large_data - INFO - Retrieving station information
+2019-09-24 17:58:37,953 - rfsks_support.download_large_data - INFO - from IRIS
+2019-09-24 17:58:38,307 - rfsks_support.download_large_data - INFO - from GFZ
+2019-09-24 17:58:40,558 - rfsks_support.download_large_data - INFO - from ORFEUS
+2019-09-24 17:58:41,958 - rfsks_support.download_large_data - WARNING - FDSNNoDataException for ORFEUS
+2019-09-24 17:58:41,969 - rfsks_support.other_support - INFO - Obtaining events catalog
+2019-09-24 17:58:41,969 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 17:58:41,971 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1994-1996-events-info-RF
+2019-09-24 17:58:45,050 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 17:58:45,053 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 17:58:45,053 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 17:58:45,053 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1996-1998-events-info-RF
+2019-09-24 17:58:46,767 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 17:58:46,769 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 17:58:46,769 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 17:58:46,770 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1998-2000-events-info-RF
+2019-09-24 17:58:49,413 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 17:58:49,414 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 17:58:49,414 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 17:58:49,414 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-2000-2599-events-info-RF
+2019-09-24 17:58:52,614 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 17:58:52,627 - rfsks_support.download_large_data - ERROR - Unable to write for 2001-11-14T09:26:10.410000Z
+2019-09-24 17:58:52,628 - rfsks_support.download_large_data - ERROR - Unable to write for 2000-07-11T01:32:26.560000Z
+2019-09-24 17:58:52,628 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 17:58:52,628 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 17:58:52,629 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1994-2599-events-info-RF
+2019-09-24 17:58:57,323 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 17:58:57,333 - rfsks_support.download_large_data - ERROR - Unable to write for 2001-11-14T09:26:10.410000Z
+2019-09-24 17:58:57,334 - rfsks_support.download_large_data - ERROR - Unable to write for 2000-07-11T01:32:26.560000Z
+2019-09-24 17:58:57,337 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 17:58:57,350 - __main__ - INFO - results/InfoRF/all_stations_rf_retrieved.txt does not exist...obtaining inventory!
+2019-09-24 17:58:57,372 - rfsks_support.other_support - INFO - 
 
-2019-09-23 18:30:22,454 - __main__ - INFO - ## Operating plot_RF method
-2019-09-23 18:30:22,454 - rfsks_support.rf_support - INFO - --> Plotting the receiver functions
-2019-09-23 18:30:22,455 - __main__ - INFO - 
-
-2019-09-23 18:30:22,456 - __main__ - INFO - ## Operating plot_priercingpoints_RF method
-2019-09-23 18:30:22,459 - __main__ - INFO - [Errno 2] File b'results/InfoRF/all_stations_rf_retrieved.txt' does not exist: b'results/InfoRF/all_stations_rf_retrieved.txt'
-2019-09-23 18:30:22,459 - __main__ - INFO - 
+2019-09-24 17:58:57,372 - rfsks_support.other_support - INFO - ## Operating download method
+2019-09-24 17:58:57,373 - rfsks_support.download_large_data - INFO - Total data files to download: 430
+2019-09-24 17:58:57,377 - rfsks_support.download_large_data - INFO - Searching and downloading data for RF; GE-STU
+2019-09-24 17:58:57,518 - rfsks_support.download_large_data - INFO - Station not active during 1999-12-06T23:12:28.650000Z ; remaining try: 429/430; successful dl = 0/1
+2019-09-24 17:58:57,592 - rfsks_support.download_large_data - INFO - Station not active during 1999-11-15T05:42:43.110000Z ; remaining try: 428/430; successful dl = 0/2
+2019-09-24 17:58:57,701 - rfsks_support.download_large_data - INFO - Station not active during 1999-11-08T16:45:41.800000Z ; remaining try: 427/430; successful dl = 0/3
+2019-09-24 17:58:57,770 - rfsks_support.download_large_data - INFO - Station not active during 1999-10-16T09:46:45.000000Z ; remaining try: 426/430; successful dl = 0/4
+2019-09-24 17:58:57,871 - rfsks_support.download_large_data - INFO - Station not active during 1999-09-30T16:31:15.760000Z ; remaining try: 425/430; successful dl = 0/5
+2019-09-24 17:58:57,982 - rfsks_support.download_large_data - INFO - Station not active during 1999-09-25T23:52:50.000000Z ; remaining try: 424/430; successful dl = 0/6
+2019-09-24 17:58:58,089 - rfsks_support.download_large_data - INFO - Station not active during 1999-09-20T17:47:16.340000Z ; remaining try: 423/430; successful dl = 0/7
+2019-09-24 17:58:58,176 - rfsks_support.download_large_data - INFO - Station not active during 1999-08-20T10:02:23.680000Z ; remaining try: 422/430; successful dl = 0/8
+2019-09-24 17:58:58,248 - rfsks_support.download_large_data - INFO - Station not active during 1999-07-11T14:14:16.120000Z ; remaining try: 421/430; successful dl = 0/9
+2019-09-24 17:58:58,328 - rfsks_support.download_large_data - INFO - Station not active during 1999-06-15T20:42:05.410000Z ; remaining try: 420/430; successful dl = 0/10
+2019-09-24 17:58:58,422 - rfsks_support.download_large_data - INFO - Station not active during 1999-04-08T13:10:34.130000Z ; remaining try: 419/430; successful dl = 0/11
+2019-09-24 17:58:58,505 - rfsks_support.download_large_data - INFO - Station not active during 1999-03-28T19:05:12.270000Z ; remaining try: 418/430; successful dl = 0/12
+2019-09-24 17:58:58,592 - rfsks_support.download_large_data - INFO - Station not active during 1999-03-20T10:47:45.090000Z ; remaining try: 417/430; successful dl = 0/13
+2019-09-24 17:58:58,673 - rfsks_support.download_large_data - INFO - Station not active during 1999-03-08T12:25:46.770000Z ; remaining try: 416/430; successful dl = 0/14
+2019-09-24 17:58:58,758 - rfsks_support.download_large_data - INFO - Station not active during 1999-03-04T05:38:26.810000Z ; remaining try: 415/430; successful dl = 0/15
+2019-09-24 17:58:58,844 - rfsks_support.download_large_data - INFO - Station not active during 1999-01-28T08:10:04.210000Z ; remaining try: 414/430; successful dl = 0/16
+2019-09-24 17:58:58,931 - rfsks_support.download_large_data - INFO - Station not active during 1998-08-23T13:57:15.610000Z ; remaining try: 413/430; successful dl = 0/17
+2019-09-24 17:58:59,028 - rfsks_support.download_large_data - INFO - Station not active during 1998-06-01T05:34:04.180000Z ; remaining try: 412/430; successful dl = 0/18
+2019-09-24 17:58:59,142 - rfsks_support.download_large_data - INFO - Station not active during 1998-05-30T06:22:28.940000Z ; remaining try: 411/430; successful dl = 0/19
+2019-09-24 17:58:59,255 - rfsks_support.download_large_data - INFO - Station not active during 1998-05-03T23:30:24.070000Z ; remaining try: 410/430; successful dl = 0/20
+2019-09-24 17:59:00,286 - rfsks_support.download_large_data - INFO - Event: 1996-12-02T22:17:58.500000Z ; remaining try: 409/430; successful dl = 0/21
+2019-09-24 17:59:01,420 - rfsks_support.download_large_data - INFO - Event: 1996-11-19T10:44:46.270000Z ; remaining try: 408/430; successful dl = 1/22
+2019-09-24 17:59:02,648 - rfsks_support.download_large_data - INFO - Event: 1996-10-19T14:44:43.120000Z ; remaining try: 407/430; successful dl = 2/23
+2019-09-24 17:59:03,822 - rfsks_support.download_large_data - INFO - Event: 1996-10-18T10:50:22.610000Z ; remaining try: 406/430; successful dl = 3/24
+2019-09-24 17:59:04,900 - rfsks_support.download_large_data - INFO - Event: 1996-09-05T23:42:07.150000Z ; remaining try: 405/430; successful dl = 4/25
+2019-09-24 17:59:06,232 - rfsks_support.download_large_data - INFO - Event: 1996-07-16T03:48:28.850000Z ; remaining try: 404/430; successful dl = 5/26
+2019-09-24 17:59:07,405 - rfsks_support.download_large_data - INFO - Event: 1996-07-15T21:23:37.970000Z ; remaining try: 403/430; successful dl = 6/27
+2019-09-24 17:59:08,586 - rfsks_support.download_large_data - INFO - Event: 1996-07-06T17:04:09.700000Z ; remaining try: 402/430; successful dl = 7/28
+2019-09-24 17:59:10,020 - rfsks_support.download_large_data - INFO - Event: 1996-06-21T13:57:11.990000Z ; remaining try: 401/430; successful dl = 8/29
+2019-09-24 17:59:11,147 - rfsks_support.download_large_data - INFO - Event: 1996-06-10T15:24:57.180000Z ; remaining try: 400/430; successful dl = 9/30
+2019-09-24 17:59:12,375 - rfsks_support.download_large_data - INFO - Event: 1996-06-10T04:03:35.710000Z ; remaining try: 399/430; successful dl = 10/31
+2019-09-24 17:59:13,550 - rfsks_support.download_large_data - INFO - Event: 1996-06-02T02:52:09.620000Z ; remaining try: 398/430; successful dl = 11/32
+2019-09-24 17:59:14,729 - rfsks_support.download_large_data - INFO - Event: 1996-03-22T03:24:17.920000Z ; remaining try: 397/430; successful dl = 12/33
+2019-09-24 17:59:15,959 - rfsks_support.download_large_data - INFO - Event: 1996-03-03T16:37:37.890000Z ; remaining try: 396/430; successful dl = 13/34
+2019-09-24 17:59:17,031 - rfsks_support.download_large_data - INFO - Event: 1996-03-03T14:55:15.350000Z ; remaining try: 395/430; successful dl = 14/35
+2019-09-24 17:59:18,212 - rfsks_support.download_large_data - INFO - Event: 1996-02-25T03:08:13.790000Z ; remaining try: 394/430; successful dl = 15/36
+2019-09-24 17:59:19,440 - rfsks_support.download_large_data - INFO - Event: 1996-02-18T23:49:28.260000Z ; remaining try: 393/430; successful dl = 16/37
+2019-09-24 17:59:20,670 - rfsks_support.download_large_data - INFO - Event: 1996-02-16T15:22:59.230000Z ; remaining try: 392/430; successful dl = 17/38
+2019-09-24 17:59:21,898 - rfsks_support.download_large_data - INFO - Event: 1996-02-16T09:44:58.580000Z ; remaining try: 391/430; successful dl = 18/39
+2019-09-24 17:59:28,758 - rfsks_support.download_large_data - INFO - Event: 1996-02-07T21:36:45.600000Z ; remaining try: 390/430; successful dl = 19/40
+2019-09-24 17:59:29,926 - rfsks_support.download_large_data - INFO - Event: 1995-12-03T18:01:10.150000Z ; remaining try: 389/430; successful dl = 20/41
+2019-09-24 17:59:31,113 - rfsks_support.download_large_data - INFO - Event: 1995-11-08T07:14:18.260000Z ; remaining try: 388/430; successful dl = 21/42
+2019-09-24 17:59:32,343 - rfsks_support.download_large_data - INFO - Event: 1995-10-21T02:38:57.740000Z ; remaining try: 387/430; successful dl = 22/43
+2019-09-24 17:59:33,571 - rfsks_support.download_large_data - INFO - Event: 1995-10-19T02:41:37.010000Z ; remaining try: 386/430; successful dl = 23/44
+2019-09-24 17:59:34,801 - rfsks_support.download_large_data - INFO - Event: 1995-10-18T10:37:28.050000Z ; remaining try: 385/430; successful dl = 24/45
+2019-09-24 17:59:37,040 - rfsks_support.download_large_data - INFO - Event: 1995-09-14T14:04:34.820000Z ; remaining try: 384/430; successful dl = 25/46
+2019-09-24 17:59:39,028 - rfsks_support.download_large_data - INFO - Event: 1995-08-28T10:46:14.380000Z ; remaining try: 383/430; successful dl = 25/47
+2019-09-24 17:59:40,176 - rfsks_support.download_large_data - INFO - Event: 1995-08-19T21:43:30.710000Z ; remaining try: 382/430; successful dl = 25/48
+2019-09-24 17:59:41,355 - rfsks_support.download_large_data - INFO - Event: 1995-07-11T21:46:39.980000Z ; remaining try: 381/430; successful dl = 26/49
+2019-09-24 17:59:42,480 - rfsks_support.download_large_data - INFO - Event: 1995-05-27T13:03:52.260000Z ; remaining try: 380/430; successful dl = 27/50
+2019-09-24 17:59:43,616 - rfsks_support.download_large_data - INFO - Event: 1995-05-18T00:06:27.680000Z ; remaining try: 379/430; successful dl = 28/51
+2019-09-24 17:59:45,687 - rfsks_support.download_large_data - INFO - Event: 1995-04-28T16:30:01.400000Z ; remaining try: 378/430; successful dl = 29/52
+2019-09-24 17:59:52,004 - rfsks_support.download_large_data - INFO - Event: 1995-04-17T23:28:06.970000Z ; remaining try: 377/430; successful dl = 30/53
+2019-09-24 17:59:53,847 - rfsks_support.download_large_data - INFO - Event: 1995-01-19T15:05:06.220000Z ; remaining try: 376/430; successful dl = 31/54
+2019-09-24 17:59:55,590 - rfsks_support.download_large_data - INFO - Event: 1995-01-16T20:46:51.910000Z ; remaining try: 375/430; successful dl = 32/55
+2019-09-24 17:59:57,521 - rfsks_support.download_large_data - INFO - Event: 1995-01-06T22:37:37.290000Z ; remaining try: 374/430; successful dl = 33/56
+2019-09-24 17:59:58,967 - rfsks_support.download_large_data - INFO - Event: 1995-01-01T06:59:54.540000Z ; remaining try: 373/430; successful dl = 34/57
+2019-09-24 18:00:00,191 - rfsks_support.download_large_data - INFO - Event: 1994-12-28T12:19:19.280000Z ; remaining try: 372/430; successful dl = 35/58
+2019-09-24 18:00:01,322 - rfsks_support.download_large_data - INFO - Event: 1994-12-10T16:17:39.240000Z ; remaining try: 371/430; successful dl = 36/59
+2019-09-24 18:00:02,654 - rfsks_support.download_large_data - INFO - Event: 1994-10-16T05:09:59.310000Z ; remaining try: 370/430; successful dl = 37/60
+2019-09-24 18:00:03,781 - rfsks_support.download_large_data - INFO - Event: 1994-10-09T07:55:34.600000Z ; remaining try: 369/430; successful dl = 38/61
+2019-09-24 18:00:05,009 - rfsks_support.download_large_data - INFO - Event: 1994-10-04T13:22:57.680000Z ; remaining try: 368/430; successful dl = 39/62
+2019-09-24 18:00:06,238 - rfsks_support.download_large_data - INFO - Event: 1994-09-16T06:20:19.800000Z ; remaining try: 367/430; successful dl = 40/63
+2019-09-24 18:00:07,363 - rfsks_support.download_large_data - INFO - Event: 1994-09-01T15:15:53.510000Z ; remaining try: 366/430; successful dl = 41/64
+2019-09-24 18:00:08,493 - rfsks_support.download_large_data - INFO - Event: 1994-08-28T18:37:20.940000Z ; remaining try: 365/430; successful dl = 42/65
+2019-09-24 18:00:14,942 - rfsks_support.download_large_data - INFO - Event: 1994-07-21T18:36:30.820000Z ; remaining try: 364/430; successful dl = 43/66
+2019-09-24 18:00:16,171 - rfsks_support.download_large_data - INFO - Event: 1994-07-16T04:44:16.100000Z ; remaining try: 363/430; successful dl = 44/67
+2019-09-24 18:00:18,217 - rfsks_support.download_large_data - INFO - Event: 1994-06-08T06:48:44.900000Z ; remaining try: 362/430; successful dl = 45/68
+2019-09-24 18:00:19,446 - rfsks_support.download_large_data - INFO - Event: 1994-06-06T20:47:43.930000Z ; remaining try: 361/430; successful dl = 46/69
+2019-09-24 18:00:21,389 - rfsks_support.download_large_data - INFO - Event: 1994-05-24T04:00:42.220000Z ; remaining try: 360/430; successful dl = 47/70
+2019-09-24 18:00:21,466 - rfsks_support.download_large_data - INFO - Station not active during 2019-07-06T03:19:53.040000Z ; remaining try: 359/430; successful dl = 47/71
+2019-09-24 18:00:21,540 - rfsks_support.download_large_data - INFO - Station not active during 2019-05-30T09:03:28.971000Z ; remaining try: 358/430; successful dl = 47/72
+2019-09-24 18:00:21,618 - rfsks_support.download_large_data - INFO - Station not active during 2019-02-22T10:17:22.410000Z ; remaining try: 357/430; successful dl = 47/73
+2019-09-24 18:00:21,689 - rfsks_support.download_large_data - INFO - Station not active during 2019-02-01T16:14:13.090000Z ; remaining try: 356/430; successful dl = 47/74
+2019-09-24 18:00:21,765 - rfsks_support.download_large_data - INFO - Station not active during 2018-12-20T17:01:55.150000Z ; remaining try: 355/430; successful dl = 47/75
+2019-09-24 18:00:21,839 - rfsks_support.download_large_data - INFO - Station not active during 2018-11-30T17:29:29.330000Z ; remaining try: 354/430; successful dl = 47/76
+2019-09-24 18:00:21,910 - rfsks_support.download_large_data - INFO - Station not active during 2018-10-22T06:22:48.810000Z ; remaining try: 353/430; successful dl = 47/77
+2019-09-24 18:00:21,977 - rfsks_support.download_large_data - INFO - Station not active during 2018-10-22T06:16:28.160000Z ; remaining try: 352/430; successful dl = 47/78
+2019-09-24 18:00:22,050 - rfsks_support.download_large_data - INFO - Station not active during 2018-10-22T05:39:40.330000Z ; remaining try: 351/430; successful dl = 47/79
+2019-09-24 18:00:22,126 - rfsks_support.download_large_data - INFO - Station not active during 2018-10-13T11:10:22.400000Z ; remaining try: 350/430; successful dl = 47/80
+2019-09-24 18:00:22,184 - rfsks_support.download_large_data - INFO - Station not active during 2018-10-10T23:16:02.130000Z ; remaining try: 349/430; successful dl = 47/81
+2019-09-24 18:00:22,239 - rfsks_support.download_large_data - INFO - Station not active during 2018-09-05T18:07:59.150000Z ; remaining try: 348/430; successful dl = 47/82
+2019-09-24 18:00:22,319 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-21T21:31:47.540000Z ; remaining try: 347/430; successful dl = 47/83
+2019-09-24 18:00:22,384 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-15T21:56:54.360000Z ; remaining try: 346/430; successful dl = 47/84
+2019-09-24 18:00:22,452 - rfsks_support.download_large_data - INFO - Station not active during 2018-02-16T23:39:39.700000Z ; remaining try: 345/430; successful dl = 47/85
+2019-09-24 18:00:22,523 - rfsks_support.download_large_data - INFO - Station not active during 2018-01-23T09:31:42.940000Z ; remaining try: 344/430; successful dl = 47/86
+2019-09-24 18:00:22,594 - rfsks_support.download_large_data - INFO - Station not active during 2018-01-10T02:51:31.860000Z ; remaining try: 343/430; successful dl = 47/87
+2019-09-24 18:00:22,662 - rfsks_support.download_large_data - INFO - Station not active during 2017-11-30T06:32:50.760000Z ; remaining try: 342/430; successful dl = 47/88
+2019-09-24 18:00:22,730 - rfsks_support.download_large_data - INFO - Station not active during 2017-11-13T02:28:23.680000Z ; remaining try: 341/430; successful dl = 47/89
+2019-09-24 18:00:22,812 - rfsks_support.download_large_data - INFO - Station not active during 2017-11-12T18:18:17.290000Z ; remaining try: 340/430; successful dl = 47/90
+2019-09-24 18:00:22,885 - rfsks_support.download_large_data - INFO - Station not active during 2017-10-08T22:34:33.960000Z ; remaining try: 339/430; successful dl = 47/91
+2019-09-24 18:00:22,955 - rfsks_support.download_large_data - INFO - Station not active during 2017-09-19T18:14:38.430000Z ; remaining try: 338/430; successful dl = 47/92
+2019-09-24 18:00:23,029 - rfsks_support.download_large_data - INFO - Station not active during 2017-09-08T04:49:20.000000Z ; remaining try: 337/430; successful dl = 47/93
+2019-09-24 18:00:23,097 - rfsks_support.download_large_data - INFO - Station not active during 2017-08-18T02:59:21.950000Z ; remaining try: 336/430; successful dl = 47/94
+2019-09-24 18:00:23,169 - rfsks_support.download_large_data - INFO - Station not active during 2017-08-08T13:19:49.540000Z ; remaining try: 335/430; successful dl = 47/95
+2019-09-24 18:00:23,244 - rfsks_support.download_large_data - INFO - Station not active during 2017-07-17T23:34:13.870000Z ; remaining try: 334/430; successful dl = 47/96
+2019-09-24 18:00:23,314 - rfsks_support.download_large_data - INFO - Station not active during 2017-06-22T12:31:04.490000Z ; remaining try: 333/430; successful dl = 47/97
+2019-09-24 18:00:23,394 - rfsks_support.download_large_data - INFO - Station not active during 2017-06-14T07:29:05.630000Z ; remaining try: 332/430; successful dl = 47/98
+2019-09-24 18:00:23,463 - rfsks_support.download_large_data - INFO - Station not active during 2017-06-02T22:24:47.920000Z ; remaining try: 331/430; successful dl = 47/99
+2019-09-24 18:00:23,535 - rfsks_support.download_large_data - INFO - Station not active during 2017-04-03T17:40:18.560000Z ; remaining try: 330/430; successful dl = 47/100
+2019-09-24 18:00:23,607 - rfsks_support.download_large_data - INFO - Station not active during 2017-03-29T04:09:23.950000Z ; remaining try: 329/430; successful dl = 47/101
+2019-09-24 18:00:23,678 - rfsks_support.download_large_data - INFO - Station not active during 2016-12-08T14:49:46.730000Z ; remaining try: 328/430; successful dl = 47/102
+2019-09-24 18:00:23,746 - rfsks_support.download_large_data - INFO - Station not active during 2016-12-06T22:03:33.390000Z ; remaining try: 327/430; successful dl = 47/103
+2019-09-24 18:00:23,821 - rfsks_support.download_large_data - INFO - Station not active during 2016-11-25T14:24:30.590000Z ; remaining try: 326/430; successful dl = 47/104
+2019-09-24 18:00:23,892 - rfsks_support.download_large_data - INFO - Station not active during 2016-11-24T18:43:48.830000Z ; remaining try: 325/430; successful dl = 47/105
+2019-09-24 18:00:23,960 - rfsks_support.download_large_data - INFO - Station not active during 2016-11-21T20:59:49.010000Z ; remaining try: 324/430; successful dl = 47/106
+2019-09-24 18:00:24,028 - rfsks_support.download_large_data - INFO - Station not active during 2016-08-29T04:29:57.880000Z ; remaining try: 323/430; successful dl = 47/107
+2019-09-24 18:00:24,104 - rfsks_support.download_large_data - INFO - Station not active during 2016-08-24T10:34:54.580000Z ; remaining try: 322/430; successful dl = 47/108
+2019-09-24 18:00:24,175 - rfsks_support.download_large_data - INFO - Station not active during 2016-05-18T16:46:43.860000Z ; remaining try: 321/430; successful dl = 47/109
+2019-09-24 18:00:24,248 - rfsks_support.download_large_data - INFO - Station not active during 2016-05-18T07:57:02.650000Z ; remaining try: 320/430; successful dl = 47/110
+2019-09-24 18:00:24,319 - rfsks_support.download_large_data - INFO - Station not active during 2016-04-16T23:58:36.980000Z ; remaining try: 319/430; successful dl = 47/111
+2019-09-24 18:00:24,390 - rfsks_support.download_large_data - INFO - Station not active during 2016-04-15T16:25:06.220000Z ; remaining try: 318/430; successful dl = 47/112
+2019-09-24 18:00:24,468 - rfsks_support.download_large_data - INFO - Station not active during 2016-04-13T13:55:17.800000Z ; remaining try: 317/430; successful dl = 47/113
+2019-09-24 18:00:24,541 - rfsks_support.download_large_data - INFO - Station not active during 2016-04-10T10:28:58.720000Z ; remaining try: 316/430; successful dl = 47/114
+2019-09-24 18:00:24,619 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-30T03:25:10.750000Z ; remaining try: 315/430; successful dl = 47/115
+2019-09-24 18:00:24,697 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-24T10:30:29.560000Z ; remaining try: 314/430; successful dl = 47/116
+2019-09-24 18:00:24,767 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-14T03:25:33.640000Z ; remaining try: 313/430; successful dl = 47/117
+2019-09-24 18:00:24,838 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-03T23:05:22.270000Z ; remaining try: 312/430; successful dl = 47/118
+2019-09-24 18:00:24,907 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-03T23:05:22.000000Z ; remaining try: 311/430; successful dl = 47/119
+2019-09-24 18:00:24,978 - rfsks_support.download_large_data - INFO - Station not active during 2015-12-17T19:49:53.050000Z ; remaining try: 310/430; successful dl = 47/120
+2019-09-24 18:00:25,055 - rfsks_support.download_large_data - INFO - Station not active during 2015-12-07T07:50:05.950000Z ; remaining try: 309/430; successful dl = 47/121
+2019-09-24 18:00:25,124 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-13T20:51:31.030000Z ; remaining try: 308/430; successful dl = 47/122
+2019-09-24 18:00:25,191 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-09T16:03:46.070000Z ; remaining try: 307/430; successful dl = 47/123
+2019-09-24 18:00:25,259 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-08T16:47:02.160000Z ; remaining try: 306/430; successful dl = 47/124
+2019-09-24 18:00:25,339 - rfsks_support.download_large_data - INFO - Station not active during 2015-10-26T09:09:42.560000Z ; remaining try: 305/430; successful dl = 47/125
+2019-09-24 18:00:25,404 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-13T08:14:08.560000Z ; remaining try: 304/430; successful dl = 47/126
+2019-09-24 18:00:25,471 - rfsks_support.download_large_data - INFO - Station not active during 2015-07-27T04:49:45.670000Z ; remaining try: 303/430; successful dl = 47/127
+2019-09-24 18:00:25,542 - rfsks_support.download_large_data - INFO - Station not active during 2015-07-16T15:16:32.980000Z ; remaining try: 302/430; successful dl = 47/128
+2019-09-24 18:00:25,614 - rfsks_support.download_large_data - INFO - Station not active during 2015-06-17T12:51:35.660000Z ; remaining try: 301/430; successful dl = 47/129
+2019-09-24 18:00:25,688 - rfsks_support.download_large_data - INFO - Station not active during 2015-05-29T07:00:07.990000Z ; remaining try: 300/430; successful dl = 47/130
+2019-09-24 18:00:25,760 - rfsks_support.download_large_data - INFO - Station not active during 2015-05-12T21:12:58.600000Z ; remaining try: 299/430; successful dl = 47/131
+2019-09-24 18:00:25,835 - rfsks_support.download_large_data - INFO - Station not active during 2015-05-12T07:05:18.830000Z ; remaining try: 298/430; successful dl = 47/132
+2019-09-24 18:00:25,907 - rfsks_support.download_large_data - INFO - Station not active during 2015-04-26T07:09:09.310000Z ; remaining try: 297/430; successful dl = 47/133
+2019-09-24 18:00:25,978 - rfsks_support.download_large_data - INFO - Station not active during 2015-04-25T06:45:21.360000Z ; remaining try: 296/430; successful dl = 47/134
+2019-09-24 18:00:26,052 - rfsks_support.download_large_data - INFO - Station not active during 2015-04-25T06:11:26.630000Z ; remaining try: 295/430; successful dl = 47/135
+2019-09-24 18:00:26,119 - rfsks_support.download_large_data - INFO - Station not active during 2015-02-16T23:06:28.080000Z ; remaining try: 294/430; successful dl = 47/136
+2019-09-24 18:00:26,187 - rfsks_support.download_large_data - INFO - Station not active during 2015-01-07T05:07:06.240000Z ; remaining try: 293/430; successful dl = 47/137
+2019-09-24 18:00:26,241 - rfsks_support.download_large_data - INFO - Station not active during 2014-12-08T08:54:52.520000Z ; remaining try: 292/430; successful dl = 47/138
+2019-09-24 18:00:26,309 - rfsks_support.download_large_data - INFO - Station not active during 2014-11-09T14:38:15.600000Z ; remaining try: 291/430; successful dl = 47/139
+2019-09-24 18:00:26,398 - rfsks_support.download_large_data - INFO - Station not active during 2014-10-14T03:51:37.110000Z ; remaining try: 290/430; successful dl = 47/140
+2019-09-24 18:00:26,470 - rfsks_support.download_large_data - INFO - Station not active during 2014-07-11T19:22:05.800000Z ; remaining try: 289/430; successful dl = 47/141
+2019-09-24 18:00:26,530 - rfsks_support.download_large_data - INFO - Station not active during 2014-07-11T19:22:00.820000Z ; remaining try: 288/430; successful dl = 47/142
+2019-09-24 18:00:26,601 - rfsks_support.download_large_data - INFO - Station not active during 2014-07-07T11:23:54.780000Z ; remaining try: 287/430; successful dl = 47/143
+2019-09-24 18:00:26,679 - rfsks_support.download_large_data - INFO - Station not active during 2014-06-23T20:53:09.930000Z ; remaining try: 286/430; successful dl = 47/144
+2019-09-24 18:00:26,747 - rfsks_support.download_large_data - INFO - Station not active during 2014-05-13T06:35:24.530000Z ; remaining try: 285/430; successful dl = 47/145
+2019-09-24 18:00:26,831 - rfsks_support.download_large_data - INFO - Station not active during 2014-05-08T17:00:15.920000Z ; remaining try: 284/430; successful dl = 47/146
+2019-09-24 18:00:26,903 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-24T03:10:11.720000Z ; remaining try: 283/430; successful dl = 47/147
+2019-09-24 18:00:26,988 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-18T14:27:24.690000Z ; remaining try: 282/430; successful dl = 47/148
+2019-09-24 18:00:27,070 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-11T20:29:13.610000Z ; remaining try: 281/430; successful dl = 47/149
+2019-09-24 18:00:27,145 - rfsks_support.download_large_data - INFO - Station not active during 2014-03-10T05:18:13.590000Z ; remaining try: 280/430; successful dl = 47/150
+2019-09-24 18:00:27,216 - rfsks_support.download_large_data - INFO - Station not active during 2014-03-02T20:11:22.710000Z ; remaining try: 279/430; successful dl = 47/151
+2019-09-24 18:00:27,284 - rfsks_support.download_large_data - INFO - Station not active during 2014-02-18T09:27:14.830000Z ; remaining try: 278/430; successful dl = 47/152
+2019-09-24 18:00:27,362 - rfsks_support.download_large_data - INFO - Station not active during 2014-02-12T09:19:48.420000Z ; remaining try: 277/430; successful dl = 47/153
+2019-09-24 18:00:27,436 - rfsks_support.download_large_data - INFO - Station not active during 2013-11-12T07:03:52.470000Z ; remaining try: 276/430; successful dl = 47/154
+2019-09-24 18:00:27,505 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-25T17:10:17.090000Z ; remaining try: 275/430; successful dl = 47/155
+2019-09-24 18:00:27,574 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-19T17:54:57.220000Z ; remaining try: 274/430; successful dl = 47/156
+2019-09-24 18:00:27,646 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-11T09:28:47.300000Z ; remaining try: 273/430; successful dl = 47/157
+2019-09-24 18:00:27,742 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-01T03:38:21.390000Z ; remaining try: 272/430; successful dl = 47/158
+2019-09-24 18:00:27,820 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-28T07:34:07.460000Z ; remaining try: 271/430; successful dl = 47/159
+2019-09-24 18:00:27,895 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-24T11:29:48.230000Z ; remaining try: 270/430; successful dl = 47/160
+2019-09-24 18:00:27,966 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-04T02:32:32.010000Z ; remaining try: 269/430; successful dl = 47/161
+2019-09-24 18:00:28,052 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-04T00:18:24.450000Z ; remaining try: 268/430; successful dl = 47/162
+2019-09-24 18:00:28,122 - rfsks_support.download_large_data - INFO - Station not active during 2013-08-30T16:25:02.120000Z ; remaining try: 267/430; successful dl = 47/163
+2019-09-24 18:00:28,194 - rfsks_support.download_large_data - INFO - Station not active during 2013-08-13T15:43:15.910000Z ; remaining try: 266/430; successful dl = 47/164
+2019-09-24 18:00:28,268 - rfsks_support.download_large_data - INFO - Station not active during 2013-06-24T22:04:14.180000Z ; remaining try: 265/430; successful dl = 47/165
+2019-09-24 18:00:28,354 - rfsks_support.download_large_data - INFO - Station not active during 2013-05-24T14:56:31.600000Z ; remaining try: 264/430; successful dl = 47/166
+2019-09-24 18:00:28,437 - rfsks_support.download_large_data - INFO - Station not active during 2013-05-24T05:44:49.880000Z ; remaining try: 263/430; successful dl = 47/167
+2019-09-24 18:00:28,511 - rfsks_support.download_large_data - INFO - Station not active during 2013-04-20T00:02:47.980000Z ; remaining try: 262/430; successful dl = 47/168
+2019-09-24 18:00:28,591 - rfsks_support.download_large_data - INFO - Station not active during 2013-04-19T03:05:52.630000Z ; remaining try: 261/430; successful dl = 47/169
+2019-09-24 18:00:28,669 - rfsks_support.download_large_data - INFO - Station not active during 2013-04-16T10:44:19.030000Z ; remaining try: 260/430; successful dl = 47/170
+2019-09-24 18:00:28,741 - rfsks_support.download_large_data - INFO - Station not active during 2013-03-01T13:20:52.900000Z ; remaining try: 259/430; successful dl = 47/171
+2019-09-24 18:00:28,814 - rfsks_support.download_large_data - INFO - Station not active during 2013-02-28T14:05:50.870000Z ; remaining try: 258/430; successful dl = 47/172
+2019-09-24 18:00:28,886 - rfsks_support.download_large_data - INFO - Station not active during 2013-02-14T13:13:52.720000Z ; remaining try: 257/430; successful dl = 47/173
+2019-09-24 18:00:28,964 - rfsks_support.download_large_data - INFO - Station not active during 2013-02-09T14:16:06.960000Z ; remaining try: 256/430; successful dl = 47/174
+2019-09-24 18:00:29,042 - rfsks_support.download_large_data - INFO - Station not active during 2013-02-02T14:17:34.760000Z ; remaining try: 255/430; successful dl = 47/175
+2019-09-24 18:00:29,117 - rfsks_support.download_large_data - INFO - Station not active during 2013-01-05T08:58:19.180000Z ; remaining try: 254/430; successful dl = 47/176
+2019-09-24 18:00:29,190 - rfsks_support.download_large_data - INFO - Station not active during 2012-12-07T08:18:23.630000Z ; remaining try: 253/430; successful dl = 47/177
+2019-09-24 18:00:29,267 - rfsks_support.download_large_data - INFO - Station not active during 2012-11-16T18:12:43.260000Z ; remaining try: 252/430; successful dl = 47/178
+2019-09-24 18:00:29,340 - rfsks_support.download_large_data - INFO - Station not active during 2012-11-11T01:12:39.150000Z ; remaining try: 251/430; successful dl = 47/179
+2019-09-24 18:00:29,411 - rfsks_support.download_large_data - INFO - Station not active during 2012-11-07T16:35:49.310000Z ; remaining try: 250/430; successful dl = 47/180
+2019-09-24 18:00:29,482 - rfsks_support.download_large_data - INFO - Station not active during 2012-10-28T03:04:07.790000Z ; remaining try: 249/430; successful dl = 47/181
+2019-09-24 18:00:29,561 - rfsks_support.download_large_data - INFO - Station not active during 2012-09-30T16:31:34.070000Z ; remaining try: 248/430; successful dl = 47/182
+2019-09-24 18:00:29,633 - rfsks_support.download_large_data - INFO - Station not active during 2012-09-26T23:39:56.500000Z ; remaining try: 247/430; successful dl = 47/183
+2019-09-24 18:00:29,699 - rfsks_support.download_large_data - INFO - Station not active during 2012-09-05T14:42:07.730000Z ; remaining try: 246/430; successful dl = 47/184
+2019-09-24 18:00:29,773 - rfsks_support.download_large_data - INFO - Station not active during 2012-08-27T04:37:19.650000Z ; remaining try: 245/430; successful dl = 47/185
+2019-09-24 18:00:29,860 - rfsks_support.download_large_data - INFO - Station not active during 2012-08-14T02:59:38.860000Z ; remaining try: 244/430; successful dl = 47/186
+2019-09-24 18:00:29,933 - rfsks_support.download_large_data - INFO - Station not active during 2012-07-26T05:33:33.860000Z ; remaining try: 243/430; successful dl = 47/187
+2019-09-24 18:00:30,001 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-12T07:15:49.170000Z ; remaining try: 242/430; successful dl = 47/188
+2019-09-24 18:00:30,073 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-11T10:43:10.530000Z ; remaining try: 241/430; successful dl = 47/189
+2019-09-24 18:00:30,143 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-11T08:38:37.800000Z ; remaining try: 240/430; successful dl = 47/190
+2019-09-24 18:00:30,213 - rfsks_support.download_large_data - INFO - Station not active during 2012-03-20T18:02:47.620000Z ; remaining try: 239/430; successful dl = 47/191
+2019-09-24 18:00:30,288 - rfsks_support.download_large_data - INFO - Station not active during 2012-03-14T09:08:36.230000Z ; remaining try: 238/430; successful dl = 47/192
+2019-09-24 18:00:30,361 - rfsks_support.download_large_data - INFO - Station not active during 2012-02-26T06:17:19.920000Z ; remaining try: 237/430; successful dl = 47/193
+2019-09-24 18:00:30,430 - rfsks_support.download_large_data - INFO - Station not active during 2012-01-10T18:37:00.190000Z ; remaining try: 236/430; successful dl = 47/194
+2019-09-24 18:00:30,512 - rfsks_support.download_large_data - INFO - Station not active during 2012-01-01T05:27:55.800000Z ; remaining try: 235/430; successful dl = 47/195
+2019-09-24 18:00:30,580 - rfsks_support.download_large_data - INFO - Station not active during 2011-12-27T15:21:57.570000Z ; remaining try: 234/430; successful dl = 47/196
+2019-09-24 18:00:30,653 - rfsks_support.download_large_data - INFO - Station not active during 2011-12-11T01:47:25.400000Z ; remaining try: 233/430; successful dl = 47/197
+2019-09-24 18:00:30,730 - rfsks_support.download_large_data - INFO - Station not active during 2011-11-08T02:59:08.670000Z ; remaining try: 232/430; successful dl = 47/198
+2019-09-24 18:00:30,800 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-18T12:40:49.580000Z ; remaining try: 231/430; successful dl = 47/199
+2019-09-24 18:00:30,869 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-16T19:26:40.730000Z ; remaining try: 230/430; successful dl = 47/200
+2019-09-24 18:00:30,939 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-09T19:41:33.130000Z ; remaining try: 229/430; successful dl = 47/201
+2019-09-24 18:00:31,014 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-05T17:55:12.930000Z ; remaining try: 228/430; successful dl = 47/202
+2019-09-24 18:00:31,093 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-02T10:55:54.990000Z ; remaining try: 227/430; successful dl = 47/203
+2019-09-24 18:00:31,161 - rfsks_support.download_large_data - INFO - Station not active during 2011-07-10T00:57:10.910000Z ; remaining try: 226/430; successful dl = 47/204
+2019-09-24 18:00:31,233 - rfsks_support.download_large_data - INFO - Station not active during 2011-06-24T03:09:38.920000Z ; remaining try: 225/430; successful dl = 47/205
+2019-09-24 18:00:31,305 - rfsks_support.download_large_data - INFO - Station not active during 2011-06-22T21:50:51.590000Z ; remaining try: 224/430; successful dl = 47/206
+2019-09-24 18:00:31,382 - rfsks_support.download_large_data - INFO - Station not active during 2011-04-11T08:16:12.690000Z ; remaining try: 223/430; successful dl = 47/207
+2019-09-24 18:00:31,459 - rfsks_support.download_large_data - INFO - Station not active during 2011-04-07T14:32:44.100000Z ; remaining try: 222/430; successful dl = 47/208
+2019-09-24 18:00:31,539 - rfsks_support.download_large_data - INFO - Station not active during 2011-04-07T13:11:23.430000Z ; remaining try: 221/430; successful dl = 47/209
+2019-09-24 18:00:31,611 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-24T13:55:13.390000Z ; remaining try: 220/430; successful dl = 47/210
+2019-09-24 18:00:31,680 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-12T01:47:16.160000Z ; remaining try: 219/430; successful dl = 47/211
+2019-09-24 18:00:31,750 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T19:46:35.300000Z ; remaining try: 218/430; successful dl = 47/212
+2019-09-24 18:00:31,822 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T11:36:40.030000Z ; remaining try: 217/430; successful dl = 47/213
+2019-09-24 18:00:31,892 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T08:19:27.470000Z ; remaining try: 216/430; successful dl = 47/214
+2019-09-24 18:00:31,965 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T06:25:50.740000Z ; remaining try: 215/430; successful dl = 47/215
+2019-09-24 18:00:32,036 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T06:20:02.390000Z ; remaining try: 214/430; successful dl = 47/216
+2019-09-24 18:00:32,104 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T06:18:51.060000Z ; remaining try: 213/430; successful dl = 47/217
+2019-09-24 18:00:32,178 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T06:15:37.570000Z ; remaining try: 212/430; successful dl = 47/218
+2019-09-24 18:00:32,236 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T06:08:32.540000Z ; remaining try: 211/430; successful dl = 47/219
+2019-09-24 18:00:32,305 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T05:51:20.500000Z ; remaining try: 210/430; successful dl = 47/220
+2019-09-24 18:00:32,379 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-11T05:46:23.200000Z ; remaining try: 209/430; successful dl = 47/221
+2019-09-24 18:00:32,447 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-09T21:24:01.830000Z ; remaining try: 208/430; successful dl = 47/222
+2019-09-24 18:00:32,519 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-09T02:45:19.590000Z ; remaining try: 207/430; successful dl = 47/223
+2019-09-24 18:00:32,595 - rfsks_support.download_large_data - INFO - Station not active during 2011-01-18T20:23:25.570000Z ; remaining try: 206/430; successful dl = 47/224
+2019-09-24 18:00:32,664 - rfsks_support.download_large_data - INFO - Station not active during 2010-12-20T18:41:59.920000Z ; remaining try: 205/430; successful dl = 47/225
+2019-09-24 18:00:32,734 - rfsks_support.download_large_data - INFO - Station not active during 2010-10-21T17:53:13.770000Z ; remaining try: 204/430; successful dl = 47/226
+2019-09-24 18:00:32,804 - rfsks_support.download_large_data - INFO - Station not active during 2010-09-03T11:16:08.110000Z ; remaining try: 203/430; successful dl = 47/227
+2019-09-24 18:00:32,885 - rfsks_support.download_large_data - INFO - Station not active during 2010-08-12T11:54:15.020000Z ; remaining try: 202/430; successful dl = 47/228
+2019-09-24 18:00:32,953 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-18T05:56:45.840000Z ; remaining try: 201/430; successful dl = 47/229
+2019-09-24 18:00:33,028 - rfsks_support.download_large_data - INFO - Station not active during 2010-06-12T19:26:50.050000Z ; remaining try: 200/430; successful dl = 47/230
+2019-09-24 18:00:33,106 - rfsks_support.download_large_data - INFO - Station not active during 2010-05-31T19:51:47.690000Z ; remaining try: 199/430; successful dl = 47/231
+2019-09-24 18:00:33,177 - rfsks_support.download_large_data - INFO - Station not active during 2010-05-09T05:59:42.340000Z ; remaining try: 198/430; successful dl = 47/232
+2019-09-24 18:00:33,252 - rfsks_support.download_large_data - INFO - Station not active during 2010-04-30T23:11:43.690000Z ; remaining try: 197/430; successful dl = 47/233
+2019-09-24 18:00:33,321 - rfsks_support.download_large_data - INFO - Station not active during 2010-04-26T02:59:52.260000Z ; remaining try: 196/430; successful dl = 47/234
+2019-09-24 18:00:33,392 - rfsks_support.download_large_data - INFO - Station not active during 2010-04-13T23:49:37.010000Z ; remaining try: 195/430; successful dl = 47/235
+2019-09-24 18:00:33,460 - rfsks_support.download_large_data - INFO - Station not active during 2010-04-06T22:15:02.130000Z ; remaining try: 194/430; successful dl = 47/236
+2019-09-24 18:00:33,533 - rfsks_support.download_large_data - INFO - Station not active during 2010-04-04T22:40:43.650000Z ; remaining try: 193/430; successful dl = 47/237
+2019-09-24 18:00:33,606 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-30T16:54:47.370000Z ; remaining try: 192/430; successful dl = 47/238
+2019-09-24 18:00:33,675 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-14T08:08:05.010000Z ; remaining try: 191/430; successful dl = 47/239
+2019-09-24 18:00:33,743 - rfsks_support.download_large_data - INFO - Station not active during 2010-02-26T20:31:26.860000Z ; remaining try: 190/430; successful dl = 47/240
+2019-09-24 18:00:33,826 - rfsks_support.download_large_data - INFO - Station not active during 2010-02-18T01:13:18.420000Z ; remaining try: 189/430; successful dl = 47/241
+2019-09-24 18:00:33,895 - rfsks_support.download_large_data - INFO - Station not active during 2010-01-12T21:53:10.410000Z ; remaining try: 188/430; successful dl = 47/242
+2019-09-24 18:00:33,966 - rfsks_support.download_large_data - INFO - Station not active during 2010-01-10T00:27:41.850000Z ; remaining try: 187/430; successful dl = 47/243
+2019-09-24 18:00:34,038 - rfsks_support.download_large_data - INFO - Station not active during 2009-11-17T15:30:46.840000Z ; remaining try: 186/430; successful dl = 47/244
+2019-09-24 18:00:34,113 - rfsks_support.download_large_data - INFO - Station not active during 2009-10-30T07:03:39.120000Z ; remaining try: 185/430; successful dl = 47/245
+2019-09-24 18:00:34,184 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-17T00:05:48.960000Z ; remaining try: 184/430; successful dl = 47/246
+2019-09-24 18:00:34,255 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-12T22:48:52.100000Z ; remaining try: 183/430; successful dl = 47/247
+2019-09-24 18:00:34,329 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-10T19:55:39.830000Z ; remaining try: 182/430; successful dl = 47/248
+2019-09-24 18:00:34,406 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-09T10:55:56.280000Z ; remaining try: 181/430; successful dl = 47/249
+2019-09-24 18:00:34,474 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-03T17:59:56.390000Z ; remaining try: 180/430; successful dl = 47/250
+2019-09-24 18:00:34,538 - rfsks_support.download_large_data - INFO - Station not active during 2009-05-28T08:24:57.100000Z ; remaining try: 179/430; successful dl = 47/251
+2019-09-24 18:00:34,608 - rfsks_support.download_large_data - INFO - Station not active during 2009-05-28T08:24:48.360000Z ; remaining try: 178/430; successful dl = 47/252
+2019-09-24 18:00:34,679 - rfsks_support.download_large_data - INFO - Station not active during 2009-04-18T19:18:01.130000Z ; remaining try: 177/430; successful dl = 47/253
+2019-09-24 18:00:34,748 - rfsks_support.download_large_data - INFO - Station not active during 2009-04-07T04:23:34.100000Z ; remaining try: 176/430; successful dl = 47/254
+2019-09-24 18:00:34,821 - rfsks_support.download_large_data - INFO - Station not active during 2009-03-06T10:50:30.160000Z ; remaining try: 175/430; successful dl = 47/255
+2019-09-24 18:00:34,893 - rfsks_support.download_large_data - INFO - Station not active during 2009-01-15T17:49:38.440000Z ; remaining try: 174/430; successful dl = 47/256
+2019-09-24 18:00:34,971 - rfsks_support.download_large_data - INFO - Station not active during 2008-11-24T09:03:00.020000Z ; remaining try: 173/430; successful dl = 47/257
+2019-09-24 18:00:35,044 - rfsks_support.download_large_data - INFO - Station not active during 2008-10-16T19:41:33.100000Z ; remaining try: 172/430; successful dl = 47/258
+2019-09-24 18:00:35,116 - rfsks_support.download_large_data - INFO - Station not active during 2008-10-05T15:52:50.080000Z ; remaining try: 171/430; successful dl = 47/259
+2019-09-24 18:00:35,185 - rfsks_support.download_large_data - INFO - Station not active during 2008-09-11T00:20:52.880000Z ; remaining try: 170/430; successful dl = 47/260
+2019-09-24 18:00:35,271 - rfsks_support.download_large_data - INFO - Station not active during 2008-09-10T13:08:14.060000Z ; remaining try: 169/430; successful dl = 47/261
+2019-09-24 18:00:35,344 - rfsks_support.download_large_data - INFO - Station not active during 2008-08-25T13:22:01.530000Z ; remaining try: 168/430; successful dl = 47/262
+2019-09-24 18:00:35,423 - rfsks_support.download_large_data - INFO - Station not active during 2008-07-23T15:26:20.740000Z ; remaining try: 167/430; successful dl = 47/263
+2019-09-24 18:00:35,492 - rfsks_support.download_large_data - INFO - Station not active during 2008-07-19T02:39:29.670000Z ; remaining try: 166/430; successful dl = 47/264
+2019-09-24 18:00:35,573 - rfsks_support.download_large_data - INFO - Station not active during 2008-07-05T02:12:06.070000Z ; remaining try: 165/430; successful dl = 47/265
+2019-09-24 18:00:35,641 - rfsks_support.download_large_data - INFO - Station not active during 2008-06-27T11:40:15.720000Z ; remaining try: 164/430; successful dl = 47/266
+2019-09-24 18:00:35,713 - rfsks_support.download_large_data - INFO - Station not active during 2008-06-13T23:43:46.790000Z ; remaining try: 163/430; successful dl = 47/267
+2019-09-24 18:00:35,781 - rfsks_support.download_large_data - INFO - Station not active during 2008-05-23T19:35:35.500000Z ; remaining try: 162/430; successful dl = 47/268
+2019-09-24 18:00:35,849 - rfsks_support.download_large_data - INFO - Station not active during 2008-05-12T06:27:59.980000Z ; remaining try: 161/430; successful dl = 47/269
+2019-09-24 18:00:35,925 - rfsks_support.download_large_data - INFO - Station not active during 2008-05-07T16:45:21.080000Z ; remaining try: 160/430; successful dl = 47/270
+2019-09-24 18:00:35,997 - rfsks_support.download_large_data - INFO - Station not active during 2008-05-02T01:33:35.770000Z ; remaining try: 159/430; successful dl = 47/271
+2019-09-24 18:00:36,065 - rfsks_support.download_large_data - INFO - Station not active during 2008-04-24T12:14:50.210000Z ; remaining try: 158/430; successful dl = 47/272
+2019-09-24 18:00:36,137 - rfsks_support.download_large_data - INFO - Station not active during 2008-04-16T05:54:21.810000Z ; remaining try: 157/430; successful dl = 47/273
+2019-09-24 18:00:36,209 - rfsks_support.download_large_data - INFO - Station not active during 2008-04-15T22:59:54.150000Z ; remaining try: 156/430; successful dl = 47/274
+2019-09-24 18:00:36,277 - rfsks_support.download_large_data - INFO - Station not active during 2008-03-20T22:32:58.070000Z ; remaining try: 155/430; successful dl = 47/275
+2019-09-24 18:00:36,356 - rfsks_support.download_large_data - INFO - Station not active during 2008-03-03T09:31:06.690000Z ; remaining try: 154/430; successful dl = 47/276
+2019-09-24 18:00:36,429 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-20T08:08:31.440000Z ; remaining try: 153/430; successful dl = 47/277
+2019-09-24 18:00:36,504 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-12T12:50:19.710000Z ; remaining try: 152/430; successful dl = 47/278
+2019-09-24 18:00:36,573 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-08T09:38:13.680000Z ; remaining try: 151/430; successful dl = 47/279
+2019-09-24 18:00:36,641 - rfsks_support.download_large_data - INFO - Station not active during 2008-01-05T11:01:05.260000Z ; remaining try: 150/430; successful dl = 47/280
+2019-09-24 18:00:36,709 - rfsks_support.download_large_data - INFO - Station not active during 2007-12-19T09:30:28.490000Z ; remaining try: 149/430; successful dl = 47/281
+2019-09-24 18:00:36,787 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-29T19:00:19.960000Z ; remaining try: 148/430; successful dl = 47/282
+2019-09-24 18:00:36,876 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-16T03:13:00.430000Z ; remaining try: 147/430; successful dl = 47/283
+2019-09-24 18:00:36,951 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-10T01:49:14.340000Z ; remaining try: 146/430; successful dl = 47/284
+2019-09-24 18:00:37,025 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-20T22:42:28.400000Z ; remaining try: 145/430; successful dl = 47/285
+2019-09-24 18:00:37,096 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-15T20:22:13.000000Z ; remaining try: 144/430; successful dl = 47/286
+2019-09-24 18:00:37,169 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-02T03:21:47.360000Z ; remaining try: 143/430; successful dl = 47/287
+2019-09-24 18:00:37,248 - rfsks_support.download_large_data - INFO - Station not active during 2007-07-16T14:17:37.740000Z ; remaining try: 142/430; successful dl = 47/288
+2019-09-24 18:00:37,322 - rfsks_support.download_large_data - INFO - Station not active during 2007-07-16T01:13:21.880000Z ; remaining try: 141/430; successful dl = 47/289
+2019-09-24 18:00:37,406 - rfsks_support.download_large_data - INFO - Station not active during 2007-06-13T19:29:46.130000Z ; remaining try: 140/430; successful dl = 47/290
+2019-09-24 18:00:37,470 - rfsks_support.download_large_data - INFO - Station not active during 2007-03-25T00:41:57.020000Z ; remaining try: 139/430; successful dl = 47/291
+2019-09-24 18:00:37,544 - rfsks_support.download_large_data - INFO - Station not active during 2007-01-13T04:23:23.250000Z ; remaining try: 138/430; successful dl = 47/292
+2019-09-24 18:00:37,619 - rfsks_support.download_large_data - INFO - Station not active during 2006-12-30T08:30:48.790000Z ; remaining try: 137/430; successful dl = 47/293
+2019-09-24 18:00:37,686 - rfsks_support.download_large_data - INFO - Station not active during 2006-12-26T12:34:17.280000Z ; remaining try: 136/430; successful dl = 47/294
+2019-09-24 18:00:37,758 - rfsks_support.download_large_data - INFO - Station not active during 2006-12-26T12:26:21.230000Z ; remaining try: 135/430; successful dl = 47/295
+2019-09-24 18:00:37,834 - rfsks_support.download_large_data - INFO - Station not active during 2006-11-15T11:40:55.010000Z ; remaining try: 134/430; successful dl = 47/296
+2019-09-24 18:00:37,909 - rfsks_support.download_large_data - INFO - Station not active during 2006-11-15T11:14:14.540000Z ; remaining try: 133/430; successful dl = 47/297
+2019-09-24 18:00:37,979 - rfsks_support.download_large_data - INFO - Station not active during 2006-10-01T09:06:02.530000Z ; remaining try: 132/430; successful dl = 47/298
+2019-09-24 18:00:38,056 - rfsks_support.download_large_data - INFO - Station not active during 2006-09-30T17:50:24.440000Z ; remaining try: 131/430; successful dl = 47/299
+2019-09-24 18:00:38,145 - rfsks_support.download_large_data - INFO - Station not active during 2006-08-24T21:50:37.970000Z ; remaining try: 130/430; successful dl = 47/300
+2019-09-24 18:00:38,217 - rfsks_support.download_large_data - INFO - Station not active during 2006-07-08T20:39:59.150000Z ; remaining try: 129/430; successful dl = 47/301
+2019-09-24 18:00:38,288 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-14T04:18:44.680000Z ; remaining try: 128/430; successful dl = 47/302
+2019-09-24 18:00:38,372 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-05T00:50:31.530000Z ; remaining try: 127/430; successful dl = 47/303
+2019-09-24 18:00:38,445 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-01T18:57:02.910000Z ; remaining try: 126/430; successful dl = 47/304
+2019-09-24 18:00:38,524 - rfsks_support.download_large_data - INFO - Station not active during 2006-05-22T11:12:00.180000Z ; remaining try: 125/430; successful dl = 47/305
+2019-09-24 18:00:38,599 - rfsks_support.download_large_data - INFO - Station not active during 2006-05-16T15:28:29.150000Z ; remaining try: 124/430; successful dl = 47/306
+2019-09-24 18:00:38,670 - rfsks_support.download_large_data - INFO - Station not active during 2006-04-29T16:58:06.870000Z ; remaining try: 123/430; successful dl = 47/307
+2019-09-24 18:00:38,742 - rfsks_support.download_large_data - INFO - Station not active during 2006-04-20T23:25:02.960000Z ; remaining try: 122/430; successful dl = 47/308
+2019-09-24 18:00:38,815 - rfsks_support.download_large_data - INFO - Station not active during 2006-02-22T22:19:09.320000Z ; remaining try: 121/430; successful dl = 47/309
+2019-09-24 18:00:38,887 - rfsks_support.download_large_data - INFO - Station not active during 2006-01-04T08:32:33.490000Z ; remaining try: 120/430; successful dl = 47/310
+2019-09-24 18:00:38,962 - rfsks_support.download_large_data - INFO - Station not active during 2005-12-12T21:47:44.650000Z ; remaining try: 119/430; successful dl = 47/311
+2019-09-24 18:00:39,040 - rfsks_support.download_large_data - INFO - Station not active during 2005-12-05T12:19:53.730000Z ; remaining try: 118/430; successful dl = 47/312
+2019-09-24 18:00:39,111 - rfsks_support.download_large_data - INFO - Station not active during 2005-12-02T13:13:09.310000Z ; remaining try: 117/430; successful dl = 47/313
+2019-09-24 18:00:39,186 - rfsks_support.download_large_data - INFO - Station not active during 2005-11-14T21:38:50.550000Z ; remaining try: 116/430; successful dl = 47/314
+2019-09-24 18:00:39,258 - rfsks_support.download_large_data - INFO - Station not active during 2005-10-08T03:50:35.990000Z ; remaining try: 115/430; successful dl = 47/315
+2019-09-24 18:00:39,336 - rfsks_support.download_large_data - INFO - Station not active during 2005-08-16T02:46:26.930000Z ; remaining try: 114/430; successful dl = 47/316
+2019-09-24 18:00:39,409 - rfsks_support.download_large_data - INFO - Station not active during 2005-07-24T15:42:05.000000Z ; remaining try: 113/430; successful dl = 47/317
+2019-09-24 18:00:39,485 - rfsks_support.download_large_data - INFO - Station not active during 2005-07-05T01:52:03.120000Z ; remaining try: 112/430; successful dl = 47/318
+2019-09-24 18:00:39,556 - rfsks_support.download_large_data - INFO - Station not active during 2005-07-02T02:16:47.710000Z ; remaining try: 111/430; successful dl = 47/319
+2019-09-24 18:00:39,631 - rfsks_support.download_large_data - INFO - Station not active during 2005-06-17T06:21:41.440000Z ; remaining try: 110/430; successful dl = 47/320
+2019-09-24 18:00:39,703 - rfsks_support.download_large_data - INFO - Station not active during 2005-06-15T02:50:55.770000Z ; remaining try: 109/430; successful dl = 47/321
+2019-09-24 18:00:39,779 - rfsks_support.download_large_data - INFO - Station not active during 2005-06-14T17:10:15.340000Z ; remaining try: 108/430; successful dl = 47/322
+2019-09-24 18:00:39,848 - rfsks_support.download_large_data - INFO - Station not active during 2005-05-19T01:54:51.490000Z ; remaining try: 107/430; successful dl = 47/323
+2019-09-24 18:00:39,920 - rfsks_support.download_large_data - INFO - Station not active during 2005-05-14T05:05:17.070000Z ; remaining try: 106/430; successful dl = 47/324
+2019-09-24 18:00:39,986 - rfsks_support.download_large_data - INFO - Station not active during 2005-05-05T19:12:22.950000Z ; remaining try: 105/430; successful dl = 47/325
+2019-09-24 18:00:40,054 - rfsks_support.download_large_data - INFO - Station not active during 2005-03-28T16:09:35.290000Z ; remaining try: 104/430; successful dl = 47/326
+2019-09-24 18:00:40,126 - rfsks_support.download_large_data - INFO - Station not active during 2005-03-20T01:53:41.140000Z ; remaining try: 103/430; successful dl = 47/327
+2019-09-24 18:00:40,195 - rfsks_support.download_large_data - INFO - Station not active during 2005-02-26T12:56:50.030000Z ; remaining try: 102/430; successful dl = 47/328
+2019-09-24 18:00:40,266 - rfsks_support.download_large_data - INFO - Station not active during 2005-02-16T20:27:53.750000Z ; remaining try: 101/430; successful dl = 47/329
+2019-09-24 18:00:40,340 - rfsks_support.download_large_data - INFO - Station not active during 2005-01-19T06:11:32.190000Z ; remaining try: 100/430; successful dl = 47/330
+2019-09-24 18:00:40,409 - rfsks_support.download_large_data - INFO - Station not active during 2005-01-12T08:40:01.740000Z ; remaining try: 99/430; successful dl = 47/331
+2019-09-24 18:00:40,481 - rfsks_support.download_large_data - INFO - Station not active during 2005-01-01T06:25:42.990000Z ; remaining try: 98/430; successful dl = 47/332
+2019-09-24 18:00:40,553 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-26T09:20:00.840000Z ; remaining try: 97/430; successful dl = 47/333
+2019-09-24 18:00:40,622 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-26T04:21:26.880000Z ; remaining try: 96/430; successful dl = 47/334
+2019-09-24 18:00:40,682 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-26T01:06:10.870000Z ; remaining try: 95/430; successful dl = 47/335
+2019-09-24 18:00:40,751 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-26T00:58:52.050000Z ; remaining try: 94/430; successful dl = 47/336
+2019-09-24 18:00:40,823 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-14T23:20:11.820000Z ; remaining try: 93/430; successful dl = 47/337
+2019-09-24 18:00:40,896 - rfsks_support.download_large_data - INFO - Station not active during 2004-12-06T14:15:10.180000Z ; remaining try: 92/430; successful dl = 47/338
+2019-09-24 18:00:40,967 - rfsks_support.download_large_data - INFO - Station not active during 2004-11-28T18:32:12.760000Z ; remaining try: 91/430; successful dl = 47/339
+2019-09-24 18:00:41,036 - rfsks_support.download_large_data - INFO - Station not active during 2004-11-15T09:06:55.390000Z ; remaining try: 90/430; successful dl = 47/340
+2019-09-24 18:00:41,109 - rfsks_support.download_large_data - INFO - Station not active during 2004-11-02T10:02:11.650000Z ; remaining try: 89/430; successful dl = 47/341
+2019-09-24 18:00:41,182 - rfsks_support.download_large_data - INFO - Station not active during 2004-10-23T08:55:58.630000Z ; remaining try: 88/430; successful dl = 47/342
+2019-09-24 18:00:41,260 - rfsks_support.download_large_data - INFO - Station not active during 2004-10-15T04:08:49.620000Z ; remaining try: 87/430; successful dl = 47/343
+2019-09-24 18:00:41,335 - rfsks_support.download_large_data - INFO - Station not active during 2004-10-09T21:26:54.990000Z ; remaining try: 86/430; successful dl = 47/344
+2019-09-24 18:00:41,411 - rfsks_support.download_large_data - INFO - Station not active during 2004-09-06T23:29:34.910000Z ; remaining try: 85/430; successful dl = 47/345
+2019-09-24 18:00:41,477 - rfsks_support.download_large_data - INFO - Station not active during 2004-09-05T14:57:17.430000Z ; remaining try: 84/430; successful dl = 47/346
+2019-09-24 18:00:41,545 - rfsks_support.download_large_data - INFO - Station not active during 2004-09-05T10:07:07.180000Z ; remaining try: 83/430; successful dl = 47/347
+2019-09-24 18:00:41,609 - rfsks_support.download_large_data - INFO - Station not active during 2004-06-28T09:49:46.340000Z ; remaining try: 82/430; successful dl = 47/348
+2019-09-24 18:00:41,686 - rfsks_support.download_large_data - INFO - Station not active during 2004-06-10T15:19:56.280000Z ; remaining try: 81/430; successful dl = 47/349
+2019-09-24 18:00:41,764 - rfsks_support.download_large_data - INFO - Station not active during 2004-04-05T21:24:00.960000Z ; remaining try: 80/430; successful dl = 47/350
+2019-09-24 18:00:41,837 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-26T01:56:53.180000Z ; remaining try: 79/430; successful dl = 47/351
+2019-09-24 18:00:41,909 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-25T07:11:11.720000Z ; remaining try: 78/430; successful dl = 47/352
+2019-09-24 18:00:41,977 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-22T19:15:56.640000Z ; remaining try: 77/430; successful dl = 47/353
+2019-09-24 18:00:42,045 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-21T07:40:45.680000Z ; remaining try: 76/430; successful dl = 47/354
+2019-09-24 18:00:42,120 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-10T04:38:14.750000Z ; remaining try: 75/430; successful dl = 47/355
+2019-09-24 18:00:42,192 - rfsks_support.download_large_data - INFO - Station not active during 2003-12-05T21:26:09.820000Z ; remaining try: 74/430; successful dl = 47/356
+2019-09-24 18:00:42,260 - rfsks_support.download_large_data - INFO - Station not active during 2003-11-17T06:43:05.980000Z ; remaining try: 73/430; successful dl = 47/357
+2019-09-24 18:00:42,332 - rfsks_support.download_large_data - INFO - Station not active during 2003-11-09T19:52:37.240000Z ; remaining try: 72/430; successful dl = 47/358
+2019-09-24 18:00:42,402 - rfsks_support.download_large_data - INFO - Station not active during 2003-10-31T01:06:30.620000Z ; remaining try: 71/430; successful dl = 47/359
+2019-09-24 18:00:42,471 - rfsks_support.download_large_data - INFO - Station not active during 2003-10-08T09:06:56.860000Z ; remaining try: 70/430; successful dl = 47/360
+2019-09-24 18:00:42,544 - rfsks_support.download_large_data - INFO - Station not active during 2003-10-01T01:03:26.310000Z ; remaining try: 69/430; successful dl = 47/361
+2019-09-24 18:00:42,614 - rfsks_support.download_large_data - INFO - Station not active during 2003-09-29T02:36:55.220000Z ; remaining try: 68/430; successful dl = 47/362
+2019-09-24 18:00:42,685 - rfsks_support.download_large_data - INFO - Station not active during 2003-09-27T11:33:25.130000Z ; remaining try: 67/430; successful dl = 47/363
+2019-09-24 18:00:42,757 - rfsks_support.download_large_data - INFO - Station not active during 2003-09-25T21:07:59.800000Z ; remaining try: 66/430; successful dl = 47/364
+2019-09-24 18:00:42,865 - rfsks_support.download_large_data - INFO - Station not active during 2003-09-25T19:50:07.280000Z ; remaining try: 65/430; successful dl = 47/365
+2019-09-24 18:00:42,938 - rfsks_support.download_large_data - INFO - Station not active during 2003-09-21T18:16:12.650000Z ; remaining try: 64/430; successful dl = 47/366
+2019-09-24 18:00:43,012 - rfsks_support.download_large_data - INFO - Station not active during 2003-07-27T06:25:31.760000Z ; remaining try: 63/430; successful dl = 47/367
+2019-09-24 18:00:43,079 - rfsks_support.download_large_data - INFO - Station not active during 2003-07-15T20:27:50.720000Z ; remaining try: 62/430; successful dl = 47/368
+2019-09-24 18:00:43,153 - rfsks_support.download_large_data - INFO - Station not active during 2003-06-23T12:12:31.510000Z ; remaining try: 61/430; successful dl = 47/369
+2019-09-24 18:00:43,235 - rfsks_support.download_large_data - INFO - Station not active during 2003-06-20T06:19:40.110000Z ; remaining try: 60/430; successful dl = 47/370
+2019-09-24 18:00:43,310 - rfsks_support.download_large_data - INFO - Station not active during 2003-06-16T22:08:02.870000Z ; remaining try: 59/430; successful dl = 47/371
+2019-09-24 18:00:43,386 - rfsks_support.download_large_data - INFO - Station not active during 2003-06-15T19:24:35.310000Z ; remaining try: 58/430; successful dl = 47/372
+2019-09-24 18:00:43,461 - rfsks_support.download_large_data - INFO - Station not active during 2003-05-26T09:24:33.920000Z ; remaining try: 57/430; successful dl = 47/373
+2019-09-24 18:00:43,533 - rfsks_support.download_large_data - INFO - Station not active during 2003-05-14T06:03:33.630000Z ; remaining try: 56/430; successful dl = 47/374
+2019-09-24 18:00:43,605 - rfsks_support.download_large_data - INFO - Station not active during 2003-03-17T16:36:17.260000Z ; remaining try: 55/430; successful dl = 47/375
+2019-09-24 18:00:43,676 - rfsks_support.download_large_data - INFO - Station not active during 2003-02-19T03:32:35.710000Z ; remaining try: 54/430; successful dl = 47/376
+2019-09-24 18:00:43,750 - rfsks_support.download_large_data - INFO - Station not active during 2002-11-17T04:53:55.040000Z ; remaining try: 53/430; successful dl = 47/377
+2019-09-24 18:00:43,824 - rfsks_support.download_large_data - INFO - Station not active during 2002-11-07T15:14:08.500000Z ; remaining try: 52/430; successful dl = 47/378
+2019-09-24 18:00:43,900 - rfsks_support.download_large_data - INFO - Station not active during 2002-11-03T22:12:41.130000Z ; remaining try: 51/430; successful dl = 47/379
+2019-09-24 18:00:43,969 - rfsks_support.download_large_data - INFO - Station not active during 2002-11-02T01:26:11.830000Z ; remaining try: 50/430; successful dl = 47/380
+2019-09-24 18:00:44,044 - rfsks_support.download_large_data - INFO - Station not active during 2002-10-23T11:27:20.130000Z ; remaining try: 49/430; successful dl = 47/381
+2019-09-24 18:00:44,113 - rfsks_support.download_large_data - INFO - Station not active during 2002-10-03T16:08:29.890000Z ; remaining try: 48/430; successful dl = 47/382
+2019-09-24 18:00:44,186 - rfsks_support.download_large_data - INFO - Station not active during 2002-09-13T22:28:29.380000Z ; remaining try: 47/430; successful dl = 47/383
+2019-09-24 18:00:44,251 - rfsks_support.download_large_data - INFO - Station not active during 2002-07-31T00:16:44.780000Z ; remaining try: 46/430; successful dl = 47/384
+2019-09-24 18:00:44,333 - rfsks_support.download_large_data - INFO - Station not active during 2002-06-28T17:19:30.610000Z ; remaining try: 45/430; successful dl = 47/385
+2019-09-24 18:00:44,405 - rfsks_support.download_large_data - INFO - Station not active during 2002-06-22T02:58:21.470000Z ; remaining try: 44/430; successful dl = 47/386
+2019-09-24 18:00:44,487 - rfsks_support.download_large_data - INFO - Station not active during 2002-04-18T05:02:45.840000Z ; remaining try: 43/430; successful dl = 47/387
+2019-09-24 18:00:44,555 - rfsks_support.download_large_data - INFO - Station not active during 2002-03-31T06:52:50.680000Z ; remaining try: 42/430; successful dl = 47/388
+2019-09-24 18:00:44,630 - rfsks_support.download_large_data - INFO - Station not active during 2002-03-03T12:08:18.000000Z ; remaining try: 41/430; successful dl = 47/389
+2019-09-24 18:00:44,709 - rfsks_support.download_large_data - INFO - Station not active during 2002-03-03T12:08:06.650000Z ; remaining try: 40/430; successful dl = 47/390
+2019-09-24 18:00:44,780 - rfsks_support.download_large_data - INFO - Station not active during 2001-12-18T04:03:00.380000Z ; remaining try: 39/430; successful dl = 47/391
+2019-09-24 18:00:44,857 - rfsks_support.download_large_data - INFO - Station not active during 2001-12-02T13:01:53.700000Z ; remaining try: 38/430; successful dl = 47/392
+2019-09-24 18:00:44,928 - rfsks_support.download_large_data - INFO - Station not active during 2001-11-14T09:26:10.410000Z ; remaining try: 37/430; successful dl = 47/393
+2019-09-24 18:00:45,009 - rfsks_support.download_large_data - INFO - Station not active during 2001-07-28T07:32:43.440000Z ; remaining try: 36/430; successful dl = 47/394
+2019-09-24 18:00:45,079 - rfsks_support.download_large_data - INFO - Station not active during 2001-06-14T19:48:47.960000Z ; remaining try: 35/430; successful dl = 47/395
+2019-09-24 18:00:45,151 - rfsks_support.download_large_data - INFO - Station not active during 2001-05-25T00:40:50.590000Z ; remaining try: 34/430; successful dl = 47/396
+2019-09-24 18:00:45,220 - rfsks_support.download_large_data - INFO - Station not active during 2001-03-24T06:27:53.850000Z ; remaining try: 33/430; successful dl = 47/397
+2019-09-24 18:00:45,293 - rfsks_support.download_large_data - INFO - Station not active during 2001-02-28T18:54:31.770000Z ; remaining try: 32/430; successful dl = 47/398
+2019-09-24 18:00:45,372 - rfsks_support.download_large_data - INFO - Station not active during 2001-02-13T14:22:05.950000Z ; remaining try: 31/430; successful dl = 47/399
+2019-09-24 18:00:45,442 - rfsks_support.download_large_data - INFO - Station not active during 2001-02-10T18:21:56.460000Z ; remaining try: 30/430; successful dl = 47/400
+2019-09-24 18:00:45,517 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-26T03:16:40.260000Z ; remaining try: 29/430; successful dl = 47/401
+2019-09-24 18:00:45,589 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-13T17:33:34.580000Z ; remaining try: 28/430; successful dl = 47/402
+2019-09-24 18:00:45,656 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-10T16:02:43.580000Z ; remaining try: 27/430; successful dl = 47/403
+2019-09-24 18:00:45,727 - rfsks_support.download_large_data - INFO - Station not active during 2000-12-06T17:11:06.610000Z ; remaining try: 26/430; successful dl = 47/404
+2019-09-24 18:00:45,803 - rfsks_support.download_large_data - INFO - Station not active during 2000-11-08T06:59:59.450000Z ; remaining try: 25/430; successful dl = 47/405
+2019-09-24 18:00:45,873 - rfsks_support.download_large_data - INFO - Station not active during 2000-10-06T04:30:17.510000Z ; remaining try: 24/430; successful dl = 47/406
+2019-09-24 18:00:45,942 - rfsks_support.download_large_data - INFO - Station not active during 2000-10-02T02:25:32.750000Z ; remaining try: 23/430; successful dl = 47/407
+2019-09-24 18:00:46,024 - rfsks_support.download_large_data - INFO - Station not active during 2000-08-09T11:41:44.310000Z ; remaining try: 22/430; successful dl = 47/408
+2019-09-24 18:00:46,096 - rfsks_support.download_large_data - INFO - Station not active during 2000-08-04T21:13:03.320000Z ; remaining try: 21/430; successful dl = 47/409
+2019-09-24 18:00:46,167 - rfsks_support.download_large_data - INFO - Station not active during 2000-07-30T12:25:45.550000Z ; remaining try: 20/430; successful dl = 47/410
+2019-09-24 18:00:46,241 - rfsks_support.download_large_data - INFO - Station not active during 2000-07-11T01:32:26.560000Z ; remaining try: 19/430; successful dl = 47/411
+2019-09-24 18:00:46,314 - rfsks_support.download_large_data - INFO - Station not active during 2000-01-28T14:21:05.790000Z ; remaining try: 18/430; successful dl = 47/412
+2019-09-24 18:00:46,388 - rfsks_support.download_large_data - INFO - Station not active during 1998-03-14T19:40:31.780000Z ; remaining try: 17/430; successful dl = 47/413
+2019-09-24 18:00:46,458 - rfsks_support.download_large_data - INFO - Station not active during 1998-01-10T08:20:10.120000Z ; remaining try: 16/430; successful dl = 47/414
+2019-09-24 18:00:46,531 - rfsks_support.download_large_data - INFO - Station not active during 1997-12-17T04:38:51.800000Z ; remaining try: 15/430; successful dl = 47/415
+2019-09-24 18:00:46,604 - rfsks_support.download_large_data - INFO - Station not active during 1997-12-05T11:26:53.810000Z ; remaining try: 14/430; successful dl = 47/416
+2019-09-24 18:00:46,683 - rfsks_support.download_large_data - INFO - Station not active during 1997-11-09T22:56:43.860000Z ; remaining try: 13/430; successful dl = 47/417
+2019-09-24 18:00:46,756 - rfsks_support.download_large_data - INFO - Station not active during 1997-11-08T10:02:53.380000Z ; remaining try: 12/430; successful dl = 47/418
+2019-09-24 18:00:46,836 - rfsks_support.download_large_data - INFO - Station not active during 1997-09-02T12:13:23.080000Z ; remaining try: 11/430; successful dl = 47/419
+2019-09-24 18:00:46,907 - rfsks_support.download_large_data - INFO - Station not active during 1997-07-19T14:22:08.870000Z ; remaining try: 10/430; successful dl = 47/420
+2019-09-24 18:00:46,982 - rfsks_support.download_large_data - INFO - Station not active during 1997-07-09T19:24:10.250000Z ; remaining try: 9/430; successful dl = 47/421
+2019-09-24 18:00:47,063 - rfsks_support.download_large_data - INFO - Station not active during 1997-05-22T07:50:55.310000Z ; remaining try: 8/430; successful dl = 47/422
+2019-09-24 18:00:47,147 - rfsks_support.download_large_data - INFO - Station not active during 1997-05-13T14:13:46.250000Z ; remaining try: 7/430; successful dl = 47/423
+2019-09-24 18:00:47,215 - rfsks_support.download_large_data - INFO - Station not active during 1997-05-10T07:57:29.580000Z ; remaining try: 6/430; successful dl = 47/424
+2019-09-24 18:00:47,291 - rfsks_support.download_large_data - INFO - Station not active during 1997-04-22T09:31:28.850000Z ; remaining try: 5/430; successful dl = 47/425
+2019-09-24 18:00:47,366 - rfsks_support.download_large_data - INFO - Station not active during 1997-03-26T02:08:57.800000Z ; remaining try: 4/430; successful dl = 47/426
+2019-09-24 18:00:47,437 - rfsks_support.download_large_data - INFO - Station not active during 1997-02-27T21:08:02.710000Z ; remaining try: 3/430; successful dl = 47/427
+2019-09-24 18:00:47,512 - rfsks_support.download_large_data - INFO - Station not active during 1997-02-04T10:37:51.190000Z ; remaining try: 2/430; successful dl = 47/428
+2019-09-24 18:00:47,581 - rfsks_support.download_large_data - INFO - Station not active during 1996-12-22T14:53:29.080000Z ; remaining try: 1/430; successful dl = 47/429
+2019-09-24 18:00:47,650 - rfsks_support.download_large_data - INFO - Station not active during 1996-12-10T08:36:17.840000Z ; remaining try: 0/430; successful dl = 47/430
+2019-09-24 18:00:48,180 - rfsks_support.download_large_data - INFO - Plotting events for GE STU
+2019-09-24 18:01:07,081 - rfsks_support.download_large_data - INFO - Plotting station map
+2019-09-24 18:01:30,484 - __main__ - INFO - 
 WORKING ON SKS
-2019-09-23 18:30:22,460 - __main__ - INFO - 
+2019-09-24 18:01:30,484 - __main__ - INFO - 
 # Initializing the downloadDataclass
-2019-09-23 18:30:22,461 - rfsks_support.download_large_data - INFO - --> Reading station inventory to obtain events catalog
-2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
-2019-09-23 18:30:22,509 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
-2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
-2019-09-23 18:30:22,510 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
-2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - --> Retrieving event info for GE-STU
-2019-09-23 18:30:22,511 - rfsks_support.download_large_data - INFO - ----> results/InfoSKS/GE-STU-rf_events.xml and results/InfoSKS/GE-STU-events-info-SKS.txt already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - results/dataSKS/ GE-STU-sks_profile_data.h5 already exists!
-2019-09-23 18:30:22,542 - __main__ - INFO - 
+2019-09-24 18:01:30,485 - __main__ - INFO - Downloading the SKS data
+2019-09-24 18:01:30,485 - __main__ - INFO - results/InfoSKS/stations_SKS.txt does not exist...obtaining
+2019-09-24 18:01:30,485 - rfsks_support.other_support - INFO - Trying to operate the get_stnxml method
+2019-09-24 18:01:30,485 - rfsks_support.other_support - INFO - ## Operating get_stnxml method
+2019-09-24 18:01:30,485 - rfsks_support.download_large_data - INFO - Retrieving station information
+2019-09-24 18:01:30,487 - rfsks_support.download_large_data - INFO - from IRIS
+2019-09-24 18:01:31,266 - rfsks_support.download_large_data - INFO - from GFZ
+2019-09-24 18:01:32,112 - rfsks_support.download_large_data - INFO - from ORFEUS
+2019-09-24 18:01:32,701 - rfsks_support.download_large_data - WARNING - FDSNNoDataException for ORFEUS
+2019-09-24 18:01:32,709 - rfsks_support.other_support - INFO - Obtaining events catalog
+2019-09-24 18:01:32,709 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 18:01:32,709 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1994-1996-events-info-SKS
+2019-09-24 18:01:39,551 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 18:01:39,552 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 18:01:39,552 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 18:01:39,552 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1996-1998-events-info-SKS
+2019-09-24 18:01:52,330 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 18:01:52,331 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 18:01:52,331 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 18:01:52,332 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1998-2000-events-info-SKS
+2019-09-24 18:01:55,048 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 18:01:55,050 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 18:01:55,050 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 18:01:55,050 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-2000-2599-events-info-SKS
+2019-09-24 18:01:57,501 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 18:01:57,508 - rfsks_support.download_large_data - ERROR - Unable to write for 2002-04-18T16:08:36.920000Z
+2019-09-24 18:01:57,510 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 18:01:57,510 - rfsks_support.download_large_data - INFO - Retrieving event info for GE-STU
+2019-09-24 18:01:57,511 - rfsks_support.download_large_data - INFO - Obtaining catalog: GE-STU-1994-2599-events-info-SKS
+2019-09-24 18:02:01,440 - rfsks_support.download_large_data - INFO - Writing the event data into a text file
+2019-09-24 18:02:01,449 - rfsks_support.download_large_data - ERROR - Unable to write for 2002-04-18T16:08:36.920000Z
+2019-09-24 18:02:01,454 - rfsks_support.download_large_data - INFO - Finished writing the event data into a text and xml file
+2019-09-24 18:02:01,481 - __main__ - INFO - results/InfoSKS/all_stations_rf_retrieved.txt does not exist...obtaining inventory!
+2019-09-24 18:02:01,501 - rfsks_support.other_support - INFO - 
 
-2019-09-23 18:30:22,542 - __main__ - INFO - ## Pre-processing
-2019-09-23 18:30:22,543 - rfsks_support.sks_support - INFO - Cut the traces around the SKS arrival
-2019-09-23 18:30:22,544 - rfsks_support.sks_support - INFO - ['results/dataSKS/GE-STU-sks_profile_data.h5']
-2019-09-23 18:30:22,988 - rfsks_support.sks_support - INFO - Calculating SKS arrival times for results/dataSKS/GE-STU-sks_profile_data.h5
-2019-09-23 18:30:22,992 - root - INFO - Working on 1/41
-2019-09-23 18:30:25,027 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1994-05-10T06:36:28.610000Z: BHN,BHE
-2019-09-23 18:30:27,065 - root - INFO - Working on 2/41
-2019-09-23 18:30:28,766 - root - INFO - Working on 3/41
-2019-09-23 18:30:30,141 - root - INFO - Working on 4/41
-2019-09-23 18:30:31,362 - root - INFO - Working on 5/41
-2019-09-23 18:30:32,486 - root - INFO - Working on 6/41
-2019-09-23 18:30:33,679 - root - INFO - Working on 7/41
-2019-09-23 18:30:34,824 - root - INFO - Working on 8/41
-2019-09-23 18:30:35,954 - root - INFO - Working on 9/41
-2019-09-23 18:30:37,134 - root - INFO - Working on 10/41
-2019-09-23 18:30:38,247 - root - INFO - Working on 11/41
-2019-09-23 18:30:39,494 - root - INFO - Working on 12/41
-2019-09-23 18:30:40,783 - root - INFO - Working on 13/41
-2019-09-23 18:30:42,007 - root - INFO - Working on 14/41
-2019-09-23 18:30:43,409 - root - INFO - Working on 15/41
-2019-09-23 18:30:45,096 - root - INFO - Working on 16/41
-2019-09-23 18:30:46,717 - root - INFO - Working on 17/41
-2019-09-23 18:30:48,192 - root - INFO - Working on 18/41
-2019-09-23 18:30:49,999 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1995-04-23T05:07:58.060000Z: BHN,BHE
-2019-09-23 18:30:50,873 - root - INFO - Working on 19/41
-2019-09-23 18:30:52,023 - root - INFO - Working on 20/41
-2019-09-23 18:30:53,215 - root - INFO - Working on 21/41
-2019-09-23 18:30:54,460 - root - INFO - Working on 22/41
-2019-09-23 18:30:55,640 - root - INFO - Working on 23/41
-2019-09-23 18:30:57,205 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1995-07-30T05:11:23.370000Z: BHN,BHE
-2019-09-23 18:30:58,095 - root - INFO - Working on 24/41
-2019-09-23 18:30:59,249 - root - INFO - Working on 25/41
-2019-09-23 18:31:00,464 - root - INFO - Working on 26/41
-2019-09-23 18:31:01,588 - root - INFO - Working on 27/41
-2019-09-23 18:31:02,705 - root - INFO - Working on 28/41
-2019-09-23 18:31:03,906 - root - INFO - Working on 29/41
-2019-09-23 18:31:05,124 - root - INFO - Working on 30/41
-2019-09-23 18:31:06,352 - root - INFO - Working on 31/41
-2019-09-23 18:31:07,592 - root - INFO - Working on 32/41
-2019-09-23 18:31:09,184 - rfsks_support.sks_support - INFO - Measure splitting for GE-STU-1996-01-01T08:05:09.560000Z: BHN,BHE
-2019-09-23 18:31:10,070 - root - INFO - Working on 33/41
-2019-09-23 18:31:11,292 - root - INFO - Working on 34/41
-2019-09-23 18:31:12,464 - root - INFO - Working on 35/41
-2019-09-23 18:31:13,756 - root - INFO - Working on 36/41
-2019-09-23 18:31:14,940 - root - INFO - Working on 37/41
-2019-09-23 18:31:16,144 - root - INFO - Working on 38/41
-2019-09-23 18:31:17,378 - root - INFO - Working on 39/41
-2019-09-23 18:31:18,508 - root - INFO - Working on 40/41
-2019-09-23 18:31:19,639 - root - INFO - Working on 41/41
+2019-09-24 18:02:01,502 - rfsks_support.other_support - INFO - ## Operating download method
+2019-09-24 18:02:01,502 - rfsks_support.download_large_data - INFO - Total data files to download: 388
+2019-09-24 18:02:01,516 - rfsks_support.download_large_data - INFO - Searching and downloading data for SKS; GE-STU
+2019-09-24 18:02:01,519 - rfsks_support.download_large_data - INFO - Reading events catalog file
+2019-09-24 18:02:01,723 - rfsks_support.download_large_data - INFO - Station not active during 1998-04-03T22:01:51.920000Z ; remaining try: 387/388; successful dl = 0/1
+2019-09-24 18:02:01,916 - rfsks_support.download_large_data - INFO - Station not active during 1998-04-01T22:42:59.080000Z ; remaining try: 386/388; successful dl = 0/2
+2019-09-24 18:02:02,052 - rfsks_support.download_large_data - INFO - Station not active during 1998-04-01T17:56:23.960000Z ; remaining try: 385/388; successful dl = 0/3
+2019-09-24 18:02:02,148 - rfsks_support.download_large_data - INFO - Station not active during 1998-02-22T06:18:54.300000Z ; remaining try: 384/388; successful dl = 0/4
+2019-09-24 18:02:02,258 - rfsks_support.download_large_data - INFO - Station not active during 1998-02-19T14:14:51.530000Z ; remaining try: 383/388; successful dl = 0/5
+2019-09-24 18:02:02,378 - rfsks_support.download_large_data - INFO - Station not active during 1998-01-30T12:16:09.300000Z ; remaining try: 382/388; successful dl = 0/6
+2019-09-24 18:02:02,516 - rfsks_support.download_large_data - INFO - Station not active during 1997-11-28T22:53:42.610000Z ; remaining try: 381/388; successful dl = 0/7
+2019-09-24 18:02:02,615 - rfsks_support.download_large_data - INFO - Station not active during 1997-11-25T12:14:36.120000Z ; remaining try: 380/388; successful dl = 0/8
+2019-09-24 18:02:02,700 - rfsks_support.download_large_data - INFO - Station not active during 1997-10-28T06:15:19.220000Z ; remaining try: 379/388; successful dl = 0/9
+2019-09-24 18:02:02,788 - rfsks_support.download_large_data - INFO - Station not active during 1997-10-15T01:03:33.030000Z ; remaining try: 378/388; successful dl = 0/10
+2019-09-24 18:02:02,884 - rfsks_support.download_large_data - INFO - Station not active during 1997-10-06T12:30:07.540000Z ; remaining try: 377/388; successful dl = 0/11
+2019-09-24 18:02:02,961 - rfsks_support.download_large_data - INFO - Station not active during 1997-08-20T13:51:16.880000Z ; remaining try: 376/388; successful dl = 0/12
+2019-09-24 18:02:03,053 - rfsks_support.download_large_data - INFO - Station not active during 1997-07-06T09:54:00.180000Z ; remaining try: 375/388; successful dl = 0/13
+2019-09-24 18:02:03,134 - rfsks_support.download_large_data - INFO - Station not active during 1997-05-01T11:37:34.220000Z ; remaining try: 374/388; successful dl = 0/14
+2019-09-24 18:02:03,210 - rfsks_support.download_large_data - INFO - Station not active during 1997-04-28T12:07:38.340000Z ; remaining try: 373/388; successful dl = 0/15
+2019-09-24 18:02:03,293 - rfsks_support.download_large_data - INFO - Station not active during 1997-04-23T19:44:29.880000Z ; remaining try: 372/388; successful dl = 0/16
+2019-09-24 18:02:03,390 - rfsks_support.download_large_data - INFO - Station not active during 1997-03-11T19:22:00.370000Z ; remaining try: 371/388; successful dl = 0/17
+2019-09-24 18:02:03,484 - rfsks_support.download_large_data - INFO - Station not active during 1997-01-23T02:15:19.790000Z ; remaining try: 370/388; successful dl = 0/18
+2019-09-24 18:02:03,619 - rfsks_support.download_large_data - INFO - Station not active during 1997-01-11T20:28:28.030000Z ; remaining try: 369/388; successful dl = 0/19
+2019-09-24 18:02:03,703 - rfsks_support.download_large_data - INFO - Station not active during 2019-08-27T23:55:19.187000Z ; remaining try: 368/388; successful dl = 0/20
+2019-09-24 18:02:03,782 - rfsks_support.download_large_data - INFO - Station not active during 2019-08-02T12:03:27.483000Z ; remaining try: 367/388; successful dl = 0/21
+2019-09-24 18:02:03,876 - rfsks_support.download_large_data - INFO - Station not active during 2019-08-01T18:28:07.272000Z ; remaining try: 366/388; successful dl = 0/22
+2019-09-24 18:02:03,976 - rfsks_support.download_large_data - INFO - Station not active during 2019-07-14T09:10:50.533000Z ; remaining try: 365/388; successful dl = 0/23
+2019-09-24 18:02:04,088 - rfsks_support.download_large_data - INFO - Station not active during 2019-07-14T05:39:23.427000Z ; remaining try: 364/388; successful dl = 0/24
+2019-09-24 18:02:04,173 - rfsks_support.download_large_data - INFO - Station not active during 2019-07-07T15:08:40.525000Z ; remaining try: 363/388; successful dl = 0/25
+2019-09-24 18:02:04,290 - rfsks_support.download_large_data - INFO - Station not active during 2019-06-24T02:53:39.830000Z ; remaining try: 362/388; successful dl = 0/26
+2019-09-24 18:02:04,406 - rfsks_support.download_large_data - INFO - Station not active during 2019-05-26T07:41:15.058000Z ; remaining try: 361/388; successful dl = 0/27
+2019-09-24 18:02:04,581 - rfsks_support.download_large_data - INFO - Station not active during 2019-04-12T11:40:49.886000Z ; remaining try: 360/388; successful dl = 0/28
+2019-09-24 18:02:04,708 - rfsks_support.download_large_data - INFO - Station not active during 2019-04-09T17:53:59.096000Z ; remaining try: 359/388; successful dl = 0/29
+2019-09-24 18:02:04,828 - rfsks_support.download_large_data - INFO - Station not active during 2019-03-01T08:50:42.620000Z ; remaining try: 358/388; successful dl = 0/30
+2019-09-24 18:02:04,949 - rfsks_support.download_large_data - INFO - Station not active during 2019-01-22T19:01:43.580000Z ; remaining try: 357/388; successful dl = 0/31
+2019-09-24 18:02:05,065 - rfsks_support.download_large_data - INFO - Station not active during 2019-01-20T01:32:51.850000Z ; remaining try: 356/388; successful dl = 0/32
+2019-09-24 18:02:05,187 - rfsks_support.download_large_data - INFO - Station not active during 2019-01-06T17:27:20.670000Z ; remaining try: 355/388; successful dl = 0/33
+2019-09-24 18:02:05,334 - rfsks_support.download_large_data - INFO - Station not active during 2019-01-05T19:25:38.580000Z ; remaining try: 354/388; successful dl = 0/34
+2019-09-24 18:02:05,492 - rfsks_support.download_large_data - INFO - Station not active during 2018-12-29T03:39:09.740000Z ; remaining try: 353/388; successful dl = 0/35
+2019-09-24 18:02:05,642 - rfsks_support.download_large_data - INFO - Station not active during 2018-12-11T02:26:32.730000Z ; remaining try: 352/388; successful dl = 0/36
+2019-09-24 18:02:05,764 - rfsks_support.download_large_data - INFO - Station not active during 2018-09-28T10:02:43.480000Z ; remaining try: 351/388; successful dl = 0/37
+2019-09-24 18:02:05,906 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-24T09:04:06.780000Z ; remaining try: 350/388; successful dl = 0/38
+2019-09-24 18:02:06,017 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-19T14:56:28.030000Z ; remaining try: 349/388; successful dl = 0/39
+2019-09-24 18:02:06,141 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-17T15:35:01.870000Z ; remaining try: 348/388; successful dl = 0/40
+2019-09-24 18:02:06,240 - rfsks_support.download_large_data - INFO - Station not active during 2018-08-05T11:46:38.190000Z ; remaining try: 347/388; successful dl = 0/41
+2019-09-24 18:02:06,338 - rfsks_support.download_large_data - INFO - Station not active during 2018-05-04T22:32:54.370000Z ; remaining try: 346/388; successful dl = 0/42
+2019-09-24 18:02:06,469 - rfsks_support.download_large_data - INFO - Station not active during 2018-04-02T13:40:34.840000Z ; remaining try: 345/388; successful dl = 0/43
+2019-09-24 18:02:06,602 - rfsks_support.download_large_data - INFO - Station not active during 2018-01-28T16:03:03.970000Z ; remaining try: 344/388; successful dl = 0/44
+2019-09-24 18:02:06,717 - rfsks_support.download_large_data - INFO - Station not active during 2018-01-14T09:18:45.540000Z ; remaining try: 343/388; successful dl = 0/45
+2019-09-24 18:02:06,825 - rfsks_support.download_large_data - INFO - Station not active during 2017-12-15T16:47:58.230000Z ; remaining try: 342/388; successful dl = 0/46
+2019-09-24 18:02:06,915 - rfsks_support.download_large_data - INFO - Station not active during 2017-12-13T18:03:42.790000Z ; remaining try: 341/388; successful dl = 0/47
+2019-09-24 18:02:07,029 - rfsks_support.download_large_data - INFO - Station not active during 2017-10-24T10:47:47.540000Z ; remaining try: 340/388; successful dl = 0/48
+2019-09-24 18:02:07,136 - rfsks_support.download_large_data - INFO - Station not active during 2017-10-10T18:53:27.840000Z ; remaining try: 339/388; successful dl = 0/49
+2019-09-24 18:02:07,237 - rfsks_support.download_large_data - INFO - Station not active during 2017-07-06T08:03:57.220000Z ; remaining try: 338/388; successful dl = 0/50
+2019-09-24 18:02:07,326 - rfsks_support.download_large_data - INFO - Station not active during 2017-05-29T14:35:21.510000Z ; remaining try: 337/388; successful dl = 0/51
+2019-09-24 18:02:07,413 - rfsks_support.download_large_data - INFO - Station not active during 2017-05-10T23:23:37.270000Z ; remaining try: 336/388; successful dl = 0/52
+2019-09-24 18:02:07,497 - rfsks_support.download_large_data - INFO - Station not active during 2017-04-28T20:23:17.260000Z ; remaining try: 335/388; successful dl = 0/53
+2019-09-24 18:02:07,602 - rfsks_support.download_large_data - INFO - Station not active during 2017-04-24T21:38:30.840000Z ; remaining try: 334/388; successful dl = 0/54
+2019-09-24 18:02:07,717 - rfsks_support.download_large_data - INFO - Station not active during 2017-02-21T14:09:04.320000Z ; remaining try: 333/388; successful dl = 0/55
+2019-09-24 18:02:07,826 - rfsks_support.download_large_data - INFO - Station not active during 2017-02-10T14:03:43.920000Z ; remaining try: 332/388; successful dl = 0/56
+2019-09-24 18:02:07,943 - rfsks_support.download_large_data - INFO - Station not active during 2017-01-10T06:13:47.250000Z ; remaining try: 331/388; successful dl = 0/57
+2019-09-24 18:02:08,044 - rfsks_support.download_large_data - INFO - Station not active during 2016-12-25T14:22:27.030000Z ; remaining try: 330/388; successful dl = 0/58
+2019-09-24 18:02:08,189 - rfsks_support.download_large_data - INFO - Station not active during 2016-12-21T00:17:14.990000Z ; remaining try: 329/388; successful dl = 0/59
+2019-09-24 18:02:08,354 - rfsks_support.download_large_data - INFO - Station not active during 2016-10-19T00:26:01.090000Z ; remaining try: 328/388; successful dl = 0/60
+2019-09-24 18:02:08,472 - rfsks_support.download_large_data - INFO - Station not active during 2016-08-19T07:32:22.730000Z ; remaining try: 327/388; successful dl = 0/61
+2019-09-24 18:02:08,607 - rfsks_support.download_large_data - INFO - Station not active during 2016-07-29T21:18:26.510000Z ; remaining try: 326/388; successful dl = 0/62
+2019-09-24 18:02:08,739 - rfsks_support.download_large_data - INFO - Station not active during 2016-06-01T22:56:00.800000Z ; remaining try: 325/388; successful dl = 0/63
+2019-09-24 18:02:08,877 - rfsks_support.download_large_data - INFO - Station not active during 2016-05-28T09:46:59.780000Z ; remaining try: 324/388; successful dl = 0/64
+2019-09-24 18:02:08,974 - rfsks_support.download_large_data - INFO - Station not active during 2016-04-29T01:33:38.910000Z ; remaining try: 323/388; successful dl = 0/65
+2019-09-24 18:02:09,087 - rfsks_support.download_large_data - INFO - Station not active during 2016-03-02T12:49:48.110000Z ; remaining try: 322/388; successful dl = 0/66
+2019-09-24 18:02:09,206 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-21T18:06:57.690000Z ; remaining try: 321/388; successful dl = 0/67
+2019-09-24 18:02:09,301 - rfsks_support.download_large_data - INFO - Station not active during 2016-01-11T16:38:05.910000Z ; remaining try: 320/388; successful dl = 0/68
+2019-09-24 18:02:09,394 - rfsks_support.download_large_data - INFO - Station not active during 2015-12-09T10:21:48.530000Z ; remaining try: 319/388; successful dl = 0/69
+2019-09-24 18:02:09,472 - rfsks_support.download_large_data - INFO - Station not active during 2015-12-04T22:25:00.110000Z ; remaining try: 318/388; successful dl = 0/70
+2019-09-24 18:02:09,575 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-26T05:45:18.400000Z ; remaining try: 317/388; successful dl = 0/71
+2019-09-24 18:02:09,680 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-24T22:50:54.370000Z ; remaining try: 316/388; successful dl = 0/72
+2019-09-24 18:02:09,786 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-24T22:45:38.880000Z ; remaining try: 315/388; successful dl = 0/73
+2019-09-24 18:02:09,869 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-11T02:46:19.830000Z ; remaining try: 314/388; successful dl = 0/74
+2019-09-24 18:02:09,954 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-11T01:54:38.570000Z ; remaining try: 313/388; successful dl = 0/75
+2019-09-24 18:02:10,050 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-07T07:31:43.870000Z ; remaining try: 312/388; successful dl = 0/76
+2019-09-24 18:02:10,129 - rfsks_support.download_large_data - INFO - Station not active during 2015-11-04T03:44:15.190000Z ; remaining try: 311/388; successful dl = 0/77
+2019-09-24 18:02:10,220 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-24T15:53:27.740000Z ; remaining try: 310/388; successful dl = 0/78
+2019-09-24 18:02:10,317 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-24T15:53:27.000000Z ; remaining try: 309/388; successful dl = 0/79
+2019-09-24 18:02:10,396 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-21T17:40:00.060000Z ; remaining try: 308/388; successful dl = 0/80
+2019-09-24 18:02:10,484 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-17T04:10:27.780000Z ; remaining try: 307/388; successful dl = 0/81
+2019-09-24 18:02:10,563 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-17T04:10:27.000000Z ; remaining try: 306/388; successful dl = 0/82
+2019-09-24 18:02:10,641 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-17T03:55:15.430000Z ; remaining try: 305/388; successful dl = 0/83
+2019-09-24 18:02:10,722 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-16T23:18:41.850000Z ; remaining try: 304/388; successful dl = 0/84
+2019-09-24 18:02:10,835 - rfsks_support.download_large_data - INFO - Station not active during 2015-09-16T22:54:32.860000Z ; remaining try: 303/388; successful dl = 0/85
+2019-09-24 18:02:10,936 - rfsks_support.download_large_data - INFO - Station not active during 2015-07-27T21:41:20.760000Z ; remaining try: 302/388; successful dl = 0/86
+2019-09-24 18:02:11,028 - rfsks_support.download_large_data - INFO - Station not active during 2015-06-23T12:18:30.370000Z ; remaining try: 301/388; successful dl = 0/87
+2019-09-24 18:02:11,123 - rfsks_support.download_large_data - INFO - Station not active during 2015-05-30T11:23:02.850000Z ; remaining try: 300/388; successful dl = 0/88
+2019-09-24 18:02:11,221 - rfsks_support.download_large_data - INFO - Station not active during 2015-02-27T13:45:05.640000Z ; remaining try: 299/388; successful dl = 0/89
+2019-09-24 18:02:11,326 - rfsks_support.download_large_data - INFO - Station not active during 2015-02-11T18:57:20.460000Z ; remaining try: 298/388; successful dl = 0/90
+2019-09-24 18:02:11,439 - rfsks_support.download_large_data - INFO - Station not active during 2014-12-02T05:11:31.000000Z ; remaining try: 297/388; successful dl = 0/91
+2019-09-24 18:02:11,519 - rfsks_support.download_large_data - INFO - Station not active during 2014-11-26T14:33:45.180000Z ; remaining try: 296/388; successful dl = 0/92
+2019-09-24 18:02:11,606 - rfsks_support.download_large_data - INFO - Station not active during 2014-11-21T10:10:20.780000Z ; remaining try: 295/388; successful dl = 0/93
+2019-09-24 18:02:11,690 - rfsks_support.download_large_data - INFO - Station not active during 2014-11-15T02:31:42.240000Z ; remaining try: 294/388; successful dl = 0/94
+2019-09-24 18:02:11,780 - rfsks_support.download_large_data - INFO - Station not active during 2014-09-17T06:14:46.220000Z ; remaining try: 293/388; successful dl = 0/95
+2019-09-24 18:02:11,869 - rfsks_support.download_large_data - INFO - Station not active during 2014-08-24T23:21:43.400000Z ; remaining try: 292/388; successful dl = 0/96
+2019-09-24 18:02:11,954 - rfsks_support.download_large_data - INFO - Station not active during 2014-08-24T23:21:41.700000Z ; remaining try: 291/388; successful dl = 0/97
+2019-09-24 18:02:12,020 - rfsks_support.download_large_data - INFO - Station not active during 2014-08-03T00:22:01.730000Z ; remaining try: 290/388; successful dl = 0/98
+2019-09-24 18:02:12,104 - rfsks_support.download_large_data - INFO - Station not active during 2014-06-29T07:52:56.840000Z ; remaining try: 289/388; successful dl = 0/99
+2019-09-24 18:02:12,178 - rfsks_support.download_large_data - INFO - Station not active during 2014-06-14T11:11:03.260000Z ; remaining try: 288/388; successful dl = 0/100
+2019-09-24 18:02:12,252 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-15T03:57:01.840000Z ; remaining try: 287/388; successful dl = 0/101
+2019-09-24 18:02:12,338 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-03T05:26:13.640000Z ; remaining try: 286/388; successful dl = 0/102
+2019-09-24 18:02:12,422 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-03T02:43:14.260000Z ; remaining try: 285/388; successful dl = 0/103
+2019-09-24 18:02:12,503 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-03T01:58:29.040000Z ; remaining try: 284/388; successful dl = 0/104
+2019-09-24 18:02:12,586 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-01T23:57:56.540000Z ; remaining try: 283/388; successful dl = 0/105
+2019-09-24 18:02:12,662 - rfsks_support.download_large_data - INFO - Station not active during 2014-04-01T23:46:47.380000Z ; remaining try: 282/388; successful dl = 0/106
+2019-09-24 18:02:12,744 - rfsks_support.download_large_data - INFO - Station not active during 2014-03-16T21:16:28.980000Z ; remaining try: 281/388; successful dl = 0/107
+2019-09-24 18:02:12,830 - rfsks_support.download_large_data - INFO - Station not active during 2013-12-01T01:24:15.720000Z ; remaining try: 280/388; successful dl = 0/108
+2019-09-24 18:02:12,903 - rfsks_support.download_large_data - INFO - Station not active during 2013-11-25T06:27:34.680000Z ; remaining try: 279/388; successful dl = 0/109
+2019-09-24 18:02:12,981 - rfsks_support.download_large_data - INFO - Station not active during 2013-11-17T09:04:56.260000Z ; remaining try: 278/388; successful dl = 0/110
+2019-09-24 18:02:13,057 - rfsks_support.download_large_data - INFO - Station not active during 2013-11-16T03:34:34.790000Z ; remaining try: 277/388; successful dl = 0/111
+2019-09-24 18:02:13,125 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-31T23:03:58.620000Z ; remaining try: 276/388; successful dl = 0/112
+2019-09-24 18:02:13,189 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-24T19:25:10.300000Z ; remaining try: 275/388; successful dl = 0/113
+2019-09-24 18:02:13,260 - rfsks_support.download_large_data - INFO - Station not active during 2013-10-15T00:12:33.250000Z ; remaining try: 274/388; successful dl = 0/114
+2019-09-24 18:02:13,330 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-25T16:42:43.180000Z ; remaining try: 273/388; successful dl = 0/115
+2019-09-24 18:02:13,410 - rfsks_support.download_large_data - INFO - Station not active during 2013-09-01T11:52:32.120000Z ; remaining try: 272/388; successful dl = 0/116
+2019-09-24 18:02:13,479 - rfsks_support.download_large_data - INFO - Station not active during 2013-07-15T14:03:41.730000Z ; remaining try: 271/388; successful dl = 0/117
+2019-09-24 18:02:13,549 - rfsks_support.download_large_data - INFO - Station not active during 2013-06-13T16:47:25.800000Z ; remaining try: 270/388; successful dl = 0/118
+2019-09-24 18:02:13,633 - rfsks_support.download_large_data - INFO - Station not active during 2013-05-14T00:32:26.430000Z ; remaining try: 269/388; successful dl = 0/119
+2019-09-24 18:02:13,700 - rfsks_support.download_large_data - INFO - Station not active during 2013-04-16T22:55:27.360000Z ; remaining try: 268/388; successful dl = 0/120
+2019-09-24 18:02:13,776 - rfsks_support.download_large_data - INFO - Station not active during 2013-04-06T04:42:36.190000Z ; remaining try: 267/388; successful dl = 0/121
+2019-09-24 18:02:13,851 - rfsks_support.download_large_data - INFO - Station not active during 2013-01-30T20:15:43.390000Z ; remaining try: 266/388; successful dl = 0/122
+2019-09-24 18:02:13,929 - rfsks_support.download_large_data - INFO - Station not active during 2012-12-10T16:53:09.490000Z ; remaining try: 265/388; successful dl = 0/123
+2019-09-24 18:02:14,001 - rfsks_support.download_large_data - INFO - Station not active during 2012-10-12T00:31:31.370000Z ; remaining try: 264/388; successful dl = 0/124
+2019-09-24 18:02:14,074 - rfsks_support.download_large_data - INFO - Station not active during 2012-08-31T12:47:35.540000Z ; remaining try: 263/388; successful dl = 0/125
+2019-09-24 18:02:14,145 - rfsks_support.download_large_data - INFO - Station not active during 2012-08-26T15:05:37.160000Z ; remaining try: 262/388; successful dl = 0/126
+2019-09-24 18:02:14,229 - rfsks_support.download_large_data - INFO - Station not active during 2012-05-28T05:07:23.520000Z ; remaining try: 261/388; successful dl = 0/127
+2019-09-24 18:02:14,304 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-21T01:16:53.670000Z ; remaining try: 260/388; successful dl = 0/128
+2019-09-24 18:02:14,376 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-17T03:50:15.280000Z ; remaining try: 259/388; successful dl = 0/129
+2019-09-24 18:02:14,451 - rfsks_support.download_large_data - INFO - Station not active during 2012-04-11T22:55:10.820000Z ; remaining try: 258/388; successful dl = 0/130
+2019-09-24 18:02:14,528 - rfsks_support.download_large_data - INFO - Station not active during 2012-03-25T22:37:06.560000Z ; remaining try: 257/388; successful dl = 0/131
+2019-09-24 18:02:14,601 - rfsks_support.download_large_data - INFO - Station not active during 2012-02-06T03:49:13.920000Z ; remaining try: 256/388; successful dl = 0/132
+2019-09-24 18:02:14,684 - rfsks_support.download_large_data - INFO - Station not active during 2011-11-22T18:48:16.290000Z ; remaining try: 255/388; successful dl = 0/133
+2019-09-24 18:02:14,758 - rfsks_support.download_large_data - INFO - Station not active during 2011-10-28T18:54:34.750000Z ; remaining try: 254/388; successful dl = 0/134
+2019-09-24 18:02:14,845 - rfsks_support.download_large_data - INFO - Station not active during 2011-09-02T13:47:10.700000Z ; remaining try: 253/388; successful dl = 0/135
+2019-09-24 18:02:14,946 - rfsks_support.download_large_data - INFO - Station not active during 2011-08-30T06:57:41.540000Z ; remaining try: 252/388; successful dl = 0/136
+2019-09-24 18:02:15,045 - rfsks_support.download_large_data - INFO - Station not active during 2011-08-24T17:46:11.560000Z ; remaining try: 251/388; successful dl = 0/137
+2019-09-24 18:02:15,131 - rfsks_support.download_large_data - INFO - Station not active during 2011-07-11T20:47:04.890000Z ; remaining try: 250/388; successful dl = 0/138
+2019-09-24 18:02:15,220 - rfsks_support.download_large_data - INFO - Station not active during 2011-06-20T16:36:00.870000Z ; remaining try: 249/388; successful dl = 0/139
+2019-09-24 18:02:15,304 - rfsks_support.download_large_data - INFO - Station not active during 2011-04-03T20:06:43.260000Z ; remaining try: 248/388; successful dl = 0/140
+2019-09-24 18:02:15,398 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-10T17:08:37.320000Z ; remaining try: 247/388; successful dl = 0/141
+2019-09-24 18:02:15,487 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-06T14:32:42.100000Z ; remaining try: 246/388; successful dl = 0/142
+2019-09-24 18:02:15,572 - rfsks_support.download_large_data - INFO - Station not active during 2011-03-06T14:32:36.940000Z ; remaining try: 245/388; successful dl = 0/143
+2019-09-24 18:02:15,653 - rfsks_support.download_large_data - INFO - Station not active during 2011-02-14T03:40:09.250000Z ; remaining try: 244/388; successful dl = 0/144
+2019-09-24 18:02:15,729 - rfsks_support.download_large_data - INFO - Station not active during 2011-02-11T20:05:28.880000Z ; remaining try: 243/388; successful dl = 0/145
+2019-09-24 18:02:15,815 - rfsks_support.download_large_data - INFO - Station not active during 2011-02-10T14:41:59.580000Z ; remaining try: 242/388; successful dl = 0/146
+2019-09-24 18:02:15,898 - rfsks_support.download_large_data - INFO - Station not active during 2011-02-10T14:39:28.200000Z ; remaining try: 241/388; successful dl = 0/147
+2019-09-24 18:02:15,980 - rfsks_support.download_large_data - INFO - Station not active during 2011-01-12T21:32:54.550000Z ; remaining try: 240/388; successful dl = 0/148
+2019-09-24 18:02:16,058 - rfsks_support.download_large_data - INFO - Station not active during 2011-01-02T20:20:18.170000Z ; remaining try: 239/388; successful dl = 0/149
+2019-09-24 18:02:16,145 - rfsks_support.download_large_data - INFO - Station not active during 2011-01-01T09:56:58.460000Z ; remaining try: 238/388; successful dl = 0/150
+2019-09-24 18:02:16,221 - rfsks_support.download_large_data - INFO - Station not active during 2010-12-21T17:19:41.160000Z ; remaining try: 237/388; successful dl = 0/151
+2019-09-24 18:02:16,303 - rfsks_support.download_large_data - INFO - Station not active during 2010-11-30T03:24:41.250000Z ; remaining try: 236/388; successful dl = 0/152
+2019-09-24 18:02:16,367 - rfsks_support.download_large_data - INFO - Station not active during 2010-10-25T14:42:22.180000Z ; remaining try: 235/388; successful dl = 0/153
+2019-09-24 18:02:16,440 - rfsks_support.download_large_data - INFO - Station not active during 2010-09-29T17:11:24.970000Z ; remaining try: 234/388; successful dl = 0/154
+2019-09-24 18:02:16,514 - rfsks_support.download_large_data - INFO - Station not active during 2010-08-13T21:19:34.220000Z ; remaining try: 233/388; successful dl = 0/155
+2019-09-24 18:02:16,600 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-29T07:31:56.660000Z ; remaining try: 232/388; successful dl = 0/156
+2019-09-24 18:02:16,684 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-24T05:35:01.820000Z ; remaining try: 231/388; successful dl = 0/157
+2019-09-24 18:02:16,770 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-23T23:15:09.820000Z ; remaining try: 230/388; successful dl = 0/158
+2019-09-24 18:02:16,855 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-23T22:51:13.000000Z ; remaining try: 229/388; successful dl = 0/159
+2019-09-24 18:02:16,952 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-23T22:08:11.220000Z ; remaining try: 228/388; successful dl = 0/160
+2019-09-24 18:02:17,048 - rfsks_support.download_large_data - INFO - Station not active during 2010-07-14T08:32:21.850000Z ; remaining try: 227/388; successful dl = 0/161
+2019-09-24 18:02:17,131 - rfsks_support.download_large_data - INFO - Station not active during 2010-06-16T03:58:10.120000Z ; remaining try: 226/388; successful dl = 0/162
+2019-09-24 18:02:17,214 - rfsks_support.download_large_data - INFO - Station not active during 2010-06-16T03:16:29.120000Z ; remaining try: 225/388; successful dl = 0/163
+2019-09-24 18:02:17,311 - rfsks_support.download_large_data - INFO - Station not active during 2010-05-24T16:18:28.810000Z ; remaining try: 224/388; successful dl = 0/164
+2019-09-24 18:02:17,402 - rfsks_support.download_large_data - INFO - Station not active during 2010-05-05T16:29:03.110000Z ; remaining try: 223/388; successful dl = 0/165
+2019-09-24 18:02:17,488 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-16T02:21:58.050000Z ; remaining try: 222/388; successful dl = 0/166
+2019-09-24 18:02:17,576 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-14T00:57:46.160000Z ; remaining try: 221/388; successful dl = 0/167
+2019-09-24 18:02:17,663 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-11T14:55:29.170000Z ; remaining try: 220/388; successful dl = 0/168
+2019-09-24 18:02:17,750 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-11T14:39:45.740000Z ; remaining try: 219/388; successful dl = 0/169
+2019-09-24 18:02:17,839 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-05T16:07:00.000000Z ; remaining try: 218/388; successful dl = 0/170
+2019-09-24 18:02:17,921 - rfsks_support.download_large_data - INFO - Station not active during 2010-03-05T11:47:07.530000Z ; remaining try: 217/388; successful dl = 0/171
+2019-09-24 18:02:17,986 - rfsks_support.download_large_data - INFO - Station not active during 2010-02-27T08:01:23.480000Z ; remaining try: 216/388; successful dl = 0/172
+2019-09-24 18:02:18,066 - rfsks_support.download_large_data - INFO - Station not active during 2010-02-27T06:34:13.330000Z ; remaining try: 215/388; successful dl = 0/173
+2019-09-24 18:02:18,136 - rfsks_support.download_large_data - INFO - Station not active during 2010-01-05T04:55:38.890000Z ; remaining try: 214/388; successful dl = 0/174
+2019-09-24 18:02:18,204 - rfsks_support.download_large_data - INFO - Station not active during 2009-11-13T03:05:58.310000Z ; remaining try: 213/388; successful dl = 0/175
+2019-09-24 18:02:18,275 - rfsks_support.download_large_data - INFO - Station not active during 2009-11-08T19:41:45.860000Z ; remaining try: 212/388; successful dl = 0/176
+2019-09-24 18:02:18,357 - rfsks_support.download_large_data - INFO - Station not active during 2009-10-24T14:40:44.770000Z ; remaining try: 211/388; successful dl = 0/177
+2019-09-24 18:02:18,449 - rfsks_support.download_large_data - INFO - Station not active during 2009-10-07T21:41:14.560000Z ; remaining try: 210/388; successful dl = 0/178
+2019-09-24 18:02:18,538 - rfsks_support.download_large_data - INFO - Station not active during 2009-10-04T10:58:00.950000Z ; remaining try: 209/388; successful dl = 0/179
+2019-09-24 18:02:18,613 - rfsks_support.download_large_data - INFO - Station not active during 2009-10-01T01:52:29.720000Z ; remaining try: 208/388; successful dl = 0/180
+2019-09-24 18:02:18,695 - rfsks_support.download_large_data - INFO - Station not active during 2009-09-30T10:16:10.520000Z ; remaining try: 207/388; successful dl = 0/181
+2019-09-24 18:02:18,766 - rfsks_support.download_large_data - INFO - Station not active during 2009-09-02T07:55:01.830000Z ; remaining try: 206/388; successful dl = 0/182
+2019-09-24 18:02:18,856 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-28T01:51:19.860000Z ; remaining try: 205/388; successful dl = 0/183
+2019-09-24 18:02:18,932 - rfsks_support.download_large_data - INFO - Station not active during 2009-08-16T07:38:25.240000Z ; remaining try: 204/388; successful dl = 0/184
+2019-09-24 18:02:19,001 - rfsks_support.download_large_data - INFO - Station not active during 2009-06-14T05:17:39.000000Z ; remaining try: 203/388; successful dl = 0/185
+2019-09-24 18:02:19,077 - rfsks_support.download_large_data - INFO - Station not active during 2009-04-16T14:57:06.210000Z ; remaining try: 202/388; successful dl = 0/186
+2019-09-24 18:02:19,150 - rfsks_support.download_large_data - INFO - Station not active during 2009-02-11T17:34:51.380000Z ; remaining try: 201/388; successful dl = 0/187
+2019-09-24 18:02:19,226 - rfsks_support.download_large_data - INFO - Station not active during 2009-01-03T22:33:42.660000Z ; remaining try: 200/388; successful dl = 0/188
+2019-09-24 18:02:19,295 - rfsks_support.download_large_data - INFO - Station not active during 2009-01-03T19:43:55.840000Z ; remaining try: 199/388; successful dl = 0/189
+2019-09-24 18:02:19,361 - rfsks_support.download_large_data - INFO - Station not active during 2008-11-20T23:29:07.000000Z ; remaining try: 198/388; successful dl = 0/190
+2019-09-24 18:02:19,431 - rfsks_support.download_large_data - INFO - Station not active during 2008-11-16T17:02:32.810000Z ; remaining try: 197/388; successful dl = 0/191
+2019-09-24 18:02:19,502 - rfsks_support.download_large_data - INFO - Station not active during 2008-09-11T00:00:02.660000Z ; remaining try: 196/388; successful dl = 0/192
+2019-09-24 18:02:19,566 - rfsks_support.download_large_data - INFO - Station not active during 2008-06-30T06:17:43.820000Z ; remaining try: 195/388; successful dl = 0/193
+2019-09-24 18:02:19,637 - rfsks_support.download_large_data - INFO - Station not active during 2008-05-09T21:51:31.570000Z ; remaining try: 194/388; successful dl = 0/194
+2019-09-24 18:02:19,709 - rfsks_support.download_large_data - INFO - Station not active during 2008-03-03T14:11:15.120000Z ; remaining try: 193/388; successful dl = 0/195
+2019-09-24 18:02:19,782 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-25T21:02:19.810000Z ; remaining try: 192/388; successful dl = 0/196
+2019-09-24 18:02:19,850 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-25T18:06:05.040000Z ; remaining try: 191/388; successful dl = 0/197
+2019-09-24 18:02:19,918 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-25T08:36:33.910000Z ; remaining try: 190/388; successful dl = 0/198
+2019-09-24 18:02:19,975 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-24T14:46:23.530000Z ; remaining try: 189/388; successful dl = 0/199
+2019-09-24 18:02:20,049 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-23T15:57:19.210000Z ; remaining try: 188/388; successful dl = 0/200
+2019-09-24 18:02:20,142 - rfsks_support.download_large_data - INFO - Station not active during 2008-02-10T12:22:03.340000Z ; remaining try: 187/388; successful dl = 0/201
+2019-09-24 18:02:20,273 - rfsks_support.download_large_data - INFO - Station not active during 2007-12-16T08:09:20.020000Z ; remaining try: 186/388; successful dl = 0/202
+2019-09-24 18:02:20,369 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-25T19:53:08.260000Z ; remaining try: 185/388; successful dl = 0/203
+2019-09-24 18:02:20,453 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-25T16:02:18.320000Z ; remaining try: 184/388; successful dl = 0/204
+2019-09-24 18:02:20,513 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-15T15:06:00.820000Z ; remaining try: 183/388; successful dl = 0/205
+2019-09-24 18:02:20,617 - rfsks_support.download_large_data - INFO - Station not active during 2007-11-14T15:40:49.790000Z ; remaining try: 182/388; successful dl = 0/206
+2019-09-24 18:02:20,704 - rfsks_support.download_large_data - INFO - Station not active during 2007-10-31T03:30:18.120000Z ; remaining try: 181/388; successful dl = 0/207
+2019-09-24 18:02:20,788 - rfsks_support.download_large_data - INFO - Station not active during 2007-10-24T21:02:51.810000Z ; remaining try: 180/388; successful dl = 0/208
+2019-09-24 18:02:20,875 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-30T02:08:31.240000Z ; remaining try: 179/388; successful dl = 0/209
+2019-09-24 18:02:20,968 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-28T13:38:57.640000Z ; remaining try: 178/388; successful dl = 0/210
+2019-09-24 18:02:21,055 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-20T08:31:14.940000Z ; remaining try: 177/388; successful dl = 0/211
+2019-09-24 18:02:21,139 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-13T03:35:28.570000Z ; remaining try: 176/388; successful dl = 0/212
+2019-09-24 18:02:21,225 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-13T02:30:03.230000Z ; remaining try: 175/388; successful dl = 0/213
+2019-09-24 18:02:21,311 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-12T23:49:04.360000Z ; remaining try: 174/388; successful dl = 0/214
+2019-09-24 18:02:21,402 - rfsks_support.download_large_data - INFO - Station not active during 2007-09-12T11:10:26.870000Z ; remaining try: 173/388; successful dl = 0/215
+2019-09-24 18:02:21,480 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-15T23:40:58.450000Z ; remaining try: 172/388; successful dl = 0/216
+2019-09-24 18:02:21,573 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-08T17:05:06.670000Z ; remaining try: 171/388; successful dl = 0/217
+2019-09-24 18:02:21,662 - rfsks_support.download_large_data - INFO - Station not active during 2007-08-08T17:04:58.000000Z ; remaining try: 170/388; successful dl = 0/218
+2019-09-24 18:02:21,746 - rfsks_support.download_large_data - INFO - Station not active during 2007-07-26T05:40:18.020000Z ; remaining try: 169/388; successful dl = 0/219
+2019-09-24 18:02:21,829 - rfsks_support.download_large_data - INFO - Station not active during 2007-06-24T00:25:17.380000Z ; remaining try: 168/388; successful dl = 0/220
+2019-09-24 18:02:21,894 - rfsks_support.download_large_data - INFO - Station not active during 2007-05-21T16:55:20.000000Z ; remaining try: 167/388; successful dl = 0/221
+2019-09-24 18:02:21,980 - rfsks_support.download_large_data - INFO - Station not active during 2007-05-06T05:36:47.000000Z ; remaining try: 166/388; successful dl = 0/222
+2019-09-24 18:02:22,060 - rfsks_support.download_large_data - INFO - Station not active during 2007-05-06T04:44:22.000000Z ; remaining try: 165/388; successful dl = 0/223
+2019-09-24 18:02:22,146 - rfsks_support.download_large_data - INFO - Station not active during 2007-05-04T16:52:41.000000Z ; remaining try: 164/388; successful dl = 0/224
+2019-09-24 18:02:22,222 - rfsks_support.download_large_data - INFO - Station not active during 2007-05-04T13:46:09.000000Z ; remaining try: 163/388; successful dl = 0/225
+2019-09-24 18:02:22,313 - rfsks_support.download_large_data - INFO - Station not active during 2007-02-20T08:04:27.450000Z ; remaining try: 162/388; successful dl = 0/226
+2019-09-24 18:02:22,408 - rfsks_support.download_large_data - INFO - Station not active during 2007-01-30T21:37:50.010000Z ; remaining try: 161/388; successful dl = 0/227
+2019-09-24 18:02:22,490 - rfsks_support.download_large_data - INFO - Station not active during 2007-01-21T11:27:44.980000Z ; remaining try: 160/388; successful dl = 0/228
+2019-09-24 18:02:22,591 - rfsks_support.download_large_data - INFO - Station not active during 2006-11-13T01:26:36.370000Z ; remaining try: 159/388; successful dl = 0/229
+2019-09-24 18:02:22,674 - rfsks_support.download_large_data - INFO - Station not active during 2006-10-20T10:48:57.800000Z ; remaining try: 158/388; successful dl = 0/230
+2019-09-24 18:02:22,745 - rfsks_support.download_large_data - INFO - Station not active during 2006-10-15T17:07:45.620000Z ; remaining try: 157/388; successful dl = 0/231
+2019-09-24 18:02:22,831 - rfsks_support.download_large_data - INFO - Station not active during 2006-09-09T19:46:22.460000Z ; remaining try: 156/388; successful dl = 0/232
+2019-09-24 18:02:22,922 - rfsks_support.download_large_data - INFO - Station not active during 2006-08-25T00:44:46.530000Z ; remaining try: 155/388; successful dl = 0/233
+2019-09-24 18:02:23,003 - rfsks_support.download_large_data - INFO - Station not active during 2006-08-20T03:41:45.920000Z ; remaining try: 154/388; successful dl = 0/234
+2019-09-24 18:02:23,076 - rfsks_support.download_large_data - INFO - Station not active during 2006-07-17T08:19:26.300000Z ; remaining try: 153/388; successful dl = 0/235
+2019-09-24 18:02:23,172 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-18T17:20:43.750000Z ; remaining try: 152/388; successful dl = 0/236
+2019-09-24 18:02:23,261 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-17T16:19:48.190000Z ; remaining try: 151/388; successful dl = 0/237
+2019-09-24 18:02:23,347 - rfsks_support.download_large_data - INFO - Station not active during 2006-06-11T09:25:04.270000Z ; remaining try: 150/388; successful dl = 0/238
+2019-09-24 18:02:23,430 - rfsks_support.download_large_data - INFO - Station not active during 2006-04-30T21:41:01.270000Z ; remaining try: 149/388; successful dl = 0/239
+2019-09-24 18:02:23,510 - rfsks_support.download_large_data - INFO - Station not active during 2006-04-30T19:17:15.700000Z ; remaining try: 148/388; successful dl = 0/240
+2019-09-24 18:02:23,593 - rfsks_support.download_large_data - INFO - Station not active during 2006-03-14T06:57:34.380000Z ; remaining try: 147/388; successful dl = 0/241
+2019-09-24 18:02:23,677 - rfsks_support.download_large_data - INFO - Station not active during 2006-03-03T14:41:57.210000Z ; remaining try: 146/388; successful dl = 0/242
+2019-09-24 18:02:23,759 - rfsks_support.download_large_data - INFO - Station not active during 2006-02-26T22:31:33.370000Z ; remaining try: 145/388; successful dl = 0/243
+2019-09-24 18:02:23,840 - rfsks_support.download_large_data - INFO - Station not active during 2006-02-15T18:29:15.460000Z ; remaining try: 144/388; successful dl = 0/244
+2019-09-24 18:02:23,930 - rfsks_support.download_large_data - INFO - Station not active during 2006-02-15T10:10:00.230000Z ; remaining try: 143/388; successful dl = 0/245
+2019-09-24 18:02:24,021 - rfsks_support.download_large_data - INFO - Station not active during 2006-01-27T16:58:54.410000Z ; remaining try: 142/388; successful dl = 0/246
+2019-09-24 18:02:24,111 - rfsks_support.download_large_data - INFO - Station not active during 2006-01-02T06:10:48.740000Z ; remaining try: 141/388; successful dl = 0/247
+2019-09-24 18:02:24,203 - rfsks_support.download_large_data - INFO - Station not active during 2005-11-17T19:26:54.800000Z ; remaining try: 140/388; successful dl = 0/248
+2019-09-24 18:02:24,291 - rfsks_support.download_large_data - INFO - Station not active during 2005-09-26T01:55:37.710000Z ; remaining try: 139/388; successful dl = 0/249
+2019-09-24 18:02:24,381 - rfsks_support.download_large_data - INFO - Station not active during 2005-06-13T22:44:32.420000Z ; remaining try: 138/388; successful dl = 0/250
+2019-09-24 18:02:24,463 - rfsks_support.download_large_data - INFO - Station not active during 2005-04-10T11:14:18.520000Z ; remaining try: 137/388; successful dl = 0/251
+2019-09-24 18:02:24,547 - rfsks_support.download_large_data - INFO - Station not active during 2005-04-10T10:29:10.810000Z ; remaining try: 136/388; successful dl = 0/252
+2019-09-24 18:02:24,645 - rfsks_support.download_large_data - INFO - Station not active during 2005-03-21T12:23:53.070000Z ; remaining try: 135/388; successful dl = 0/253
+2019-09-24 18:02:24,731 - rfsks_support.download_large_data - INFO - Station not active during 2005-03-02T10:42:09.350000Z ; remaining try: 134/388; successful dl = 0/254
+2019-09-24 18:02:24,807 - rfsks_support.download_large_data - INFO - Station not active during 2005-02-15T14:42:23.580000Z ; remaining try: 133/388; successful dl = 0/255
+2019-09-24 18:02:24,897 - rfsks_support.download_large_data - INFO - Station not active during 2005-02-05T12:23:18.850000Z ; remaining try: 132/388; successful dl = 0/256
+2019-09-24 18:02:24,973 - rfsks_support.download_large_data - INFO - Station not active during 2005-02-05T03:34:25.350000Z ; remaining try: 131/388; successful dl = 0/257
+2019-09-24 18:02:25,046 - rfsks_support.download_large_data - INFO - Station not active during 2005-01-16T20:17:54.610000Z ; remaining try: 130/388; successful dl = 0/258
+2019-09-24 18:02:25,119 - rfsks_support.download_large_data - INFO - Station not active during 2004-11-26T02:25:00.440000Z ; remaining try: 129/388; successful dl = 0/259
+2019-09-24 18:02:25,191 - rfsks_support.download_large_data - INFO - Station not active during 2004-11-11T21:26:42.350000Z ; remaining try: 128/388; successful dl = 0/260
+2019-09-24 18:02:25,263 - rfsks_support.download_large_data - INFO - Station not active during 2004-09-06T12:42:58.890000Z ; remaining try: 127/388; successful dl = 0/261
+2019-09-24 18:02:25,334 - rfsks_support.download_large_data - INFO - Station not active during 2004-08-28T13:41:27.120000Z ; remaining try: 126/388; successful dl = 0/262
+2019-09-24 18:02:25,416 - rfsks_support.download_large_data - INFO - Station not active during 2004-07-28T03:56:29.500000Z ; remaining try: 125/388; successful dl = 0/263
+2019-09-24 18:02:25,499 - rfsks_support.download_large_data - INFO - Station not active during 2004-07-25T14:35:17.760000Z ; remaining try: 124/388; successful dl = 0/264
+2019-09-24 18:02:25,575 - rfsks_support.download_large_data - INFO - Station not active during 2004-05-03T04:36:47.460000Z ; remaining try: 123/388; successful dl = 0/265
+2019-09-24 18:02:25,652 - rfsks_support.download_large_data - INFO - Station not active during 2004-04-23T01:50:30.140000Z ; remaining try: 122/388; successful dl = 0/266
+2019-09-24 18:02:25,718 - rfsks_support.download_large_data - INFO - Station not active during 2004-02-21T02:34:43.130000Z ; remaining try: 121/388; successful dl = 0/267
+2019-09-24 18:02:25,789 - rfsks_support.download_large_data - INFO - Station not active during 2004-02-08T08:58:48.660000Z ; remaining try: 120/388; successful dl = 0/268
+2019-09-24 18:02:25,858 - rfsks_support.download_large_data - INFO - Station not active during 2004-02-07T02:42:34.180000Z ; remaining try: 119/388; successful dl = 0/269
+2019-09-24 18:02:25,932 - rfsks_support.download_large_data - INFO - Station not active during 2004-02-05T21:05:02.950000Z ; remaining try: 118/388; successful dl = 0/270
+2019-09-24 18:02:26,007 - rfsks_support.download_large_data - INFO - Station not active during 2004-01-28T22:15:28.730000Z ; remaining try: 117/388; successful dl = 0/271
+2019-09-24 18:02:26,083 - rfsks_support.download_large_data - INFO - Station not active during 2003-11-18T17:14:24.300000Z ; remaining try: 116/388; successful dl = 0/272
+2019-09-24 18:02:26,157 - rfsks_support.download_large_data - INFO - Station not active during 2003-08-04T04:37:20.920000Z ; remaining try: 115/388; successful dl = 0/273
+2019-09-24 18:02:26,241 - rfsks_support.download_large_data - INFO - Station not active during 2003-06-20T13:30:43.030000Z ; remaining try: 114/388; successful dl = 0/274
+2019-09-24 18:02:26,337 - rfsks_support.download_large_data - INFO - Station not active during 2003-05-26T23:13:31.100000Z ; remaining try: 113/388; successful dl = 0/275
+2019-09-24 18:02:26,419 - rfsks_support.download_large_data - INFO - Station not active during 2003-05-26T19:23:29.230000Z ; remaining try: 112/388; successful dl = 0/276
+2019-09-24 18:02:26,489 - rfsks_support.download_large_data - INFO - Station not active during 2003-04-17T14:50:49.620000Z ; remaining try: 111/388; successful dl = 0/277
+2019-09-24 18:02:26,570 - rfsks_support.download_large_data - INFO - Station not active during 2003-01-22T02:06:35.950000Z ; remaining try: 110/388; successful dl = 0/278
+2019-09-24 18:02:26,645 - rfsks_support.download_large_data - INFO - Station not active during 2002-11-15T19:58:33.620000Z ; remaining try: 109/388; successful dl = 0/279
+2019-09-24 18:02:26,732 - rfsks_support.download_large_data - INFO - Station not active during 2002-10-12T20:09:09.920000Z ; remaining try: 108/388; successful dl = 0/280
+2019-09-24 18:02:26,814 - rfsks_support.download_large_data - INFO - Station not active during 2002-10-10T10:50:22.230000Z ; remaining try: 107/388; successful dl = 0/281
+2019-09-24 18:02:26,893 - rfsks_support.download_large_data - INFO - Station not active during 2002-09-08T18:44:23.830000Z ; remaining try: 106/388; successful dl = 0/282
+2019-09-24 18:02:26,966 - rfsks_support.download_large_data - INFO - Station not active during 2002-08-14T13:57:55.060000Z ; remaining try: 105/388; successful dl = 0/283
+2019-09-24 18:02:27,043 - rfsks_support.download_large_data - INFO - Station not active during 2002-06-27T05:50:38.540000Z ; remaining try: 104/388; successful dl = 0/284
+2019-09-24 18:02:27,121 - rfsks_support.download_large_data - INFO - Station not active during 2002-04-26T16:06:05.120000Z ; remaining try: 103/388; successful dl = 0/285
+2019-09-24 18:02:27,202 - rfsks_support.download_large_data - INFO - Station not active during 2002-04-18T16:08:36.920000Z ; remaining try: 102/388; successful dl = 0/286
+2019-09-24 18:02:27,282 - rfsks_support.download_large_data - INFO - Station not active during 2002-03-20T03:59:52.600000Z ; remaining try: 101/388; successful dl = 0/287
+2019-09-24 18:02:27,360 - rfsks_support.download_large_data - INFO - Station not active during 2002-03-05T21:16:09.660000Z ; remaining try: 100/388; successful dl = 0/288
+2019-09-24 18:02:27,434 - rfsks_support.download_large_data - INFO - Station not active during 2002-01-21T15:47:23.700000Z ; remaining try: 99/388; successful dl = 0/289
+2019-09-24 18:02:27,501 - rfsks_support.download_large_data - INFO - Station not active during 2002-01-10T11:14:57.250000Z ; remaining try: 98/388; successful dl = 0/290
+2019-09-24 18:02:27,573 - rfsks_support.download_large_data - INFO - Station not active during 2001-10-19T03:28:43.980000Z ; remaining try: 97/388; successful dl = 0/291
+2019-09-24 18:02:27,653 - rfsks_support.download_large_data - INFO - Station not active during 2001-10-12T15:02:19.600000Z ; remaining try: 96/388; successful dl = 0/292
+2019-09-24 18:02:27,745 - rfsks_support.download_large_data - INFO - Station not active during 2001-09-11T14:56:50.730000Z ; remaining try: 95/388; successful dl = 0/293
+2019-09-24 18:02:27,826 - rfsks_support.download_large_data - INFO - Station not active during 2001-07-07T09:38:43.700000Z ; remaining try: 94/388; successful dl = 0/294
+2019-09-24 18:02:27,908 - rfsks_support.download_large_data - INFO - Station not active during 2001-07-05T13:53:49.580000Z ; remaining try: 93/388; successful dl = 0/295
+2019-09-24 18:02:27,987 - rfsks_support.download_large_data - INFO - Station not active during 2001-06-26T04:18:32.670000Z ; remaining try: 92/388; successful dl = 0/296
+2019-09-24 18:02:28,064 - rfsks_support.download_large_data - INFO - Station not active during 2001-06-23T20:33:09.330000Z ; remaining try: 91/388; successful dl = 0/297
+2019-09-24 18:02:28,138 - rfsks_support.download_large_data - INFO - Station not active during 2001-04-09T09:00:57.280000Z ; remaining try: 90/388; successful dl = 0/298
+2019-09-24 18:02:28,211 - rfsks_support.download_large_data - INFO - Station not active during 2001-03-19T05:52:15.510000Z ; remaining try: 89/388; successful dl = 0/299
+2019-09-24 18:02:28,285 - rfsks_support.download_large_data - INFO - Station not active during 2001-02-24T07:23:50.490000Z ; remaining try: 88/388; successful dl = 0/300
+2019-09-24 18:02:28,362 - rfsks_support.download_large_data - INFO - Station not active during 2001-02-13T19:28:30.480000Z ; remaining try: 87/388; successful dl = 0/301
+2019-09-24 18:02:28,439 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-16T13:25:09.290000Z ; remaining try: 86/388; successful dl = 0/302
+2019-09-24 18:02:28,517 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-15T03:47:24.530000Z ; remaining try: 85/388; successful dl = 0/303
+2019-09-24 18:02:28,600 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-01T08:54:32.650000Z ; remaining try: 84/388; successful dl = 0/304
+2019-09-24 18:02:28,674 - rfsks_support.download_large_data - INFO - Station not active during 2001-01-01T06:57:04.040000Z ; remaining try: 83/388; successful dl = 0/305
+2019-09-24 18:02:28,754 - rfsks_support.download_large_data - INFO - Station not active during 2000-12-20T11:23:54.170000Z ; remaining try: 82/388; successful dl = 0/306
+2019-09-24 18:02:28,828 - rfsks_support.download_large_data - INFO - Station not active during 2000-11-07T00:18:06.180000Z ; remaining try: 81/388; successful dl = 0/307
+2019-09-24 18:02:28,901 - rfsks_support.download_large_data - INFO - Station not active during 2000-10-25T09:32:24.300000Z ; remaining try: 80/388; successful dl = 0/308
+2019-09-24 18:02:28,980 - rfsks_support.download_large_data - INFO - Station not active during 2000-08-28T15:05:53.470000Z ; remaining try: 79/388; successful dl = 0/309
+2019-09-24 18:02:29,067 - rfsks_support.download_large_data - INFO - Station not active during 2000-08-07T14:33:56.810000Z ; remaining try: 78/388; successful dl = 0/310
+2019-09-24 18:02:29,144 - rfsks_support.download_large_data - INFO - Station not active during 2000-08-06T07:27:14.910000Z ; remaining try: 77/388; successful dl = 0/311
+2019-09-24 18:02:29,218 - rfsks_support.download_large_data - INFO - Station not active during 2000-06-18T14:44:13.160000Z ; remaining try: 76/388; successful dl = 0/312
+2019-09-24 18:02:29,288 - rfsks_support.download_large_data - INFO - Station not active during 2000-06-07T23:45:24.790000Z ; remaining try: 75/388; successful dl = 0/313
+2019-09-24 18:02:29,388 - rfsks_support.download_large_data - INFO - Station not active during 2000-06-04T16:39:46.290000Z ; remaining try: 74/388; successful dl = 0/314
+2019-09-24 18:02:29,475 - rfsks_support.download_large_data - INFO - Station not active during 2000-06-04T16:28:28.760000Z ; remaining try: 73/388; successful dl = 0/315
+2019-09-24 18:02:29,561 - rfsks_support.download_large_data - INFO - Station not active during 2000-05-12T18:43:15.160000Z ; remaining try: 72/388; successful dl = 0/316
+2019-09-24 18:02:29,637 - rfsks_support.download_large_data - INFO - Station not active during 2000-05-04T04:21:18.720000Z ; remaining try: 71/388; successful dl = 0/317
+2019-09-24 18:02:29,724 - rfsks_support.download_large_data - INFO - Station not active during 2000-04-23T09:27:23.030000Z ; remaining try: 70/388; successful dl = 0/318
+2019-09-24 18:02:29,807 - rfsks_support.download_large_data - INFO - Station not active during 2000-03-28T11:00:20.440000Z ; remaining try: 69/388; successful dl = 0/319
+2019-09-24 18:02:41,293 - rfsks_support.download_large_data - INFO - Event: 1996-11-12T16:59:43.960000Z ; remaining try: 68/388; successful dl = 0/320
+2019-09-24 18:02:43,185 - rfsks_support.download_large_data - INFO - Event: 1996-09-20T04:10:28.220000Z ; remaining try: 67/388; successful dl = 1/321
+2019-09-24 18:02:45,683 - rfsks_support.download_large_data - INFO - Event: 1996-07-22T14:19:35.700000Z ; remaining try: 66/388; successful dl = 1/322
+2019-09-24 18:02:47,936 - rfsks_support.download_large_data - INFO - Event: 1996-07-16T10:07:35.860000Z ; remaining try: 65/388; successful dl = 2/323
+2019-09-24 18:02:49,972 - rfsks_support.download_large_data - INFO - Event: 1996-06-17T11:22:18.180000Z ; remaining try: 64/388; successful dl = 3/324
+2019-09-24 18:02:52,339 - rfsks_support.download_large_data - INFO - Event: 1996-06-11T18:22:53.430000Z ; remaining try: 63/388; successful dl = 3/325
+2019-09-24 18:03:04,832 - rfsks_support.download_large_data - INFO - Event: 1996-04-19T00:19:31.200000Z ; remaining try: 62/388; successful dl = 4/326
+2019-09-24 18:03:06,782 - rfsks_support.download_large_data - INFO - Event: 1996-03-16T22:04:06.720000Z ; remaining try: 61/388; successful dl = 5/327
+2019-09-24 18:03:08,642 - rfsks_support.download_large_data - INFO - Event: 1996-02-21T12:51:01.730000Z ; remaining try: 60/388; successful dl = 6/328
+2019-09-24 18:03:10,537 - rfsks_support.download_large_data - INFO - Event: 1996-02-17T14:21:20.080000Z ; remaining try: 59/388; successful dl = 7/329
+2019-09-24 18:03:12,513 - rfsks_support.download_large_data - INFO - Event: 1996-02-17T05:59:31.970000Z ; remaining try: 58/388; successful dl = 8/330
+2019-09-24 18:03:15,072 - rfsks_support.download_large_data - INFO - Event: 1996-01-01T08:05:09.560000Z ; remaining try: 57/388; successful dl = 9/331
+2019-09-24 18:03:17,121 - rfsks_support.download_large_data - INFO - Event: 1995-12-25T04:43:23.160000Z ; remaining try: 56/388; successful dl = 10/332
+2019-09-24 18:03:19,325 - rfsks_support.download_large_data - INFO - Event: 1995-12-19T23:28:13.140000Z ; remaining try: 55/388; successful dl = 11/333
+2019-09-24 18:03:21,584 - rfsks_support.download_large_data - INFO - Event: 1995-12-01T05:20:28.850000Z ; remaining try: 54/388; successful dl = 12/334
+2019-09-24 18:03:23,879 - rfsks_support.download_large_data - INFO - Event: 1995-11-01T00:35:32.610000Z ; remaining try: 53/388; successful dl = 12/335
+2019-09-24 18:03:25,778 - rfsks_support.download_large_data - INFO - Event: 1995-10-09T15:35:55.280000Z ; remaining try: 52/388; successful dl = 13/336
+2019-09-24 18:03:27,985 - rfsks_support.download_large_data - INFO - Event: 1995-10-06T18:09:46.670000Z ; remaining try: 51/388; successful dl = 13/337
+2019-09-24 18:03:30,305 - rfsks_support.download_large_data - INFO - Event: 1995-10-03T01:51:28.240000Z ; remaining try: 50/388; successful dl = 14/338
+2019-09-24 18:03:32,585 - rfsks_support.download_large_data - INFO - Event: 1995-09-23T22:31:53.870000Z ; remaining try: 49/388; successful dl = 15/339
+2019-09-24 18:03:35,007 - rfsks_support.download_large_data - INFO - Event: 1995-08-23T07:06:04.120000Z ; remaining try: 48/388; successful dl = 16/340
+2019-09-24 18:03:50,101 - rfsks_support.download_large_data - INFO - Event: 1995-07-30T05:26:39.940000Z ; remaining try: 47/388; successful dl = 17/341
+2019-09-24 18:03:53,225 - rfsks_support.download_large_data - INFO - Event: 1995-07-30T05:11:23.370000Z ; remaining try: 46/388; successful dl = 17/342
+2019-09-24 18:03:55,520 - rfsks_support.download_large_data - INFO - Event: 1995-05-23T22:10:12.110000Z ; remaining try: 45/388; successful dl = 18/343
+2019-09-24 18:03:57,673 - rfsks_support.download_large_data - INFO - Event: 1995-05-14T11:33:18.810000Z ; remaining try: 44/388; successful dl = 19/344
+2019-09-24 18:04:10,439 - rfsks_support.download_large_data - INFO - Event: 1995-05-05T03:53:43.590000Z ; remaining try: 43/388; successful dl = 20/345
+2019-09-24 18:04:13,030 - rfsks_support.download_large_data - INFO - Event: 1995-05-02T06:06:07.960000Z ; remaining try: 42/388; successful dl = 20/346
+2019-09-24 18:04:15,488 - rfsks_support.download_large_data - INFO - Event: 1995-04-23T05:07:58.060000Z ; remaining try: 41/388; successful dl = 21/347
+2019-09-24 18:04:17,845 - rfsks_support.download_large_data - INFO - Event: 1995-04-21T05:17:01.880000Z ; remaining try: 40/388; successful dl = 22/348
+2019-09-24 18:04:20,110 - rfsks_support.download_large_data - INFO - Event: 1995-04-21T00:34:46.460000Z ; remaining try: 39/388; successful dl = 23/349
+2019-09-24 18:04:22,451 - rfsks_support.download_large_data - INFO - Event: 1995-04-21T00:09:54.420000Z ; remaining try: 38/388; successful dl = 24/350
+2019-09-24 18:04:24,669 - rfsks_support.download_large_data - INFO - Event: 1995-04-20T08:45:11.730000Z ; remaining try: 37/388; successful dl = 25/351
+2019-09-24 18:04:27,367 - rfsks_support.download_large_data - INFO - Event: 1995-04-14T13:15:17.600000Z ; remaining try: 36/388; successful dl = 26/352
+2019-09-24 18:04:29,281 - rfsks_support.download_large_data - INFO - Event: 1995-03-19T23:53:15.580000Z ; remaining try: 35/388; successful dl = 27/353
+2019-09-24 18:04:35,025 - rfsks_support.download_large_data - INFO - Event: 1995-02-13T15:04:26.830000Z ; remaining try: 34/388; successful dl = 27/354
+2019-09-24 18:04:45,390 - rfsks_support.download_large_data - INFO - Event: 1995-01-27T20:16:52.540000Z ; remaining try: 33/388; successful dl = 28/355
+2019-09-24 18:04:48,052 - rfsks_support.download_large_data - INFO - Event: 1994-11-15T20:18:11.460000Z ; remaining try: 32/388; successful dl = 29/356
+2019-09-24 18:04:50,466 - rfsks_support.download_large_data - INFO - Event: 1994-11-14T19:15:30.530000Z ; remaining try: 31/388; successful dl = 30/357
+2019-09-24 18:04:52,762 - rfsks_support.download_large_data - INFO - Event: 1994-10-08T21:44:07.710000Z ; remaining try: 30/388; successful dl = 31/358
+2019-09-24 18:04:55,180 - rfsks_support.download_large_data - INFO - Event: 1994-09-28T16:39:53.250000Z ; remaining try: 29/388; successful dl = 32/359
+2019-09-24 18:04:57,542 - rfsks_support.download_large_data - INFO - Event: 1994-08-19T10:02:51.610000Z ; remaining try: 28/388; successful dl = 33/360
+2019-09-24 18:04:59,930 - rfsks_support.download_large_data - INFO - Event: 1994-07-25T22:00:24.460000Z ; remaining try: 27/388; successful dl = 34/361
+2019-09-24 18:05:02,490 - rfsks_support.download_large_data - INFO - Event: 1994-06-09T00:33:16.710000Z ; remaining try: 26/388; successful dl = 35/362
+2019-09-24 18:05:04,905 - rfsks_support.download_large_data - INFO - Event: 1994-06-02T18:17:37.010000Z ; remaining try: 25/388; successful dl = 36/363
+2019-09-24 18:05:07,085 - rfsks_support.download_large_data - INFO - Event: 1994-05-25T04:03:41.030000Z ; remaining try: 24/388; successful dl = 37/364
+2019-09-24 18:05:09,863 - rfsks_support.download_large_data - INFO - Event: 1994-05-11T08:18:15.840000Z ; remaining try: 23/388; successful dl = 37/365
+2019-09-24 18:05:12,220 - rfsks_support.download_large_data - INFO - Event: 1994-05-10T06:36:28.610000Z ; remaining try: 22/388; successful dl = 38/366
+2019-09-24 18:05:14,365 - rfsks_support.download_large_data - INFO - Event: 1994-04-29T07:11:29.280000Z ; remaining try: 21/388; successful dl = 39/367
+2019-09-24 18:05:14,472 - rfsks_support.download_large_data - INFO - Station not active during 1999-12-21T14:14:59.240000Z ; remaining try: 20/388; successful dl = 39/368
+2019-09-24 18:05:14,559 - rfsks_support.download_large_data - INFO - Station not active during 1999-12-11T18:03:40.530000Z ; remaining try: 19/388; successful dl = 39/369
+2019-09-24 18:05:14,643 - rfsks_support.download_large_data - INFO - Station not active during 1999-11-30T04:01:47.820000Z ; remaining try: 18/388; successful dl = 39/370
+2019-09-24 18:05:14,725 - rfsks_support.download_large_data - INFO - Station not active during 1999-04-03T06:17:16.100000Z ; remaining try: 17/388; successful dl = 39/371
+2019-09-24 18:05:14,798 - rfsks_support.download_large_data - INFO - Station not active during 1999-03-04T08:51:59.380000Z ; remaining try: 16/388; successful dl = 39/372
+2019-09-24 18:05:14,871 - rfsks_support.download_large_data - INFO - Station not active during 1998-12-06T00:47:14.210000Z ; remaining try: 15/388; successful dl = 39/373
+2019-09-24 18:05:14,938 - rfsks_support.download_large_data - INFO - Station not active during 1998-11-29T14:10:26.870000Z ; remaining try: 14/388; successful dl = 39/374
+2019-09-24 18:05:15,012 - rfsks_support.download_large_data - INFO - Station not active during 1998-11-09T05:38:43.960000Z ; remaining try: 13/388; successful dl = 39/375
+2019-09-24 18:05:15,074 - rfsks_support.download_large_data - INFO - Station not active during 1998-11-09T05:30:14.480000Z ; remaining try: 12/388; successful dl = 39/376
+2019-09-24 18:05:15,148 - rfsks_support.download_large_data - INFO - Station not active during 1998-10-28T16:25:04.690000Z ; remaining try: 11/388; successful dl = 39/377
+2019-09-24 18:05:15,231 - rfsks_support.download_large_data - INFO - Station not active during 1998-09-28T13:34:30.360000Z ; remaining try: 10/388; successful dl = 39/378
+2019-09-24 18:05:15,300 - rfsks_support.download_large_data - INFO - Station not active during 1998-09-03T17:37:56.290000Z ; remaining try: 9/388; successful dl = 39/379
+2019-09-24 18:05:15,374 - rfsks_support.download_large_data - INFO - Station not active during 1998-09-02T08:37:31.340000Z ; remaining try: 8/388; successful dl = 39/380
+2019-09-24 18:05:15,452 - rfsks_support.download_large_data - INFO - Station not active during 1998-08-20T06:40:56.240000Z ; remaining try: 7/388; successful dl = 39/381
+2019-09-24 18:05:15,526 - rfsks_support.download_large_data - INFO - Station not active during 1998-08-04T18:59:22.340000Z ; remaining try: 6/388; successful dl = 39/382
+2019-09-24 18:05:15,628 - rfsks_support.download_large_data - INFO - Station not active during 1998-07-29T18:00:31.270000Z ; remaining try: 5/388; successful dl = 39/383
+2019-09-24 18:05:15,747 - rfsks_support.download_large_data - INFO - Station not active during 1998-07-17T08:49:23.400000Z ; remaining try: 4/388; successful dl = 39/384
+2019-09-24 18:05:15,816 - rfsks_support.download_large_data - INFO - Station not active during 1998-06-29T19:57:54.300000Z ; remaining try: 3/388; successful dl = 39/385
+2019-09-24 18:05:15,884 - rfsks_support.download_large_data - INFO - Station not active during 1998-05-28T15:20:14.000000Z ; remaining try: 2/388; successful dl = 39/386
+2019-09-24 18:05:15,957 - rfsks_support.download_large_data - INFO - Station not active during 1998-05-22T04:48:50.460000Z ; remaining try: 1/388; successful dl = 39/387
+2019-09-24 18:05:16,029 - rfsks_support.download_large_data - INFO - Station not active during 1998-05-21T05:34:23.880000Z ; remaining try: 0/388; successful dl = 39/388
+2019-09-24 18:05:16,495 - rfsks_support.download_large_data - INFO - Plotting events for GE STU
+2019-09-24 18:05:34,202 - rfsks_support.download_large_data - INFO - Plotting station map

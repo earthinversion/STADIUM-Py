@@ -132,7 +132,7 @@ def station_map(map, stns_lon, stns_lat,stns_name,figname="", destination="./",f
     for net in networkset:
         map.plot(np.NaN,np.NaN,'^',color=netcolor[net],label=net, markersize=7,markeredgecolor='k',linewidth=0.1)
     plt.legend(loc=4,fontsize=8)
-    plt.savefig(destination+figname+'station_map.'+figfrmt,dpi=200,bbox_inches='tight')
+    plt.savefig(destination+figname+'_map.'+figfrmt,dpi=200,bbox_inches='tight')
     plt.close('all')
 
 DEG2KM = 111.2

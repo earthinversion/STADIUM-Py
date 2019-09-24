@@ -11,6 +11,8 @@ import numpy as np
 # plt.style.use('ggplot')
 plt.style.use('seaborn')
 import logging
+from rfsks_support.other_support import Timeout
+
 
 
 
@@ -141,7 +143,7 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
     logger = logging.getLogger(__name__)
     strm = None
     j=0
-    
+    msg = None
     model = TauPyModel('iasp91')
     arrivals = model.get_travel_times_geo(float(evdp),slat,slon,float(elat),float(elon),phase_list=[phase])
     if phase=='P':
@@ -152,8 +154,9 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
         t2 = UTC(str(evtime)) + int(arrivals[0].time + 60)
     sel_inv = inv.select(network=net).select(station=stn)[0][0]
     if not sel_inv.is_active(starttime=t1, endtime=t2):
-        logger.info(f"------> Station not active during {evtime}")
-        strm, 0
+        # logger.warning(f"------> Station not active during {evtime}")
+        msg = f"Station not active during {evtime}"
+        return strm, 0, msg
     # process_id = os.getpid()
     while not strm:
         client_local = Client(client[j])
@@ -162,17 +165,19 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
             for loc in locations:
                 # print(f"loc is {loc}.")
                 try:
-                    strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",loc=loc)
-                    if strm:
-                        break
+                    with Timeout(5):
+                        strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",loc=loc)
+                        if strm:
+                            break
                 except Exception as exception:
                     pass
         elif phase=='SKS':
             for loc in locations:
                 try:
-                    strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",attach_response=True,loc=loc)
-                    if strm:
-                        break
+                    with Timeout(5):
+                        strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",attach_response=True,loc=loc)
+                        if strm:
+                            break
                 except Exception as e:
                     pass
         if strm:
@@ -186,7 +191,7 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
             res = 0
             break
         j+=1
-    return strm, res
+    return strm, res, msg
 
 
 def plot_trigger(trace, cft, on_off, thr_on, thr_off,outfile):

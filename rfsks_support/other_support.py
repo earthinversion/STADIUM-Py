@@ -1,12 +1,12 @@
-import os, tqdm
+import os, tqdm, glob, sys
 import shutil
 import numpy as np
 from obspy import UTCDateTime as UTC
 import pandas as pd
 import logging
 import logging.config
-logger = logging.getLogger(__name__)
-
+import signal
+import time
 import yaml
 
 def setup_logging(
@@ -28,11 +28,20 @@ def setup_logging(
     else:
         logging.basicConfig(level=default_level)
 
+def rem_duplicate_lines(inpfile,outfile):
+    lines_seen = set() # holds lines already seen
+    outfile = open(outfile, "w")
+    for line in open(inpfile, "r"):
+        if line not in lines_seen: # not a duplicate
+            outfile.write(line)
+            lines_seen.add(line)
+    outfile.close()
 
 def create_dir(direc):
     '''
     Create a directory
     '''
+    logger = logging.getLogger(__name__)
     try:
         os.makedirs(direc, exist_ok=True)
     except OSError:
@@ -64,6 +73,7 @@ avg = lambda num1,num2: (int(num1)+int(num2))/2.0
 
 
 def date2time(sta_sdate,sta_edate):
+    logger = logging.getLogger(__name__)
     smonth = f'0{sta_sdate.month}' if sta_sdate.month < 10 else f'{sta_sdate.month}'
     emonth = f'0{sta_edate.month}' if sta_edate.month < 10 else f'{sta_edate.month}'
     sday = f'0{sta_sdate.day}' if sta_sdate.day < 10 else f'{sta_sdate.day}'
@@ -82,3 +92,94 @@ def write_station_file(inventorytxtfile,rf_staNetNames,outfile):
         df_stations_extract = df_stations[(df_stations['#Network']==net) & (df_stations['Station']==stn)]
         df_stations_new = df_stations_new.append(df_stations_extract, ignore_index=True)
     df_stations_new.to_csv(outfile, index = None, header=True, sep = "|")
+
+
+def obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF,obtain_inventory=True,obtain_events=True):
+    logger = logging.getLogger(__name__)
+    if obtain_inventory:
+        if not os.path.exists(invRFfile):
+            try:
+                logger.info("Trying to operate the get_stnxml method")
+                logger.info("## Operating get_stnxml method")
+                rf_data.get_stnxml(network=network, station=station)
+            except Exception as e:
+                # logger.error('Error occurred')
+                logger.error("Timeout while requesting...Please try again after some time", exc_info=True)
+                # sys.exit()
+    if obtain_events:
+        logger.info("Obtaining events catalog")
+        rf_data.obtain_events(catalogxmlloc=catalogxmlloc,catalogtxtloc=catalogxmlloc,minmagnitude=minmagnitudeRF,maxmagnitude=maxmagnitudeRF)
+
+
+def concat_event_catalog(catfile,all_catalogtxt):
+    if len(all_catalogtxt)>1:
+        f = open(catfile, "w")
+        for fl in all_catalogtxt:
+            flr = open(fl,'r')
+            f.write(flr.read())
+            flr.close()
+        f.close()
+            
+    elif len(all_catalogtxt)==1:
+        shutil.copyfile(all_catalogtxt[0],catfile)
+
+
+def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF'):
+    logger = logging.getLogger(__name__)
+
+    all_stations_df = pd.read_csv(RFsta, sep="|")
+    nets = all_stations_df['#Network'].values
+    stns = all_stations_df['Station'].values
+    
+
+    net_sta_list=[]
+    for net, sta in zip(nets,stns):
+        catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
+        net_sta = f"{net}-{sta}"
+        if net_sta not in net_sta_list:
+            net_sta_list.append(net_sta)
+        all_catalogtxt = glob.glob(catalogloc+f'{net}-{sta}-*-events-info-{method}.txt')
+        if len(all_catalogtxt)!=0:
+            concat_event_catalog(catfile,all_catalogtxt)
+        else:
+            logger.error("No catalog file exists!")
+            sys.exit()
+
+    total_events=0
+    for net_sta in net_sta_list:
+        net = net_sta.split("-")[0]
+        sta = net_sta.split("-")[1]
+        catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
+        catfileout = catalogloc+f"{net}-{sta}-events-info-{method}-out.txt"
+        rem_duplicate_lines(catfile,catfileout)
+        shutil.copyfile(catfileout,catfile)
+        total_events += int(pd.read_csv(catfile,sep="|",header=None).shape[0])
+      
+
+    if total_events:
+        logger.info("\n")
+        logger.info("## Operating download method")
+        rf_data.download_data(catalogtxtloc=catalogloc,datafileloc=datafileloc,tot_evnt_stns=total_events, plot_stations=plot_stations, plot_events=plot_events,dest_map=dest_map,locations=locations)
+    else:
+        logger.warning("No events found!")
+
+
+
+ 
+class Timeout():
+    """Timeout class using ALARM signal."""
+    class Timeout(Exception):
+        pass
+ 
+    def __init__(self, sec):
+        self.sec = sec
+ 
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.raise_timeout)
+        signal.alarm(self.sec)
+ 
+    def __exit__(self, *args):
+        signal.alarm(0)    # disable alarm
+ 
+    def raise_timeout(self, *args):
+        raise Timeout.Timeout()
