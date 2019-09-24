@@ -23,12 +23,15 @@ retr_stationsfile = "results/InfoRF/all_stations_rf_retrieved.txt"
 ## all stations retrieved or not
 all_stationsfile = "results/InfoRF/all_stations_RF.txt"
 
+## selected method automatically from the filename
 method = retr_stationsfile.split("/")[-1].split("_")[-2].upper()
 
+## extract the file path
 info_loc=""
 for loc in retr_stationsfile.split("/")[0:-1]:
     info_loc += loc+"/"
 
+## read the stations inventory
 retr_stations_df = pd.read_csv(retr_stationsfile,sep="|")
 all_stations_df = pd.read_csv(all_stationsfile,sep="|")
 
