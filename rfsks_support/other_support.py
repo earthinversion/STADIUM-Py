@@ -26,6 +26,7 @@ def setup_logging(
             config = yaml.safe_load(f.read())
         logging.config.dictConfig(config)
     else:
+        print("Selecting basic config")
         logging.basicConfig(level=default_level)
 
 def rem_duplicate_lines(inpfile,outfile):
@@ -112,7 +113,9 @@ def obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs
 
 
 def concat_event_catalog(catfile,all_catalogtxt):
+    logger = logging.getLogger(__name__)
     if len(all_catalogtxt)>1:
+        logger.debug(f"length(all_catalogtxt): {len(all_catalogtxt)}")
         f = open(catfile, "w")
         for fl in all_catalogtxt:
             flr = open(fl,'r')
@@ -122,6 +125,8 @@ def concat_event_catalog(catfile,all_catalogtxt):
             
     elif len(all_catalogtxt)==1:
         shutil.copyfile(all_catalogtxt[0],catfile)
+        if os.path.exists(catfile):
+            logger.debug(f"Catalog file: {catfile}")
 
 
 def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF'):
@@ -136,14 +141,16 @@ def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minm
     for net, sta in zip(nets,stns):
         catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
         net_sta = f"{net}-{sta}"
-        if net_sta not in net_sta_list:
-            net_sta_list.append(net_sta)
+        
         all_catalogtxt = glob.glob(catalogloc+f'{net}-{sta}-*-events-info-{method}.txt')
+        # logger.info(len(all_catalogtxt),all_catalogtxt[0])
         if len(all_catalogtxt)!=0:
             concat_event_catalog(catfile,all_catalogtxt)
+            logger.info(f"Catalog file exists for {net_sta}!")
+            if net_sta not in net_sta_list:
+                net_sta_list.append(net_sta)
         else:
-            logger.error("No catalog file exists!")
-            sys.exit()
+            logger.error(f"No catalog file exists for {net_sta}!", exc_info=True)
 
     total_events=0
     for net_sta in net_sta_list:

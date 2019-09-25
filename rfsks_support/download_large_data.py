@@ -11,8 +11,6 @@ from rfsks_support.plotting_map import plot_merc, station_map, events_map
 import logging
 
 
-
-
 class downloadDataclass:
     
     def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile=None,fig_frmt="png",method='RF'):
@@ -89,7 +87,8 @@ class downloadDataclass:
                 sys.exit()
         # list all the events during the station active time
         self.staNamesNet,staLats,staLons=[],[],[]
-        # self.allcatalogxml = []
+        
+
         for net in self.inv:
             for sta in net:
                 network = net.code #network name
@@ -125,8 +124,7 @@ class downloadDataclass:
                     client = Client('IRIS')
 
                     try:
-                        with Timeout(15):
-                            catalog = client.get_events(**kwargs)
+                        catalog = client.get_events(**kwargs)
                     except:
                         self.logger.error("ConnectionResetError while obtaining the events from the client - IRIS")
                         continue
@@ -142,9 +140,9 @@ class downloadDataclass:
                         for cat in catalog:
                             try:
                                 try:
-                                    evtime,evlat,evlon,evdp,evmg,evmgtp=cat.origins[0].time,cat.origins[0].latitude,cat.origins[0].longitude,cat.origins[0].depth/1000,cat.magnitudes[0].mag,"Mww"
-                                except:
                                     evtime,evlat,evlon,evdp,evmg,evmgtp=cat.origins[0].time,cat.origins[0].latitude,cat.origins[0].longitude,cat.origins[0].depth/1000,cat.magnitudes[0].mag,cat.magnitudes[0].magnitude_type
+                                except:
+                                    evtime,evlat,evlon,evdp,evmg,evmgtp=cat.origins[0].time,cat.origins[0].latitude,cat.origins[0].longitude,cat.origins[0].depth/1000,cat.magnitudes[0].mag,"Mww"
                                 evtimes.append(str(evtime))
                                 evlats.append(float(evlat))
                                 evlons.append(float(evlon))
@@ -157,7 +155,7 @@ class downloadDataclass:
                                 self.logger.error(f"Unable to write for {evtime}")
                     self.logger.info("Finished writing the event data into a text and xml file")
                 else:
-                    self.logger.info(f"{catalogxml} and {catalogtxt} already exists!")
+                    self.logger.info(f"{catalogxml.split('/')[-1]} and {catalogtxt.split('/')[-1]} already exists!")
 
         ################################## Download
     def download_data(self,catalogtxtloc,datafileloc,tot_evnt_stns, plot_stations=True, plot_events=True,dest_map="./",locations=[""]):

@@ -11,25 +11,29 @@ import rfsks_support.sks_support as skss
 from rfsks_support.download_large_data import downloadDataclass
 import warnings
 warnings.filterwarnings("ignore")
+import time
 
 
-#######################
-## Logging
-import logging, requests
-logfiles = glob.glob("*.log")
-for log in logfiles:
-    if os.path.exists(log):
-        os.remove(log)
-oss.setup_logging()
-logger = logging.getLogger(__name__)
 
-############################
 
 
 inp = pd.read_csv("input_parameters.txt",sep="|",index_col ='PARAMETERS')
 res_dir = 'results/'
 dirs = oss.read_directories(res_dir)
 
+
+#######################
+## Logging
+import logging, requests
+logfiles = glob.glob(res_dir+"tmp/*.log")
+for log in logfiles:
+    if os.path.exists(log):
+        os.remove(log)
+oss.setup_logging()
+logger = logging.getLogger(__name__)
+print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
+time.sleep(5)
+############################
 
 ## Input parameters  ## General
 fresh_start=int(inp.loc['fresh_start','VALUES'])       #0/1
@@ -132,14 +136,19 @@ if makeRF:
     ## Download waveforms
     if download_data_RF:
         logger.info("Downloading the RF data")
-        if not os.path.exists(RFsta):
-            logger.info(f"{RFsta} does not exist...obtaining")
-            oss.obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF)
+        try:
+            if not os.path.exists(RFsta):
+                logger.info(f"{RFsta.split('/')[-1]} does not exist...obtaining")
+                oss.obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF)
+            else:
+                logger.info(f"{RFsta.split('/')[-1]} exists!")
+        except:
+            sys.exit()
     
 
         retrived_stn_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+'all_stations_rf_retrieved.txt'
         if not os.path.exists(retrived_stn_file):
-            logger.info(f"{retrived_stn_file} does not exist...obtaining inventory!")
+            logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog!")
             catalogloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
             datafileloc=str(dirs.loc['dataRFfileloc','DIR_NAME'])
             dest_map=str(dirs.loc['RFstaevnloc','DIR_NAME'])
