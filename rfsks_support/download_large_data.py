@@ -41,6 +41,7 @@ class downloadDataclass:
 
     ## Defining get_stnxml
     def get_stnxml(self,network='*', station="*"):
+        print("\n")
         self.logger.info('Retrieving station information')
         ninvt=0
         while ninvt < len(self.client):
@@ -93,6 +94,7 @@ class downloadDataclass:
             for sta in net:
                 network = net.code #network name
                 station = sta.code #station name
+                print("\n")
                 self.logger.info(f"Retrieving event info for {network}-{station}")
                 self.staNamesNet.append(f"{network}_{station}")
 
@@ -126,7 +128,7 @@ class downloadDataclass:
                     try:
                         catalog = client.get_events(**kwargs)
                     except:
-                        self.logger.error("ConnectionResetError while obtaining the events from the client - IRIS")
+                        self.logger.warning("ConnectionResetError while obtaining the events from the client - IRIS")
                         continue
                     catalog.write(catalogxml, 'QUAKEML') #writing xml catalog
 
@@ -194,6 +196,7 @@ class downloadDataclass:
             cattxtnew = catalogtxtloc+f"{net}-{stn}-events-info-available-{self.method}.txt"
             
             if self.method == 'RF':
+                print("\n")
                 self.logger.info(f"Searching and downloading data for {self.method}; {net}-{stn}")
                 rfdatafile = datafileloc+f'{net}-{stn}-rf_profile_data.h5'
                 if os.path.exists(catfile) and not os.path.exists(rfdatafile) and tot_evnt_stns > 0:
@@ -209,6 +212,9 @@ class downloadDataclass:
                         num_try += 1
                         
                         strm,res,msg = multi_download(self.client,self.inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons=rf_stalons,stalats=rf_stalats,staNetNames=rf_staNetNames,phase='P',locations=locations)
+                        if res:
+                            succ_dl+=1
+                            
                         if not msg:
                             self.logger.info(f"Event: {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
                         else:
@@ -218,9 +224,6 @@ class downloadDataclass:
                         if strm:
                             stream.extend(strm)
 
-                        if res:
-                            succ_dl+=1
-            
                     if not len(stream):
                         self.logger.warning(f"No data for {rfdatafile}")
                     stream.write(rfdatafile, 'H5')
@@ -237,6 +240,7 @@ class downloadDataclass:
 
                         
             if self.method == 'SKS':
+                print("\n")
                 self.logger.info(f"Searching and downloading data for {self.method}; {net}-{stn}")
 
                 sksdatafile = datafileloc+f'{net}-{stn}-sks_profile_data.h5'
@@ -288,15 +292,17 @@ class downloadDataclass:
                         self.logger.info(f"Plotting events for {net} {stn}")
                         events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-SKS')
 
-
+        ## plot station map for all the stations for which the data has been successfully retrieved
         if plot_stations and self.method == 'RF' and len(rf_stalons):
-            self.logger.info("Plotting station map")
+            print("\n")
+            self.logger.info("Plotting station map for RF")
             map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
             station_map(map, stns_lon=rf_stalons, stns_lat=rf_stalats,stns_name= rf_staNetNames,figname="RF_stations", destination=dest_map,figfrmt=self.fig_frmt)
 
 
         if plot_stations and self.method == 'SKS' and len(sks_stalons):
-            self.logger.info("Plotting station map")
+            print("\n")
+            self.logger.info("Plotting station map for SKS")
             map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
             station_map(map, stns_lon=sks_stalons, stns_lat=sks_stalats,stns_name= sks_staNetNames,figname="SKS_stations", destination=dest_map,figfrmt=self.fig_frmt)
         ## Write the retrieved station catalog
@@ -304,7 +310,3 @@ class downloadDataclass:
             write_station_file(self.inventorytxtfile,rf_staNetNames,outfile=catalogtxtloc+'all_stations_rf_retrieved.txt')
         elif self.method == 'SKS':
             write_station_file(self.inventorytxtfile,sks_staNetNames,outfile=catalogtxtloc+'all_stations_sks_retrieved.txt')
-        
-
-        
-

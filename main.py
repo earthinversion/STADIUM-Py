@@ -100,10 +100,10 @@ logfiles = glob.glob(res_dir+"tmp/*.log")
 for log in logfiles:
     if os.path.exists(log):
         os.remove(log)
-oss.setup_logging()
+oss.setup_logging(default_level=logging.INFO)
 logger = logging.getLogger(__name__)
 print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
-time.sleep(5)
+time.sleep(3)
 ## Log
 logger.info(f"Running the program for makeRF: {makeRF}; makeSKS: {makeSKS}")
 ############################
@@ -151,14 +151,20 @@ if makeRF:
     
 
     if plot_RF:
-        try:
-            logger.info("\n## Computing RF")
-            rfs.compute_rf(str(dirs.loc['dataRFfileloc','DIR_NAME']))
-            logger.info("\n")
-            logger.info("## Operating plot_RF method")
-            rfs.plot_RF(str(dirs.loc['dataRFfileloc','DIR_NAME']),destImg=str(dirs.loc['plotRFloc','DIR_NAME']))
-        except Exception as e:
-            logger.info(e)
+        dataRFfileloc = str(dirs.loc['dataRFfileloc','DIR_NAME'])
+        all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
+        if len(all_rfdatafile)>1:
+            try:
+                logger.info("\n## Computing RF")
+                rfs.compute_rf(dataRFfileloc)
+                logger.info("\n")
+                logger.info("## Operating plot_RF method")
+                rfs.plot_RF(dataRFfileloc,destImg=str(dirs.loc['plotRFloc','DIR_NAME']))
+            except Exception as e:
+                logger.info(e)
+        else:
+            logger.error("No RF data files present...download the data")
+            sys.exit()
 
     if plot_ppoints:
         try:

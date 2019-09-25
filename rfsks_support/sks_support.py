@@ -18,8 +18,6 @@ import logging
 
 
 
-
-
 ## Pre-processing
 def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=None,plot_measure_loc=1,method = 'None'):
     logger = logging.getLogger(__name__)
@@ -35,6 +33,15 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
         for stream3c in IterMultipleComponents(data, 'onset', 3):
             count+=1
             logging.info(f"Working on {count}/{int(len(data)/3)}")
+
+            ## check if the length of all three traces are equal
+            len_tr_list=list()
+            for tr in stream3c:
+                len_tr_list.append(len(tr))
+            if len(set(len_tr_list))!=1:
+                continue
+
+
             ## filter the trace
             st = stream3c.filter('bandpass', freqmin=0.01, freqmax=0.6)
             sps = st[0].stats.sampling_rate

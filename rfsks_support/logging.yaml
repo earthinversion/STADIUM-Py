@@ -3,17 +3,17 @@ version: 1
 disable_existing_loggers: False
 formatters:
   simple:
-    format: "STADIUM-Py %(asctime)s - %(message)s"
-    datefmt: '%Y-%m-%d %H:%M:%S'
+    format: "STADIUM-Py %(asctime)s|%(levelname)s| %(message)s"
+    datefmt: '%Y/%m/%d %H:%M:%S'
   errorfmt:
-    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    datefmt: '%Y-%m-%d %H:%M:%S'
+    format: "%(asctime)s|%(name)s|%(levelname)s| %(message)s"
+    datefmt: '%Y/%m/%d %H:%M:%S'
 
 handlers:
   console:
     class: logging.StreamHandler
     level: DEBUG
-    formatter: errorfmt
+    formatter: simple
     stream: ext://sys.stdout
 
   info_file_handler:

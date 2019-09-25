@@ -15,10 +15,6 @@ from rfsks_support.other_support import Timeout
 
 
 
-
-
-
-
 DEG2KM = 111.2  #: Conversion factor from degrees epicentral distance to km
 
 
@@ -123,11 +119,15 @@ def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",att
     st = client.get_waveforms(net, stn, loc, cha, t1, t2,attach_response=attach_response)
     if stats_dict:
         dist, baz, _ = gps2dist_azimuth(stats_dict['station_latitude'],stats_dict['station_longitude'],stats_dict['event_latitude'],stats_dict['event_longitude'])
+        len_tr_list=list()
         for tr in st:
+            len_tr_list.append(len(tr))
             for key, value in stats_dict.items():
                 tr.stats[key] = value
             tr.stats['distance'] = dist / 1000 / DEG2KM
             tr.stats['back_azimuth'] = baz
+        if len(set(len_tr_list))!=1:
+            return False
     st.merge()
     # if all 3 components present and no gap or overlap in data
     if len(st) == 3 and not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
@@ -262,6 +262,4 @@ def plot_trace(trace2,trace_loc):
         plt.close('all')
     except Exception as exception:
         logger.error("Plot trace error", exc_info=True)
-
-
 
