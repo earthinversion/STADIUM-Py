@@ -43,8 +43,6 @@ plot_SKS = int(inp.loc['plot_SKS','VALUES']) #Plotting the receiver functions
 picking_SKS=int(inp.loc['picking_SKS','VALUES'])
 
 
-
-
 ## Input parameters  ## RF
 minradiusRF=float(inp.loc['minradiusRF','VALUES'])
 maxradiusRF=float(inp.loc['maxradiusRF','VALUES'])
@@ -60,10 +58,6 @@ maxmagnitudeSKS=float(inp.loc['maxmagnitudeSKS','VALUES'])
 ## Download data
 download_data_RF = int(inp.loc['download_data_RF','VALUES'])
 download_data_SKS = int(inp.loc['download_data_SKS','VALUES'])
-
-## Log
-logger.info(f"Running the program for makeRF: {makeRF}; makeSKS: {makeSKS}")
-
 
 
 invRFfile = str(dirs.loc['RFinfoloc','DIR_NAME']) + 'rf_stations.xml'
@@ -110,6 +104,8 @@ oss.setup_logging()
 logger = logging.getLogger(__name__)
 print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
 time.sleep(5)
+## Log
+logger.info(f"Running the program for makeRF: {makeRF}; makeSKS: {makeSKS}")
 ############################
 #############################################################
 #############################################################
