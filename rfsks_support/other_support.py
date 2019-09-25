@@ -152,6 +152,11 @@ def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minm
         else:
             logger.error(f"No catalog file exists for {net_sta}!", exc_info=True)
 
+
+    if len(net_sta_list)==0:
+        logger.error("No catalog file found! Exiting...")
+        sys.exit()
+        
     total_events=0
     for net_sta in net_sta_list:
         net = net_sta.split("-")[0]

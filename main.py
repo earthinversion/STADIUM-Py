@@ -14,26 +14,9 @@ warnings.filterwarnings("ignore")
 import time
 
 
-
-
-
 inp = pd.read_csv("input_parameters.txt",sep="|",index_col ='PARAMETERS')
 res_dir = 'results/'
 dirs = oss.read_directories(res_dir)
-
-
-#######################
-## Logging
-import logging, requests
-logfiles = glob.glob(res_dir+"tmp/*.log")
-for log in logfiles:
-    if os.path.exists(log):
-        os.remove(log)
-oss.setup_logging()
-logger = logging.getLogger(__name__)
-print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
-time.sleep(5)
-############################
 
 ## Input parameters  ## General
 fresh_start=int(inp.loc['fresh_start','VALUES'])       #0/1
@@ -114,6 +97,20 @@ else:
     locations = inp.loc['locations','VALUES'].split(",")
 if not len(locations):
     locations=[""]
+
+
+#######################
+## Logging
+import logging, requests
+logfiles = glob.glob(res_dir+"tmp/*.log")
+for log in logfiles:
+    if os.path.exists(log):
+        os.remove(log)
+oss.setup_logging()
+logger = logging.getLogger(__name__)
+print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
+time.sleep(5)
+############################
 #############################################################
 #############################################################
 #####################                 #######################
