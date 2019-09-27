@@ -11,7 +11,6 @@ from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
 from rfsks_support.rfsks_extras import filter_traces
 import logging
-from numba import jit
 
 
 
