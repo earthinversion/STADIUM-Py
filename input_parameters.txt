@@ -20,10 +20,11 @@ minmagnitudeRF|6.5
 maxmagnitudeRF|9.5
 plot_stations|0
 plot_events|0
-plot_RF|1
-plot_ppoints|0
-num_profile_divs|4
-plot_RF_profile|0
+plot_RF|0
+plot_ppoints|1
+num_profile_divs_lat|2
+num_profile_divs_lon|3
+plot_RF_profile|1
 ###########|####
 SKS|INPUT PARAMETERS
 ###########|####

@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import tqdm
+import tqdm, sys
 import numpy as np
 import os, glob
 from rf import RFStream, read_rf, IterMultipleComponents, get_profile_boxes
@@ -9,7 +9,9 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
+from rfsks_support.rfsks_extras import filter_traces
 import logging
+from numba import jit
 
 
 
@@ -21,6 +23,7 @@ def compute_rf(dataRFfileloc):
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
         rffile = f'{network}-{station}-rf_profile_rfs.h5'
+        datatmp = read_rf(rfdatafile, 'H5')
         if not os.path.exists(rffile):
             logger.info(f"--> Computing RF for {rfdatafile}")
             data = read_rf(rfdatafile, 'H5')
@@ -30,11 +33,12 @@ def compute_rf(dataRFfileloc):
                     continue
                 
                 ## check if the length of all three traces are equal
-                len_tr_list=list()
                 for tr in stream3c:
-                    len_tr_list.append(len(tr))
-                if len(set(len_tr_list))!=1:
-                    continue
+                    lentr=tr.stats.npts
+                    lengt= tr.stats.sampling_rate * 100
+                    if lentr != lengt:
+                        print('Wrong trace length ', lentr,lengt)
+                        continue
                 
                 stream3c.filter('bandpass', freqmin=0.5, freqmax=2)
 
@@ -63,115 +67,122 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
                 plt.savefig(destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt)
                 stream.select(component='Q', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
                 plt.savefig(destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt)
-                logger.info("----> Working on {}/{}, network: {} station name: {} total traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
+                logger.info("----> Working on {}/{}, {}-{} total traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
             except Exception as e:
                 logger.error("Unexpected error", exc_info=True)
         else:
-            logger.info("----> {} traces for network: {} station: {}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
+            logger.info("----> {} traces for {}-{}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
 
-
-def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=70,fig_frmt="png",ndiv = 2):
+def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=70,fig_frmt="png",ndivlat = 2, ndivlon=3):
     logger = logging.getLogger(__name__)
-    df = pd.read_csv(catalogtxtloc+'all_stations_rf_retrieved.txt',sep="|")
     ppoints_df = pd.DataFrame()
     list_of_dfs = []
+    list_of_streams = []
 
     logger.info("--> Plotting the piercing points on map")
-    clon = df['Longitude'].mean()
-    clat = df['Latitude'].mean()
-    mnlon,mxlon,mnlat,mxlat = df['Longitude'].min(),df['Longitude'].max(),df['Latitude'].min(),df['Latitude'].max()
+
+    stlons,stlats=[],[]
         
     rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
     stream = read_rf(rffiles[0], 'H5')
+    filter_traces(stream,lenphase=100)
     ppoints_tmp = stream.ppoints(depth)
-    # print(ppoints_tmp[:,1])
     ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
     list_of_dfs.append(ppdf_tmp)
-    # ppoints_df.append(ppdf_tmp, ignore_index=True)
-    # print(ppoints_df.head())
-    map = plot_merc(resolution='h', llcrnrlon=mnlon-1, llcrnrlat=mnlat-1,urcrnrlon=mxlon+1, urcrnrlat=mxlat+1,topo=True)
-    x,y = map(stream[0].stats.station_longitude, stream[0].stats.station_latitude)
-    map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
+
+    stlons.append(stream[0].stats.station_longitude)
+    stlats.append(stream[0].stats.station_latitude)
+
+    
     for rffile in rffiles[1:]:
-        logger.info(f"----> for {rffile}")
+        logger.info(f"----> reading profile {rffile}")
         try:
             st_tmp = read_rf(rffile, 'H5')
+            filter_traces(st_tmp,lenphase=100)
+            list_of_streams.append(st_tmp)
             ppoints_tmp = st_tmp.ppoints(depth)
             ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
             list_of_dfs.append(ppdf_tmp)
-            # stream += read_rf(rffile, 'H5')
-            x,y = map(st_tmp[0].stats.station_longitude, st_tmp[0].stats.station_latitude)
-            map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
+            stlons.append(st_tmp[0].stats.station_longitude)
+            stlats.append(st_tmp[0].stats.station_latitude)
         except:
             logger.error("Error", exc_info=True)
-    # ppoints = stream.ppoints(depth)
-    logger.info("Plotting the piercing point map 1")
+    logger.info("Calculating profile")
     ppoints_df = ppoints_df.append(list_of_dfs , ignore_index=True)
-    print(ppoints_df.head())
-    xpp,ypp = map(ppoints_df["pplon"].values, ppoints_df["pplat"].values)
-    logger.info("xpp,ypp done")
-    # xpp,ypp = map(ppoints[:,1], ppoints[:,0])
-    map.plot(xpp, ypp,'x', markersize=5,color='b',markeredgewidth=0.3, zorder=1)
-    plt.savefig(destination+'piercing_points_map.'+fig_frmt,dpi=200,bbox_inches='tight')
-    plt.close('all')
 
-    
-    width_lat = (ppoints_df["pplat"].max()-ppoints_df["pplat"].min()) * 111.2
-    # width_lat +=0.3*width_lat
-    width_lon = (ppoints_df["pplon"].max()-ppoints_df["pplon"].min()) * 111.2
-    # width_lon +=0.3*width_lon
+
+    for st in list_of_streams:
+        for tr in st:
+            stream.append(tr)
+
+
+    abs_latvals = np.absolute(ppoints_df["pplat"].values)
+    abs_lonvals = np.absolute(ppoints_df["pplon"].values)
+    degkmfac = 111.2
+    width_lat = (np.amax(abs_latvals)-np.amin(abs_latvals)) * degkmfac
+    # width_lat +=0.2*width_lat
+    width_lon = (np.amax(abs_lonvals)-np.amin(abs_lonvals)) * degkmfac
+    # width_lon +=0.2*width_lon
+    # print(width_lat,width_lon)
         
-
+    ndivlat += 1
+    ndivlon += 1
+    stlat = ppoints_df["pplat"].min()
+    stlon = ppoints_df["pplon"].min()
     for azimuth in [0,90]:
-        if azimuth == 0:
+        if azimuth == 90:
             mxbin = width_lat
-        elif azimuth == 90:
+            ndiv=ndivlat
+            divisions = np.linspace(stlon,stlon+mxbin/degkmfac,ndivlon)
+        elif azimuth == 0:
             mxbin = width_lon
+            ndiv=ndivlon
+            divisions = np.linspace(stlat,stlat+mxbin/degkmfac,ndivlat)
 
-        divlocs = 0
-
-        
-        for dd in range(ndiv):
-            initdiv = divlocs
-            enddiv = divlocs+(mxbin/ndiv)   
-
-            outputfile = profilefileloc+ f"rf_profile_profile{azimuth}_{int(initdiv)}-{int(enddiv)}.h5"
+        for n in range(len(divisions)-1):
+            initdiv = divisions[n]
+            enddiv = divisions[n+1]
+            widthprof = int(np.abs(enddiv-initdiv)*degkmfac)
+            # print(initdiv,enddiv,widthprof)
+            # print(initdiv,enddiv)
+            outputfile = profilefileloc+ f"rf_profile_profile{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
             if not os.path.exists(outputfile):
-                boxes = get_profile_boxes((clat, clon), azimuth, np.linspace(initdiv, enddiv, int(np.abs(enddiv-initdiv)*5)), width=mxbin)
+                # logger.info("Calculating the boxes")
+                if azimuth == 90:
+                    logger.info(f'For az: {azimuth} startlat: {stlat}, startlon: {initdiv}, endlon: {enddiv}, length: {widthprof}')
+                    boxes = get_profile_boxes((stlat, initdiv), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
+                elif azimuth == 0:
+                    logger.info(f'For az: {azimuth} startlat: {initdiv}, startlon: {stlon}, endlat: {enddiv}, length: {widthprof}')
+                    boxes = get_profile_boxes((initdiv, stlon), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
+                    
                 pstream = profile(tqdm.tqdm(stream), boxes)
+
                 if len(pstream):
-                    logger.info(f"------> Calculated profile for azimuth {azimuth}: {outputfile}\n")
+                    logger.info(f"------> Calculated profile for azimuth {azimuth}: {outputfile}; Number of traces in the box: {len(pstream)}\n")
                     pstream.write(outputfile, 'H5')
                 else:
                     logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
             else:
                 logger.info(f"----> {outputfile} already exists!")
-            divlocs = enddiv
 
-    ## Profile 2
-    # rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
-    # stream = read_rf(rffiles[0], 'H5')
-    # map = plot_merc(resolution='h', llcrnrlon=mnlon-1, llcrnrlat=mnlat-1,urcrnrlon=mxlon+1, urcrnrlat=mxlat+1,topo=topo)
-    # x,y = map(stream[0].stats.station_longitude, stream[0].stats.station_latitude)
-    # map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
-    # for rffile in rffiles[1:]:
-    #     logger.info(f"----> for {rffile}")
-    #     st_tmp = read_rf(rffile, 'H5')
-    #     stream += read_rf(rffile, 'H5')
-    #     x,y = map(st_tmp[0].stats.station_longitude, st_tmp[0].stats.station_latitude)
-    #     map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
+
+    logger.info("Plotting the piercing point maps")
+
+    map = plot_merc(resolution='h', llcrnrlon=np.amin(stlons)-1, llcrnrlat=np.amin(stlats)-1,urcrnrlon=np.amax(stlons)+1, urcrnrlat=np.amax(stlats)+1,topo=True)
     
-    # ppoints = stream.ppoints(depth)
-    logger.info("Plotting the piercing point map 2")
-    xpp,ypp = map(ppoints_df["pplon"], ppoints_df["pplat"])
+    for lat,lon in zip(stlats,stlons):
+        x,y = map(lon, lat)
+        map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
+    
+    xpp,ypp = map(ppoints_df["pplon"].values, ppoints_df["pplat"].values)
     map.plot(xpp, ypp,'x', markersize=5,color='b',markeredgewidth=0.3, zorder=1)
-    plot_bm_azimuth(map,clon=clon,clat=clat,distval_lat=width_lat,distval_lon=width_lon,ndiv=ndiv)
+    plt.savefig(destination+'piercing_points_map.'+fig_frmt,dpi=200,bbox_inches='tight')
 
+    plot_bm_azimuth(map,stlon=stlon,stlat=stlat,distval_lat=width_lat,distval_lon=width_lon,ndivlat=ndivlat,ndivlon=ndivlon)
     outimagename = destination+'piercing_points_map_new.'+fig_frmt
     plt.savefig(outimagename,dpi=200,bbox_inches='tight')
     logger.info(f"----> Output image is {outimagename}")
     plt.close('all')
-
 
 
 def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
@@ -180,12 +191,12 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
     plt.style.use('classic')
     for azimuth in [0,90]:
         inpfiles = glob.glob(profilefileloc+ f"rf_profile_profile{azimuth}_*.h5")
-        # logger.info(inpfiles)
-        # inpfile = profilefileloc+ 'rf_profile_profile'+str(azimuth)+'.h5'
+
         for inpfile in inpfiles:
             logger.info(f"----> Working on {inpfile}")
             pstream = read_rf(inpfile)
-            divparam = inpfile.split("_")[-1].split(".")[0]
+            divparam = inpfile.split("_")[-4:-1]
+            divsuffix = inpfile.split("_")[-1].split(".")[0]
             # logger.info(pstream)
             pstream.trim2(trimrange[0], trimrange[1], 'onset')
             for chn in ['L','Q']:
@@ -193,7 +204,7 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
                 pstream.select(channel='??'+chn).normalize().plot_profile(scale=1.5, top='hist', fillcolors=('r', 'b'))
                 plt.gcf().set_size_inches(15, 10)
                 plt.title(f'Channel: {chn} Azimuth {azimuth}')
-                outputimage = destination+f"{chn}_{azimuth}_{divparam}_profile_plot.png"
+                outputimage = destination+f"{chn}_{azimuth}_{divparam[0]}_{divparam[1]}_{divparam[2]}_{divsuffix}_profile_plot.png"
                 plt.savefig(outputimage,dpi=200,bbox_inches='tight')
                 logger.info(f"------> Output image is {outputimage}")
 

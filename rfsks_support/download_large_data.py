@@ -75,6 +75,7 @@ class downloadDataclass:
             inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
         else:
             self.logger.error("No file written", exc_info=True)
+            sys.exit()
     ## inventory_catalog
     def obtain_events(self, catalogxmlloc,catalogtxtloc,minmagnitude=5.5,maxmagnitude=9.5):
         tot_evnt_stns = 0

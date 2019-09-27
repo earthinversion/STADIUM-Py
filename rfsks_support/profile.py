@@ -5,6 +5,7 @@ Functions for receiver function profile calculation.
 """
 import numpy as np
 from rf.util import _add_processing_info, direct_geodetic
+import logging
 
 
 _LARGE_BOX_WIDTH = 2000
@@ -66,11 +67,11 @@ def _find_box(latlon, boxes, crs=None):
         crs = ccrs.AzimuthalEquidistant(*latlon0[::-1])
     pc = ccrs.PlateCarree()
     p = crs.project_geometry(Point(*latlon[::-1]), pc)
+    # print("p is  defined")
     for box in boxes:
         poly = crs.project_geometry(box['poly'], pc)
         if p.within(poly):
             return box
-
 
 @_add_processing_info
 def profile(stream, boxes, crs=None):
@@ -82,27 +83,40 @@ def profile(stream, boxes, crs=None):
     :param crs: cartopy projection (default: AzimuthalEquidistant)
     :return: profile stream
     """
+    logger = logging.getLogger(__name__)
     stack = {}
     for tr in stream:
-        ppoint = (tr.stats.pp_latitude, tr.stats.pp_longitude)
-        box = _find_box(ppoint, boxes, crs=crs)
+        try:
+            ppoint = (tr.stats.pp_latitude, tr.stats.pp_longitude)
+        except:
+            # logger.error("ppoint error", exc_info=True)
+            continue
+        try:
+            box = _find_box(ppoint, boxes, crs=crs)
+        except:
+            # logger.error("find box error", exc_info=True)
+            continue
+
+
         if box is None:
             continue
+        # print("box is not none")
         pos = box['pos']
         comp = tr.stats.channel[-1]
         key = (pos, comp)
         if key not in stack:
+            
             header = {'box_pos': pos,
-                      'box_length': box['length'],
-                      'box_latitude': box['latlon'][0],
-                      'box_longitude': box['latlon'][1],
-                      'profile_latitude': boxes[0]['profile']['latlon'][0],
-                      'profile_longitude': boxes[0]['profile']['latlon'][1],
-                      'profile_azimuth': boxes[0]['profile']['azimuth'],
-                      'profile_length': boxes[0]['profile']['length'],
-                      'num': 1,
-                      'sampling_rate': tr.stats.sampling_rate,
-                      'channel': '??' + comp}
+                    'box_length': box['length'],
+                    'box_latitude': box['latlon'][0],
+                    'box_longitude': box['latlon'][1],
+                    'profile_latitude': boxes[0]['profile']['latlon'][0],
+                    'profile_longitude': boxes[0]['profile']['latlon'][1],
+                    'profile_azimuth': boxes[0]['profile']['azimuth'],
+                    'profile_length': boxes[0]['profile']['length'],
+                    'num': 1,
+                    'sampling_rate': tr.stats.sampling_rate,
+                    'channel': '??' + comp}
             for entry in ('slowness', 'phase', 'moveout', 'processing'):
                 if entry in tr.stats:
                     header[entry] = tr.stats[entry]
@@ -110,6 +124,7 @@ def profile(stream, boxes, crs=None):
             if 'onset' in tr.stats:
                 onset = tr.stats.onset - tr.stats.starttime
                 tr2.stats.onset = tr2.stats.starttime + onset
+
         else:
             tr2 = stack[key]
             tr2.data = tr2.data + tr.data

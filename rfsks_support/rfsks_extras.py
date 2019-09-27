@@ -17,10 +17,41 @@ from rfsks_support.other_support import Timeout
 
 DEG2KM = 111.2  #: Conversion factor from degrees epicentral distance to km
 
+def filter_traces(stream, lenphase):
+    logger = logging.getLogger(__name__)
+    # logger.warning("Filtering traces")
+    len_tr0 = stream[0].stats.npts
+    for tr in stream:
+        lentr=tr.stats.npts
+        if lentr != len_tr0:
+            # logger.warning("Length of traces not consistent")
+            stream.remove(tr)
+        lengt= tr.stats.sampling_rate * lenphase
+        
+        if lentr != lengt:
+            # logger.warning("Length is not consistent with the sampling rate")
+            stream.remove(tr)
+        elif tr.stats.sampling_rate < 20:
+            # logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}")
+            stream.remove(tr)
+        elif tr.stats.sampling_rate > 20:
+            if tr.stats.sampling_rate % 20 == 0:
+                factor = int(tr.stats.sampling_rate / 20)
+                # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
+                tr.decimate(factor, strict_length=False, no_filter=True)  
+                # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
+            else:
+                logger.warning(f"Sampling rate not a factor of 20, {tr.stats.sampling_rate}")
+                stream.remove(tr)
+
+        else:
+            pass
+    
+        
+
 
 def _get_stations(inventory):
     channels = inventory.get_contents()['channels']
-
     stations = {ch[:-1] + '?': ch[-1] for ch in channels}
     return stations
 
@@ -117,24 +148,23 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
 
 def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",attach_response=False,loc=""):    
     st = client.get_waveforms(net, stn, loc, cha, t1, t2,attach_response=attach_response)
+    # print("Retrieving")
+    filter_traces(st,lenphase=int(t2-t1))
+    if len(st) != 3:
+        # print(f"All three components not available: {len(st)}")
+        return False
     if stats_dict:
         dist, baz, _ = gps2dist_azimuth(stats_dict['station_latitude'],stats_dict['station_longitude'],stats_dict['event_latitude'],stats_dict['event_longitude'])
-        len_tr_list=list()
         for tr in st:
-            len_tr_list.append(len(tr))
             for key, value in stats_dict.items():
                 tr.stats[key] = value
             tr.stats['distance'] = dist / 1000 / DEG2KM
             tr.stats['back_azimuth'] = baz
-        if len(set(len_tr_list))!=1:
-            return False
+    
     st.merge()
     # if all 3 components present and no gap or overlap in data
     if len(st) == 3 and not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
         return RFStream(st)
-    elif len(st) != 3:
-        # print("--------> All requested channels not present!")
-        return False
     elif not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
         # print("--------> There's a gap/overlap in the data")
         return False

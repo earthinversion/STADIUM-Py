@@ -199,18 +199,17 @@ def events_map(evlons, evlats, evmgs, evdps, stns_lon, stns_lat, destination, ou
     plt.savefig(destination+outname+"-events_map."+figfrmt,dpi=200,bbox_inches='tight')
     plt.close('all')
 
-def plot_bm_azimuth(map,clon,clat,distval_lat=180,distval_lon=180,ndiv=5):
-    xc,yc = map(clon,clat)
-    distval_lat = distval_lat/2
-    distval_lon = distval_lon/2
-    ndiv = ndiv*2
-    yvals = np.linspace(clat-distval_lat/111.2,clat+distval_lat/111.2,ndiv)
-    xvals = np.linspace(clon-distval_lon/111.2,clon+distval_lon/111.2,ndiv)
-    ycs = [yc for i in range(ndiv)]
-    xcs = [xc for i in range(ndiv)]
-    xazs,yazs = map(xvals,yvals)
-    map.plot(xazs, ycs,'-|', markersize=5,color='k',markeredgewidth=1)
-    map.plot(xcs, yazs,'-_', markersize=5,color='k',markeredgewidth=1)
+def plot_bm_azimuth(map,stlon,stlat,distval_lat=180,distval_lon=180,ndivlat=4,ndivlon=5):    
+    xvals_az0 = np.linspace(stlon,stlon+distval_lon/111.2,ndivlon)
+    yvals_az0 = [stlat for i in range(ndivlon)]
+    xmap_az0,ymap_az0 = map(xvals_az0,yvals_az0)
+
+    xvals_az90 = [stlon for i in range(ndivlat)]
+    yvals_az90 = np.linspace(stlat,stlat+distval_lat/111.2,ndivlat)
+    xmap_az90,ymap_az90 = map(xvals_az90,yvals_az90)
+
+    map.plot(xmap_az0,ymap_az0,'-|', markersize=5,color='k',markeredgewidth=1)
+    map.plot(xmap_az90,ymap_az90,'-_', markersize=5,color='k',markeredgewidth=1)
 
 
 

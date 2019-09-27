@@ -170,8 +170,7 @@ if makeRF:
         try:
             logger.info("\n")
             logger.info("## Operating plot_priercingpoints_RF method")
-            rfs.plot_pp_profile_map(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70,ndiv = int(inp.loc['num_profile_divs','VALUES']))
-            # rfs.plot_pp_profile_map_new(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=catalogtxtloc,destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70)
+            rfs.plot_pp_profile_map(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70, ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
 
             if plot_RF_profile:
                 logger.info("\n")
