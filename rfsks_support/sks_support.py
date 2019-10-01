@@ -99,8 +99,8 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 pass
 
             if on_off.shape[0]==1:
-                trig_on = on_off[:,0][0]-5
-                trig_off = on_off[:,1][0]+5
+                trig_on = on_off[:,0][0]-10
+                trig_off = on_off[:,1][0]+30
                 t = trace1[0].stats.starttime
                 # logger.info(trig_on,trig_off,UTC(trig_on),UTC(trig_off),t)
                 # logger.info("------> Measure the splitting")
