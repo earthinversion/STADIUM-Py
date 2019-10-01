@@ -76,7 +76,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 
                 if trigger_loc and on_off.shape[0]==1:
                     outfile = trigger_loc+f'{plt_id}-{trace1[0].stats.event_time}-trigger.png'
-                    plot_trigger(trace1[0], cft, on_off, threshold[0], threshold[1], outfile=outfile)
+                    plot_trigger(trace1[1], cft, on_off, threshold[0], threshold[1], outfile=outfile)
 
             elif method=="classic_sta_lta":
                 cft = classic_sta_lta(trace1[1].data, int(5 * sps), int(10 * sps))
@@ -110,7 +110,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 # logger.info('\nTrace1',trace1[0].stats.channel,trace1[1].stats.channel,trace1[2].stats.channel)
                 logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
                 realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
-                measure = sw.EigenM(realdata)
+                measure = sw.EigenM(realdata, lags=(3,))
                 
                 if plot_measure_loc:
                     # setup figure and subplots
