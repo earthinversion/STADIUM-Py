@@ -195,3 +195,28 @@ class Timeout():
  
     def raise_timeout(self, *args):
         raise Timeout.Timeout()
+
+
+def organize_inventory(inventorytxtfile):
+    out_inventorytxtfile = inventorytxtfile.split(".")[0]+'_new'+'.txt'
+    inv_df = pd.read_csv(inventorytxtfile,sep="|",keep_default_na=False, na_values=[""])
+    cols = inv_df.columns.values
+    inv_df['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
+    net_sta_set = set(inv_df['#Network']+'_'+inv_df['Station'])
+
+
+    inv_df['StartTimeNum'] = inv_df['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+    inv_df['EndTimeNum'] = inv_df['EndTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+    new_inv_df = pd.DataFrame(columns = cols)
+    for net_sta in net_sta_set:
+        net = net_sta.split("_")[0]
+        sta = net_sta.split("_")[1]
+        row = inv_df[(inv_df['#Network']==net) & (inv_df['Station']==sta)]
+        print(row['Latitude'][0])
+        rowtimemax = row.loc[row['EndTimeNum'].idxmax()]
+        rowtimemin = row.loc[row['StartTimeNum'].idxmin()]
+        dict_row = {'#Network':net,'Station':sta,'Latitude':row['Latitude'][0],'Longitude':row['Longitude'][0],'Elevation':row['Elevation'][0],'SiteName':row['SiteName'][0],'StartTime':rowtimemin['StartTime'],'EndTime':rowtimemax['EndTime']}
+        new_inv_df = new_inv_df.append(dict_row, ignore_index=True)
+
+    new_inv_df.to_csv(out_inventorytxtfile, index=False,sep="|")
+    return out_inventorytxtfile

@@ -1,6 +1,6 @@
 import sys, os, glob, shutil
 from obspy.clients.fdsn import Client
-from rfsks_support.other_support import avg, date2time, write_station_file, Timeout
+from rfsks_support.other_support import avg, date2time, write_station_file, Timeout, organize_inventory
 from obspy import read_inventory
 import pandas as pd
 from obspy import UTCDateTime as UTC
@@ -13,7 +13,7 @@ import logging
 
 class downloadDataclass:
     
-    def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile=None,fig_frmt="png",method='RF'):
+    def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile,fig_frmt="png",method='RF'):
         self.logger = logging.getLogger(__name__)
         self.inventoryfile = inventoryfile
         self.inventorytxtfile = inventorytxtfile
@@ -71,11 +71,8 @@ class downloadDataclass:
         # self.logger.info(self.inventoryfile)
         inventory.write(self.inventoryfile, 'STATIONXML')
         self.inv = inventory
-        if self.inventorytxtfile:
-            inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
-        else:
-            self.logger.error("No file written", exc_info=True)
-            sys.exit()
+        inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
+        self.inventorytxtfile = organize_inventory(self.inventorytxtfile)
     ## inventory_catalog
     def obtain_events(self, catalogxmlloc,catalogtxtloc,minmagnitude=5.5,maxmagnitude=9.5):
         tot_evnt_stns = 0
@@ -162,14 +159,14 @@ class downloadDataclass:
 
         ################################## Download
     def download_data(self,catalogtxtloc,datafileloc,tot_evnt_stns, plot_stations=True, plot_events=True,dest_map="./",locations=[""]):
-        if not self.inv:
-            self.logger.info("Reading station inventory to obtain events catalog")
-            try:
-                # Read the station inventory
-                self.inv = read_inventory(self.inventoryfile, format="STATIONXML")
-            except Exception as exception:
-                self.logger.error("No available data", exc_info=True)
-                sys.exit()
+        # if not self.inv:
+        #     self.logger.info("Reading station inventory to obtain events catalog")
+        #     try:
+        #         # Read the station inventory
+        #         self.inv = read_inventory(self.inventoryfile, format="STATIONXML")
+        #     except Exception as exception:
+        #         self.logger.error("No available data", exc_info=True)
+        #         sys.exit()
         self.logger.info(f"Total data files to download: {tot_evnt_stns}")
         rem_dl = tot_evnt_stns
         succ_dl,num_try = 0, 0 
@@ -220,7 +217,6 @@ class downloadDataclass:
                             self.logger.info(f"Event: {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
                         else:
                             self.logger.info(f"{msg}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
-
 
                         if strm:
                             stream.extend(strm)

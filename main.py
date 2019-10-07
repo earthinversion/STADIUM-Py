@@ -95,7 +95,7 @@ if not len(locations):
 
 #######################
 ## Logging
-import logging, requests
+import logging
 logfiles = glob.glob(res_dir+"tmp/*.log")
 for log in logfiles:
     if os.path.exists(log):

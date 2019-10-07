@@ -8,9 +8,9 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 def plot_topo(map,cmap=plt.cm.jet):
     #20 minute bathymetry/topography data
-    etopo = np.loadtxt('topo/etopo20data.gz')
-    lons  = np.loadtxt('topo/etopo20lons.gz')
-    lats  = np.loadtxt('topo/etopo20lats.gz')
+    etopo = np.loadtxt('.topo/etopo20data.gz')
+    lons  = np.loadtxt('.topo/etopo20lons.gz')
+    lats  = np.loadtxt('.topo/etopo20lats.gz')
     # shift data so lons go from -180 to 180 instead of 20 to 380.
     etopo,lons = shiftgrid(180.,etopo,lons,start=False)
     lons, lats = np.meshgrid(lons, lats)
