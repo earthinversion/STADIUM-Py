@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from obspy.core import read
 from obspy.taup import TauPyModel
-from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_sks_splitting
+from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure
 from obspy.signal.trigger import recursive_sta_lta,classic_sta_lta,z_detect,carl_sta_trig,delayed_sta_lta, trigger_onset
 import splitwavepy as sw
 import logging
@@ -114,13 +114,16 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
                 try:
                     measure = sw.EigenM(realdata, lags=(3,))
-                    print(dir(measure))
+                    # print(dir(measure))
+                    print(measure.fast,measure.dfast,measure.lag,measure.dlag)
+                    # print(measure.lam1)
+                    
                 except Exception as e:
                     logger.error(e)
                     continue
                 
                 if plot_measure_loc:
-                    plot_sks_splitting(measure)      
-                    plt.tight_layout()
+                    plot_SKS_measure(measure)
+                    # plt.savefig(f"{plt_id}-{trace1[0].stats.event_time}.png")
                     plt.savefig(plot_measure_loc+f'{plt_id}-{trace1[0].stats.event_time}.png')
                     plt.close('all')              

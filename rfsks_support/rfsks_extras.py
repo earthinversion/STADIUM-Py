@@ -12,11 +12,7 @@ import numpy as np
 plt.style.use('seaborn')
 import logging
 from rfsks_support.other_support import Timeout
-import math
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Line3DCollection
-from matplotlib import gridspec
+import matplotlib.gridspec as gridspec
 
 
 
@@ -297,109 +293,26 @@ def plot_trace(trace2,trace_loc):
         plt.close('all')
     except Exception as exception:
         logger.error("Plot trace error", exc_info=True)
-
-
-def plot_particle_motion(measure, ax):
-    data = measure.chop()
-    data.rotate2eye()
-    x, y, z = data.x, data.y, data.z
-    t = data.t()
-    
-    # set limit
-    lim = np.abs(data.data()).max() * 1.1
-    if 'lims' not in kwargs: kwargs['lims'] = [-lim,lim] 
-    ax.set_aspect('equal')
-    ax.set_xlim(kwargs['lims'])
-    ax.set_ylim(kwargs['lims'])
-    ax.set_zlim(kwargs['lims'])
-    
-    # multi-colored
-    norm = plt.Normalize(t.min(),t.max())
-    points = np.array([x,y,z]).T.reshape(-1, 1, 3)
-    segments = np.concatenate([points[:-1], points[1:]], axis=1)
-    lc = Line3DCollection(segments,cmap='plasma',norm=norm,alpha=0.7)
-    lc.set_array(t)
-    lc.set_linewidth(2)
-    line = ax.add_collection(lc)
-    
-    # side panel data
-    ax.plot(x, y,-lim, zdir='z', alpha=0.3, color='g')
-    ax.plot(x, z, lim, zdir='y', alpha=0.3, color='g')
-    ax.plot(y, z, lim, zdir='x', alpha=0.3, color='g')
-        
-    # plot ray arrow
-    rayx, rayy, rayz = measure.rayvecs[0,2], measure.rayvecs[1,2], measure.rayvecs[2,2]
-    l = 1.5*lim
-    ax.quiver(0,0,0,rayx,rayy,rayz,pivot='middle', color='r', length=l, alpha=0.5)
-                
-    # side panel ray
-    ax.quiver(lim,0,0,0,rayy,rayz,alpha=0.3,color='b',pivot='middle',length=l*math.sqrt(rayy**2+rayz**2))
-    ax.quiver(0,lim,0,rayx,0,rayz,alpha=0.3,color='b',pivot='middle',length=l*math.sqrt(rayx**2+rayz**2))
-    ax.quiver(0,0,-lim,rayx,rayy,0,alpha=0.3,color='b',pivot='middle',length=l*math.sqrt(rayx**2+rayy**2))
-
-
-    # # set labels
-    # if 'cmplabels' not in kwargs: kwargs['cmplabels'] = data.cmplabels
-    # ax.set_xlabel(kwargs['cmplabels'][0])
-    # ax.set_ylabel(kwargs['cmplabels'][1])
-    # ax.set_zlabel(kwargs['cmplabels'][2])
-            
-    # turn off tick annotation
-    ax.axes.xaxis.set_ticklabels([])
-    ax.axes.yaxis.set_ticklabels([])
-    ax.axes.zaxis.set_ticklabels([])
-    
-    # flip axes
-    ax.invert_xaxis()
-    # ax.invert_zaxis()
-    
-    return
-
-
-def plot_sks_splitting(measure):
-    # setup figure and subplots
+def plot_SKS_measure(measure):
     fig = plt.figure(figsize=(12,6)) 
-    gs = gridspec.GridSpec(2, 3,width_ratios=[1,1,2])
+    gs = gridspec.GridSpec(2, 3, width_ratios=[1,1,2])    
     ax0 = plt.subplot(gs[0,0])
     ax1 = plt.subplot(gs[0,1])
     ax2 = plt.subplot(gs[1,0])
     ax3 = plt.subplot(gs[1,1])
     ax4 = plt.subplot(gs[:,2])
-    # data to plot
     d1 = measure.data.chop()
     d1f = measure.srcpoldata().chop()
-    print(dir(d1f))
     d2 = measure.data_corr().chop()
     d2s = measure.srcpoldata_corr().chop()
-    # get axis scaling
+    # # get axis scaling
     lim = np.abs(d2s.data()).max() * 1.1
     ylim = [-lim,lim]
+    d1f._ptr(ax0,ylim=ylim, cmplabels=['',''])
+    d1._ppm(ax1,lims=ylim, cmplabels=['',''])
+    # # corrected
+    d2s._ptr(ax2,ylim=ylim, cmplabels=['',''])
+    d2._ppm(ax3,lims=ylim, cmplabels=['',''])
 
-    ##Plot trace data on *ax* matplotlib axis object.
-    # d1f._ptr(ax0,ylim=ylim)
-    ax0.plot(d1f.t(),d1f.x,label='x')
-    ax0.plot(d1f.t(),d1f.y,label='y')
-    ax0.plot(d1f.t(),d1f.z,label='z')
-    ax0.legend(framealpha=0.5)
-    ax0.set_ylim(ylim)
-
-    ##Plot particle motion on *ax* matplotlib axis object.
-    # d1._ppm(ax1,lims=ylim)
-
-
-    # corrected
-    d2s._ptr(ax2,ylim=ylim)
-    d2._ppm(ax3,lims=ylim)
-    kwargs={}
-    kwargs['vals'] = measure.lam1 / measure.lam2
-    kwargs['title'] = r'$\lambda_1 / \lambda_2$'
-    
-    # add marker and info box by default
-    kwargs['marker'] = True
-    kwargs['info'] = True
-    kwargs['conf95'] = True
-
-    #plot an error surface
-    measure._psurf(ax4,**kwargs)
-    return fig
-    
+    measure._psurf(ax4, cmplabels=['',''])
+    plt.tight_layout()

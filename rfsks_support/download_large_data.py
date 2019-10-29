@@ -86,7 +86,6 @@ class downloadDataclass:
                 sys.exit()
         # list all the events during the station active time
         self.staNamesNet,staLats,staLons=[],[],[]
-        
 
         for net in self.inv:
             for sta in net:
