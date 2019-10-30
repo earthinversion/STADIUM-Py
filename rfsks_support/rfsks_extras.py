@@ -33,7 +33,7 @@ def filter_traces(stream, lenphase):
             # logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}")
             stream.remove(tr)
             continue
-        elif tr.stats.sampling_rate > 20:
+        elif tr.stats.sampling_rate >= 20:
             if tr.stats.sampling_rate % 20 == 0:
                 factor = int(tr.stats.sampling_rate / 20)
                 # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
@@ -41,10 +41,10 @@ def filter_traces(stream, lenphase):
                 continue 
                 # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
             else:
-                logger.warning(f"Sampling rate not a factor of 20, {tr.stats.sampling_rate}")
-                stream.remove(tr)
+                tr.resample(20.0)
+                logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
+                # stream.remove(tr)
                 continue
-
         else:
             pass
     
@@ -308,11 +308,16 @@ def plot_SKS_measure(measure):
     # # get axis scaling
     lim = np.abs(d2s.data()).max() * 1.1
     ylim = [-lim,lim]
-    d1f._ptr(ax0,ylim=ylim, cmplabels=['',''])
+    d1f._ptr(ax0,ylim=ylim, cmplabels=['N','E'])
     d1._ppm(ax1,lims=ylim, cmplabels=['',''])
     # # corrected
-    d2s._ptr(ax2,ylim=ylim, cmplabels=['',''])
+    d2s._ptr(ax2,ylim=ylim, cmplabels=['R','T'])
     d2._ppm(ax3,lims=ylim, cmplabels=['',''])
-
-    measure._psurf(ax4, cmplabels=['',''])
+    # add marker and info box by default
+    kwargs={}
+    kwargs['marker'] = True
+    kwargs['info'] = True
+    kwargs['conf95'] = True
+    kwargs['cmap'] = 'rainbow'
+    measure._psurf(ax4,**kwargs)
     plt.tight_layout()

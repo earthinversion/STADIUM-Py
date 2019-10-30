@@ -28,7 +28,11 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
     for i,sksfile in enumerate(sksfiles):
         data = read_rf(sksfile, 'H5')
         logger.info(f"Calculating SKS arrival times for {sksfile}")
-
+        net_name = os.path.basename(sksfile).split("-")[0]
+        stn_name = os.path.basename(sksfile).split("-")[1]
+        print("file name",net_name+stn_name)
+        sks_meas_file = open(plot_measure_loc+f"{net_name}_{stn_name}_sks_measurements.txt",'w')
+        sks_meas_file.write("EventTime StLong StLat FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
         
         for stream3c in IterMultipleComponents(data, 'onset', 3):
             count+=1
@@ -60,6 +64,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
             trace1.rotate('NE->RT')
             
             plt_id = f"{trace1[0].stats.network}-{trace1[0].stats.station}"
+            # print("latlon",dir(trace1[0].stats))
             
             # ## plot all three traces RTZ
             if trace_loc_RTZ:
@@ -101,8 +106,8 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 pass
 
             if on_off.shape[0]==1:
-                trig_on = on_off[:,0][0]-10
-                trig_off = on_off[:,1][0]+30
+                trig_on = on_off[:,0][0]
+                trig_off = on_off[:,1][0]+40
                 t = trace1[0].stats.starttime
                 # logger.info(trig_on,trig_off,UTC(trig_on),UTC(trig_off),t)
                 # logger.info("------> Measure the splitting")
@@ -114,16 +119,19 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
                 try:
                     measure = sw.EigenM(realdata, lags=(3,))
-                    # print(dir(measure))
-                    print(measure.fast,measure.dfast,measure.lag,measure.dlag)
-                    # print(measure.lam1)
+                    # print("NDF is ",measure.ndf())
                     
                 except Exception as e:
                     logger.error(e)
                     continue
-                
-                if plot_measure_loc:
-                    plot_SKS_measure(measure)
-                    # plt.savefig(f"{plt_id}-{trace1[0].stats.event_time}.png")
-                    plt.savefig(plot_measure_loc+f'{plt_id}-{trace1[0].stats.event_time}.png')
-                    plt.close('all')              
+                if measure.dfast < 45 and measure.dlag < 0.5 and measure.ndf()>3:
+                    '''
+                    Number of degrees of freedom is less than 3 may lead to a spurios measurement.
+                    '''
+                    sks_meas_file.write("{} {:8.4f} {:8.4f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.station_longitude,trace1[0].stats.station_latitude,measure.fast,measure.dfast,measure.lag,measure.dlag))
+                    if plot_measure_loc:
+                        plot_SKS_measure(measure)
+                        plt.savefig(plot_measure_loc+f'{plt_id}-{trace1[0].stats.event_time}.png')
+                        plt.close('all')    
+
+        sks_meas_file.close()
