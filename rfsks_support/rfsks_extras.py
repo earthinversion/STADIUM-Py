@@ -301,13 +301,18 @@ def plot_SKS_measure(measure):
     ax2 = plt.subplot(gs[1,0])
     ax3 = plt.subplot(gs[1,1])
     ax4 = plt.subplot(gs[:,2])
-    d1 = measure.data.chop()
-    d1f = measure.srcpoldata().chop()
-    d2 = measure.data_corr().chop()
-    d2s = measure.srcpoldata_corr().chop()
+    d1 = measure.data
+    # print(measure.data._w0(), measure.data._w1())
+    # print(dir(measure))
+    # print(d1.t())
+    d1f = measure.srcpoldata()
+    d2 = measure.data_corr()
+    d2s = measure.srcpoldata_corr()
     # # get axis scaling
     lim = np.abs(d2s.data()).max() * 1.1
     ylim = [-lim,lim]
+    print(d1f.wbeg(), d1f.wend())
+    print(d1f._centresamp(), d1f.window.offset, d1f.window.width/2)
     d1f._ptr(ax0,ylim=ylim, cmplabels=['N','E'])
     d1._ppm(ax1,lims=ylim, cmplabels=['',''])
     # # corrected
