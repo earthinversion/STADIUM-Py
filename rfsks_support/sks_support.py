@@ -33,7 +33,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
         stn_name = os.path.basename(sksfile).split("-")[1]
         # print("file name",net_name+stn_name)
         sks_meas_file = open(plot_measure_loc+f"{net_name}_{stn_name}_sks_measurements.txt",'w')
-        sks_meas_file.write(f"Stlon: {data[0].stats.station_longitude}; Stlat: {data[0].stats.station_latitude}; Stbaz: {data[0].stats.back_azimuth}\n")
+        sks_meas_file.write("Stlon: {:.4f}; Stlat: {:.4f}; Stbaz: {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
         sks_meas_file.write("EventTime EvLong EvLat FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
         
         for stream3c in IterMultipleComponents(data, 'onset', 3):
@@ -49,7 +49,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
 
 
             ## filter the trace
-            st = stream3c.filter('bandpass', freqmin=0.05, freqmax=0.6)
+            st = stream3c.filter('bandpass', freqmin=0.01, freqmax=0.6)
             st.detrend('linear')
             # st.taper(max_percentage=0.05, type="hann")
             sps = st[0].stats.sampling_rate
@@ -104,21 +104,18 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 if trigger_loc and on_off.shape[0]==1:
                     outfile = trigger_loc+f'{plt_id}-{trace1[0].stats.event_time}-trigger.png'
                     plot_trigger(trace1[1], cft, on_off, threshold[0], threshold[1], outfile=outfile)
-                    tav = int( (on_off[:, 0] /sps + on_off[:, 1] /(sps)))
-                    # print('t, tav, sps =', t, tav,sps)
-                    # print('trim =', t+tav-30,t+tav+30)
-                    # print('edtimediff',(t+tav+30),ev_endtime,(t+tav+30) - ev_endtime)
-                    # print('sttimediff',(t+tav-30),ev_sttime, (t+tav-30) - ev_sttime)
+                    # tav = int( (on_off[:, 0] /sps + on_off[:, 1] /(sps)))
+                   
 
-                    begttrim = t+tav-30
-                    endttrim = t+tav+30
+                    # begttrim = t+tav-30
+                    # endttrim = t+tav+30
 
-                    if (t+tav+30) - ev_endtime < 0:
-                        endttrim = ev_endtime
+                    # if (t+tav+30) - ev_endtime < 0:
+                    #     endttrim = ev_endtime
                     
-                    if (t+tav-30) - ev_sttime < 0:
-                        begttrim = ev_sttime
-                    trace1 = st.trim(begttrim,endttrim)
+                    # if (t+tav-30) - ev_sttime < 0:
+                    #     begttrim = ev_sttime
+                    # trace1 = st.trim(begttrim,endttrim)
 
             elif method=="classic_sta_lta":
                 cft = classic_sta_lta(trace1[1].data, int(5 * sps), int(10 * sps))
@@ -141,14 +138,7 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                 pass
 
             if on_off.shape[0]==1:
-                # print(snr_rt,'\n')
-                # t = trace1[0].stats.starttime
-
                 
-                # print(trace1)
-                # trace1 = trace1.trim()
-                # logger.info("------> Measure the splitting")
-                # print(trace1[0].stats)
                 trace1.rotate('RT->NE')
                 trace2 = trace1
                 logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
@@ -164,12 +154,11 @@ def SKScalc(dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=Non
                     Number of degrees of freedom is less than 3 may lead to a spurios measurement.
                     '''
                     sks_meas_file.write("{} {:8.4f} {:8.4f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,measure.fast,measure.dfast,measure.lag,measure.dlag))
-                    # sks_meas_file.write("{} {:8.4f} {:8.4f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.station_longitude,trace1[0].stats.station_latitude,measure.fast,measure.dfast,measure.lag,measure.dlag))
                     if plot_measure_loc:
                         plot_SKS_measure(measure)
                         plt.savefig(plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                         plt.close('all')  
                 else:
-                    logger.warning("Measurement rejected! Consider changing the trim window")
+                    logger.warning(f"dfast = {measure.dfast}, dlag = {measure.dlag};\nMeasurement rejected! Consider changing the trim window")
 
         sks_meas_file.close()
