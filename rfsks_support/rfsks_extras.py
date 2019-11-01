@@ -311,8 +311,8 @@ def plot_SKS_measure(measure):
     # # get axis scaling
     lim = np.abs(d2s.data()).max() * 1.1
     ylim = [-lim,lim]
-    print(d1f.wbeg(), d1f.wend())
-    print(d1f._centresamp(), d1f.window.offset, d1f.window.width/2)
+    # print(d1f.wbeg(), d1f.wend())
+    # print(d1f._centresamp(), d1f.window.offset, d1f.window.width/2)
     d1f._ptr(ax0,ylim=ylim, cmplabels=['N','E'])
     d1._ppm(ax1,lims=ylim, cmplabels=['',''])
     # # corrected
