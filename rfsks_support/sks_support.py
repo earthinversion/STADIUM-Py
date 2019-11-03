@@ -21,29 +21,31 @@ import logging
 class sks_measurements:
 
     def __init__(self,plot_measure_loc=None):
+        self.logger = logging.getLogger(__name__)
         self.plot_measure_loc= plot_measure_loc
         # pass
 
     ## Pre-processing
     def SKScalc(self, dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=None,method = 'None'):
-        logger = logging.getLogger(__name__)
-        logger.info("Cut the traces around the SKS arrival")
+        
+        self.logger.info("Cut the traces around the SKS arrival")
         sksfiles = glob.glob(dataSKSfileloc+'*-sks_profile_data.h5')
-        logger.info(sksfiles)
+        self.logger.info(sksfiles)
         count=0
         for i,sksfile in enumerate(sksfiles):
             data = read_rf(sksfile, 'H5')
-            logger.info(f"Calculating SKS arrival times for {sksfile}")
+            self.logger.info(f"Calculating SKS arrival times for {sksfile}")
             net_name = os.path.basename(sksfile).split("-")[0]
             stn_name = os.path.basename(sksfile).split("-")[1]
             # print("file name",net_name+stn_name)
             sks_meas_file = open(self.plot_measure_loc+f"{net_name}_{stn_name}_sks_measurements.txt",'w')
-            sks_meas_file.write("Stlon: {:.4f}; Stlat: {:.4f}; Stbaz: {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
+            sks_meas_file.write("Stlon Stlat Stbaz\n")
+            sks_meas_file.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
             sks_meas_file.write("EventTime EvLong EvLat FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
             
             for stream3c in IterMultipleComponents(data, 'onset', 3):
                 count+=1
-                logger.info(f"Working on {count}/{int(len(data)/3)}: {stream3c[0].stats.event_time}")
+                self.logger.info(f"Working on {count}/{int(len(data)/3)}: {stream3c[0].stats.event_time}")
 
                 ## check if the length of all three traces are equal
                 len_tr_list=list()
@@ -103,7 +105,7 @@ class sks_measurements:
                 # method = 'None'
                 ### operating on transverse component
                 if method=="recursive_sta_lta":
-                    # logger.info(f"Method is {method}")
+                    # self.logger.info(f"Method is {method}")
                     cft = recursive_sta_lta(trace1[1].data, int(1 * sps), int(5 * sps))
                     threshold = (2.5, 0.65)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
@@ -141,7 +143,7 @@ class sks_measurements:
                     threshold = (5, 10)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                 else:
-                    logger.info("No valid method specified")
+                    self.logger.info("No valid method specified")
                     pass
 
                 if on_off.shape[0]==1:
@@ -149,13 +151,13 @@ class sks_measurements:
                     # trace1 = st.trim(t+40, t+110)
                     trace1.rotate('RT->NE')
                     trace2 = trace1
-                    logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
+                    self.logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
                     realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
                     try:
                         measure = sw.EigenM(realdata, lags=(3,))
                         
                     except Exception as e:
-                        logger.error(e)
+                        self.logger.error(e)
                         continue
                     if measure.dfast < 5 and measure.dlag < 1.5:
                         '''
@@ -166,17 +168,81 @@ class sks_measurements:
                             plot_SKS_measure(measure)
                             plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                             plt.close('all')  
-                            logger.info(f"Measurement stored for {trace1[0].stats.event_time}; dfast = {measure.dfast}, dlag = {measure.dlag}")
+                            self.logger.info(f"Measurement stored for {trace1[0].stats.event_time}; dfast = {measure.dfast}, dlag = {measure.dlag}")
                     else:
-                        logger.warning(f"Measurement rejected! dfast = {measure.dfast}, dlag = {measure.dlag}; Consider changing the trim window")
+                        self.logger.warning(f"Measurement rejected! dfast = {measure.dfast}, dlag = {measure.dlag}; Consider changing the trim window")
 
             sks_meas_file.close()
 
     ## plotting the measurement
-    def plot_sks_map(self,lblon,lblat,ublon,ublat):
+    def plot_sks_map(self):
         from mpl_toolkits.basemap import Basemap
         from rfsks_support.plotting_libs import plot_topo, plot_merc
+        import pandas as pd
+        import math
 
-        map = plot_merc(resolution='l',llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat,topo=True)
-        plot_topo(map,cmap=plt.cm.rainbow)
-        # map.plot(x, y,'^', color=netcolor[net], markersize=7,markeredgecolor=netcolor[net],linewidth=0.1)
+        def plot_point_on_basemap(map, point, angle, length):
+            '''
+            point - Tuple (x, y)
+            angle - Angle in degrees.
+            length - Length of the line to plot.
+            '''
+
+            # unpack the point
+            x, y = point
+
+            # find the start and end point
+            halfleny = length/2 * math.sin(math.radians(angle))
+            halflenx = length/2 * math.cos(math.radians(angle))
+
+            endx,endy = map(x+halflenx,y+halfleny)
+            startx,starty = map(x-halflenx,y-halfleny)
+            map.plot([startx,endx],[starty,endy],color='k',zorder=3)
+            
+
+        all_sks_files = glob.glob(self.plot_measure_loc+"*_sks_measurements.txt")
+        station_data_all = pd.DataFrame(columns=['lon','lat','AvgFastDir','AvgLagTime'])
+        for i,sksfile in enumerate(all_sks_files):
+            stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
+            sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
+            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],sksdata['FastDirection(degs)'].mean(),sksdata['LagTime(s)'].mean()]
+
+        print(station_data_all.head())
+        
+        lblon = station_data_all['lon'].min() - 0.5
+        lblat = station_data_all['lat'].min() - 0.5
+
+        ublon = station_data_all['lon'].max() + 0.5
+        ublat = station_data_all['lat'].max() + 0.5
+
+
+        # map = plot_merc(resolution='l',llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat,topo=False)
+        # plot_topo(map,cmap=plt.cm.rainbow)
+        if np.abs(ublon-lblon)<2 or np.abs(ublat-lblat)<2:
+            athres = 10.
+            etoposhow=False
+        else:
+            athres = 1000.
+            etoposhow=True
+        map = Basemap(projection='merc',resolution = 'i', area_thresh = athres, llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat)
+        map.drawmapboundary(color='k', linewidth=2, zorder=1)
+
+        if etoposhow:
+            map.etopo(scale=1, alpha=0.5, zorder=2) # decrease scale (0-1) to downsample the etopo resolution
+            #The image has a 1" arc resolution
+            # map.shadedrelief(scale=1, zorder=2)
+        map.drawcoastlines(color='k',linewidth=0.5)
+        # map.fillcontinents()
+        map.drawcountries(color='k',linewidth=0.1)
+        map.drawstates(color='gray',linewidth=0.05)
+        map.drawrivers(color='blue',linewidth=0.05)
+        
+        map.drawparallels(np.linspace(lblat,ublat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+        map.drawmeridians(np.linspace(lblon,ublon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
+        stlons,stlats = map(station_data_all['lon'].values,station_data_all['lat'].values)
+        map.scatter(stlons, stlats, c='b', marker='o', s=100*np.log(station_data_all['AvgLagTime']),edgecolors='k',linewidths=0.1, zorder=4)
+        for jj in range(station_data_all.shape[0]):
+            plot_point_on_basemap(map, point=(station_data_all['lon'].values[jj],station_data_all['lat'].values[jj]), angle = station_data_all['AvgFastDir'].values[jj], length = 1)
+        # plt.tight_layout()
+        plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight')
+        self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
