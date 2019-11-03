@@ -238,8 +238,8 @@ if makeSKS:
         trigger_loc = str(dirs.loc['SKS_trigger_loc','DIR_NAME']) if plot_trigger else None
 
         plot_measure_loc = str(dirs.loc['plot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
-
-        skss.SKScalc(str(dirs.loc['dataSKSfileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,plot_measure_loc,method = 'recursive_sta_lta')
+        sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
+        sksMeasure.SKScalc(str(dirs.loc['dataSKSfileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = 'recursive_sta_lta')
 
 
 
