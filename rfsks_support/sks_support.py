@@ -244,5 +244,5 @@ class sks_measurements:
         for jj in range(station_data_all.shape[0]):
             plot_point_on_basemap(map, point=(station_data_all['lon'].values[jj],station_data_all['lat'].values[jj]), angle = station_data_all['AvgFastDir'].values[jj], length = 1)
         # plt.tight_layout()
-        plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight')
+        plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight',dpi=300)
         self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
