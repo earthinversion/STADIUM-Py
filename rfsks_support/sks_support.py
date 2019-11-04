@@ -210,18 +210,20 @@ class sks_measurements:
         for i,sksfile in enumerate(all_sks_files):
             stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
             sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
-            newfastdir=[]
-            for val in sksdata['FastDirection(degs)']:
-                if val<0 and val>-45:
-                    newfastdir.append(val+180)
-                else:
-                    newfastdir.append(val)
 
-            sksdata['FastDirection(degs)'] = np.array(newfastdir)
-            print(sksdata['FastDirection(degs)'])
+            # ## fixing for the negative fast dir values
+            # newfastdir=[]
+            # for val in sksdata['FastDirection(degs)']:
+            #     if val<0 and val>-45:
+            #         newfastdir.append(val+180)
+            #     else:
+            #         newfastdir.append(val)
+            # sksdata['FastDirection(degs)'] = np.array(newfastdir)
+
+            # print(sksdata['FastDirection(degs)'])
             station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],mean_angle(sksdata['FastDirection(degs)']),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
 
-        print(station_data_all.head())
+        # print(station_data_all.head())
         station_data_all['NumMeasurements'] = np.array(int(val) for val in station_data_all['NumMeasurements'])
         station_data_all.to_csv(self.plot_measure_loc+"../all_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
         
