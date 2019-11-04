@@ -209,40 +209,51 @@ class sks_measurements:
 
         print(station_data_all.head())
         
-        lblon = station_data_all['lon'].min() - 0.5
-        lblat = station_data_all['lat'].min() - 0.5
+        
+        if np.abs(station_data_all['lon'].max()-station_data_all['lon'].min())<10 or np.abs(station_data_all['lat'].max()-station_data_all['lat'].min())<10:
+            lblon = station_data_all['lon'].min() - 10
+            lblat = station_data_all['lat'].min() - 10
 
-        ublon = station_data_all['lon'].max() + 0.5
-        ublat = station_data_all['lat'].max() + 0.5
-
-
-        # map = plot_merc(resolution='l',llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat,topo=False)
-        # plot_topo(map,cmap=plt.cm.rainbow)
-        if np.abs(ublon-lblon)<2 or np.abs(ublat-lblat)<2:
-            athres = 10.
-            etoposhow=False
+            ublon = station_data_all['lon'].max() + 10
+            ublat = station_data_all['lat'].max() + 10
         else:
-            athres = 1000.
-            etoposhow=True
-        map = Basemap(projection='merc',resolution = 'i', area_thresh = athres, llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat)
+            lblon = station_data_all['lon'].min() - 0.5
+            lblat = station_data_all['lat'].min() - 0.5
+
+            ublon = station_data_all['lon'].max() + 0.5
+            ublat = station_data_all['lat'].max() + 0.5
+
+        plt.figure(figsize=(10,10))
+        map = Basemap(projection='merc',resolution = 'i', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat)
         map.drawmapboundary(color='k', linewidth=2, zorder=1)
 
-        if etoposhow:
-            map.etopo(scale=1, alpha=0.5, zorder=2) # decrease scale (0-1) to downsample the etopo resolution
-            #The image has a 1" arc resolution
-            # map.shadedrelief(scale=1, zorder=2)
+        map.etopo(scale=1, alpha=0.5, zorder=2) # decrease scale (0-1) to downsample the etopo resolution
+        #The image has a 1" arc resolution
+        # map.shadedrelief(scale=1, zorder=2)
         map.drawcoastlines(color='k',linewidth=0.5)
         # map.fillcontinents()
-        map.drawcountries(color='k',linewidth=0.1)
+        map.drawcountries(color='k',linewidth=0.5)
         map.drawstates(color='gray',linewidth=0.05)
         map.drawrivers(color='blue',linewidth=0.05)
         
         map.drawparallels(np.linspace(lblat,ublat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
         map.drawmeridians(np.linspace(lblon,ublon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
         stlons,stlats = map(station_data_all['lon'].values,station_data_all['lat'].values)
-        map.scatter(stlons, stlats, c='b', marker='o', s=100*np.log(station_data_all['AvgLagTime']),edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlons, stlats, c='b', marker='o', s=60*station_data_all['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+
+        for a in [1, 2, 3]:
+            map.scatter([], [], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k')
+
         for jj in range(station_data_all.shape[0]):
-            plot_point_on_basemap(map, point=(station_data_all['lon'].values[jj],station_data_all['lat'].values[jj]), angle = station_data_all['AvgFastDir'].values[jj], length = 1)
+            plot_point_on_basemap(map, point=(station_data_all['lon'].values[jj],station_data_all['lat'].values[jj]), angle = station_data_all['AvgFastDir'].values[jj], length = 2)
         # plt.tight_layout()
+        
+        
+        #draw mapscale
+        msclon,msclat = ublon-3,lblat+2
+        msclon0,msclat0 = station_data_all['lon'].mean(),station_data_all['lat'].mean()
+        map.drawmapscale(msclon,msclat,msclon0,msclat0, 500, barstyle='fancy', zorder=6)
+
+        plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
         plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight',dpi=300)
         self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
