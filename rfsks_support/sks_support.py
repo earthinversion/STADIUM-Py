@@ -199,6 +199,11 @@ class sks_measurements:
             startx,starty = map(x-halflenx,y-halfleny)
             map.plot([startx,endx],[starty,endy],color='k',zorder=3)
             
+        from cmath import rect, phase
+        from math import radians, degrees
+        def mean_angle(deg):
+            return degrees(phase(sum(rect(1, radians(d)) for d in deg)/len(deg)))
+
 
         all_sks_files = glob.glob(self.plot_measure_loc+"*_sks_measurements.txt")
         station_data_all = pd.DataFrame(columns=['lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
@@ -214,10 +219,10 @@ class sks_measurements:
 
             sksdata['FastDirection(degs)'] = np.array(newfastdir)
             print(sksdata['FastDirection(degs)'])
-            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],sksdata['FastDirection(degs)'].mean(),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
+            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],mean_angle(sksdata['FastDirection(degs)']),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
 
         print(station_data_all.head())
-        station_data_all['NumMeasurements'] = int(station_data_all['NumMeasurements'])
+        station_data_all['NumMeasurements'] = np.array(int(val) for val in station_data_all['NumMeasurements'])
         station_data_all.to_csv(self.plot_measure_loc+"../all_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
         
         if np.abs(station_data_all['lon'].max()-station_data_all['lon'].min())<10 or np.abs(station_data_all['lat'].max()-station_data_all['lat'].min())<10:
