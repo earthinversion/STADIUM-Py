@@ -201,14 +201,15 @@ class sks_measurements:
             
 
         all_sks_files = glob.glob(self.plot_measure_loc+"*_sks_measurements.txt")
-        station_data_all = pd.DataFrame(columns=['lon','lat','AvgFastDir','AvgLagTime'])
+        station_data_all = pd.DataFrame(columns=['lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         for i,sksfile in enumerate(all_sks_files):
             stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
             sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
-            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],sksdata['FastDirection(degs)'].mean(),sksdata['LagTime(s)'].mean()]
+            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],sksdata['FastDirection(degs)'].mean(),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
 
         print(station_data_all.head())
-        
+        station_data_all['NumMeasurements'] = int(station_data_all['NumMeasurements'])
+        station_data_all.to_csv(self.plot_measure_loc+"../all_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
         
         if np.abs(station_data_all['lon'].max()-station_data_all['lon'].min())<10 or np.abs(station_data_all['lat'].max()-station_data_all['lat'].min())<10:
             lblon = station_data_all['lon'].min() - 10
