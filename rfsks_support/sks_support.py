@@ -23,6 +23,7 @@ class sks_measurements:
     def __init__(self,plot_measure_loc=None):
         self.logger = logging.getLogger(__name__)
         self.plot_measure_loc= plot_measure_loc
+        print(self.plot_measure_loc)
         # pass
 
     ## Pre-processing
@@ -33,6 +34,7 @@ class sks_measurements:
         self.logger.info(sksfiles)
         count=0
         for i,sksfile in enumerate(sksfiles):
+            print(f'file = ',sksfile)
             data = read_rf(sksfile, 'H5')
             self.logger.info(f"Calculating SKS arrival times for {sksfile}")
             net_name = os.path.basename(sksfile).split("-")[0]
@@ -65,9 +67,9 @@ class sks_measurements:
                 ev_sttime = st[0].stats.starttime
                 ev_endtime = st[0].stats.endtime
                 # print('t',t,t+30, t + 110)
-                # trace1 = st.trim(t+40, t+110)
-                dsfix = (ev_endtime - ev_sttime)%2
-                trace1 = st.trim(ev_sttime, ev_endtime-dsfix)
+                trace1 = st.trim(t+30, t+110)
+#                dsfix = (ev_endtime - ev_sttime)%2
+#                trace1 = st.trim(ev_sttime, ev_endtime-dsfix)
 
 
                 ## plot the ENZ
@@ -79,11 +81,11 @@ class sks_measurements:
                 trace1.rotate('NE->RT')
                 # print('all stats',dir(trace1[0].stats))
                 # print()
-                snr_rt = sw.core.snrRH(trace1[1].data,trace1[0].data)
-                if snr_rt>3:
-                    pass
-                else:
-                    continue
+#                snr_rt = sw.core.snrRH(trace1[1].data,trace1[0].data)
+#                if snr_rt>3:
+#                    pass
+#                else:
+#                    continue
 
                 
                 plt_id = f"{trace1[0].stats.network}-{trace1[0].stats.station}"
@@ -147,7 +149,7 @@ class sks_measurements:
                     pass
 
                 if on_off.shape[0]==1:
-                    trace1 = trace1.trim(t+int(on_off[:, 0] /sps - 30), t+int(on_off[:, 1] /sps + 30))
+#                    trace1 = trace1.trim(t+int(on_off[:, 0] /sps - 30), t+int(on_off[:, 1] /sps + 30))
                     # trace1 = st.trim(t+40, t+110)
                     trace1.rotate('RT->NE')
                     trace2 = trace1
@@ -180,6 +182,7 @@ class sks_measurements:
         from rfsks_support.plotting_libs import plot_topo, plot_merc
         import pandas as pd
         import math
+        print('inside ',self.plot_measure_loc)
 
         def plot_point_on_basemap(map, point, angle, length):
             '''
@@ -199,33 +202,40 @@ class sks_measurements:
             startx,starty = map(x-halflenx,y-halfleny)
             map.plot([startx,endx],[starty,endy],color='k',zorder=3)
             
+
         from cmath import rect, phase
         from math import radians, degrees
         def mean_angle(deg):
             return degrees(phase(sum(rect(1, radians(d)) for d in deg)/len(deg)))
 
-
         all_sks_files = glob.glob(self.plot_measure_loc+"*_sks_measurements.txt")
-        station_data_all = pd.DataFrame(columns=['lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
+
+
+        station_data_all = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         for i,sksfile in enumerate(all_sks_files):
             stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
             sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
+            # print('sksfile:',sksfile)
+            net_net = sksfile.split("/")[-1].split("_")[0]
+            sta_sta = sksfile.split("/")[-1].split("_")[1]
+            print('sksfile:',net_net,sta_sta)
+            #net_sta = f"{sksfile.split("_")["/"][-1].split("_")[0]}_{sksfile.split("_")[1]}"
+            newfastdir=[]
+            for val in sksdata['FastDirection(degs)']:
+                if val<-45 and val>-91:
+                    newfastdir.append(val+180)
+                else:
+                    newfastdir.append(val)
 
-            # ## fixing for the negative fast dir values
-            # newfastdir=[]
-            # for val in sksdata['FastDirection(degs)']:
-            #     if val<0 and val>-45:
-            #         newfastdir.append(val+180)
-            #     else:
-            #         newfastdir.append(val)
-            # sksdata['FastDirection(degs)'] = np.array(newfastdir)
-
+            sksdata['FastDirection(degs)'] = np.array(newfastdir)
             # print(sksdata['FastDirection(degs)'])
-            station_data_all.loc[i] = [stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],mean_angle(sksdata['FastDirection(degs)']),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
+            station_data_all.loc[i] = [net_net,sta_sta, stn_info['Stlon'].values[0],stn_info['Stlat'].values[0],mean_angle(sksdata['FastDirection(degs)']),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
+
 
         # print(station_data_all.head())
-        station_data_all['NumMeasurements'] = np.array(int(val) for val in station_data_all['NumMeasurements'])
+        station_data_all['NumMeasurements'] = np.array([int(val) for val in station_data_all['NumMeasurements']])
         station_data_all.to_csv(self.plot_measure_loc+"../all_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+        print(self.plot_measure_loc+"../all_sks_measure.txt")
         
         if np.abs(station_data_all['lon'].max()-station_data_all['lon'].min())<10 or np.abs(station_data_all['lat'].max()-station_data_all['lat'].min())<10:
             lblon = station_data_all['lon'].min() - 10
