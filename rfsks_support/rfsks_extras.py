@@ -14,40 +14,131 @@ import logging
 from rfsks_support.other_support import Timeout
 import matplotlib.gridspec as gridspec
 
+# def filter_traces(stream, lenphase):
+#     logger = logging.getLogger(__name__)
+#     # logger.warning("Filtering traces")
+#     len_tr0 = stream[0].stats.npts
+#     for tr in stream:
+#         lentr=tr.stats.npts
+#         lengt= tr.stats.sampling_rate * lenphase
+#         if lentr != len_tr0 or lentr != lengt:
+#             # logger.warning("Length of traces not consistent")
+#             stream.remove(tr)
+#             continue
+#         elif tr.stats.sampling_rate < 20:
+#             # logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}")
+#             stream.remove(tr)
+#             continue
+#         elif tr.stats.sampling_rate >= 20:
+#             if tr.stats.sampling_rate % 20 == 0:
+#                 factor = int(tr.stats.sampling_rate / 20)
+#                 # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
+#                 tr.decimate(factor, strict_length=False, no_filter=True) 
+#                 continue 
+#                 # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
+#             else:
+#                 tr.resample(20.0)
+#                 logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
+#                 # stream.remove(tr)
+#                 continue
+#         else:
+#             pass
 
+
+
+def minendtime(alledtimes):
+        minval0 = alledtimes[0]
+        for val in alledtimes[1:]:
+            if val<minval0:
+                minval0 = val
+        return minval0
+
+def maxstarttime(allsttimes):
+    maxval0 = allsttimes[0]
+    for val in allsttimes[1:]:
+        if val>maxval0:
+            maxval0 = val
+    return maxval0
+
+def filter_traces_rf(stream,pharr = None):
+    logger = logging.getLogger(__name__)
+    #Filtering traces
+    
+    allsttimes = []
+    alledtimes = []
+    for tr in stream:
+        sttime = tr.stats.starttime
+        edtime = tr.stats.endtime
+        allsttimes.append(sttime)
+        alledtimes.append(edtime)
+        
+    
+    if minendtime(alledtimes)-pharr>=75 and pharr - maxstarttime(allsttimes)>=25:
+        
+        stream = stream.trim(pharr - 25, pharr+ 75)
+        for tr in stream:
+        
+            if tr.stats.sampling_rate < 20:
+                logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}, required >= 20Hz")
+                stream.remove(tr)
+                continue
+            elif tr.stats.sampling_rate >= 20:
+                if tr.stats.sampling_rate % 20 == 0:
+                    factor = int(tr.stats.sampling_rate / 20)
+                    # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
+                    tr.decimate(factor, strict_length=False, no_filter=True) 
+                    continue 
+                    # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
+                else:
+                    tr.resample(20.0)
+                    logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
+                    # stream.remove(tr)
+                    continue
+            else:
+                pass
+        
+        
 
 DEG2KM = 111.2  #: Conversion factor from degrees epicentral distance to km
 
-def filter_traces(stream, lenphase):
+def filter_traces_sks(stream,pharr = None):
     logger = logging.getLogger(__name__)
-    # logger.warning("Filtering traces")
-    len_tr0 = stream[0].stats.npts
+    #Filtering traces
+    # obtaining the start and end time for all traces in stream
+    allsttimes = []
+    alledtimes = []
     for tr in stream:
-        lentr=tr.stats.npts
-        lengt= tr.stats.sampling_rate * lenphase
-        if lentr != len_tr0 or lentr != lengt:
-            # logger.warning("Length of traces not consistent")
-            stream.remove(tr)
-            continue
-        elif tr.stats.sampling_rate < 20:
-            # logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}")
-            stream.remove(tr)
-            continue
-        elif tr.stats.sampling_rate >= 20:
-            if tr.stats.sampling_rate % 20 == 0:
-                factor = int(tr.stats.sampling_rate / 20)
-                # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
-                tr.decimate(factor, strict_length=False, no_filter=True) 
-                continue 
-                # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
-            else:
-                tr.resample(20.0)
-                logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
-                # stream.remove(tr)
-                continue
-        else:
-            pass
+        sttime = tr.stats.starttime
+        edtime = tr.stats.endtime
+        allsttimes.append(sttime)
+        alledtimes.append(edtime)
     
+    # filtering for defined window
+    if minendtime(alledtimes)-pharr>=60 and pharr - maxstarttime(allsttimes)>=60:
+        mincut = np.min([minendtime(alledtimes)-pharr,pharr - maxstarttime(allsttimes)]) #min dist from arrival time
+        mincut = 60 if mincut > 60 else None
+        
+        stream = stream.trim(pharr - mincut, pharr+ mincut)
+        for tr in stream:            
+            if tr.stats.sampling_rate < 20:
+                logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}, required >= 20Hz")
+                stream.remove(tr)
+                continue
+            elif tr.stats.sampling_rate >= 20:
+                if tr.stats.sampling_rate % 20 == 0:
+                    factor = int(tr.stats.sampling_rate / 20)
+                    # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
+                    tr.decimate(factor, strict_length=False, no_filter=True) 
+                    continue 
+                    # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
+                else:
+                    tr.resample(20.0)
+                    logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
+                    # stream.remove(tr)
+                    continue
+            else:
+                pass
+        
         
 
 
@@ -126,6 +217,7 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
                'endtime': endtime + pad}
         try:
             stream = get_waveforms(**kws)
+            # print(f"stream obtained {len(stream)}")
         except:  # no data available
             # logger.warning(f"No data available for {event}")
             continue
@@ -147,12 +239,20 @@ def iter_event_data(events, inventory, get_waveforms, phase='P',
             tr.stats.update(stats)
         yield RFStream(stream)
 
-def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",attach_response=False,loc=""):    
-    st = client.get_waveforms(net, stn, loc, cha, t1, t2,attach_response=attach_response)
+def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",attach_response=False,loc="",pharr=None, phasenm = 'P'):  
+    try:  
+        st = client.get_waveforms(net, stn, loc, cha, t1, t2,attach_response=attach_response)
+    except:
+        return False
     # print("Retrieving")
-    filter_traces(st,lenphase=int(t2-t1))
+    if phasenm == 'P':
+        # filter_traces(st,lenphase=int(t2-t1))
+        filter_traces_rf(st,pharr = pharr)
+    elif phasenm == 'SKS':
+        filter_traces_sks(st,pharr = pharr)
+
     if len(st) != 3:
-        # print(f"All three components not available: {len(st)}")
+        print(f"All three components not available: {len(st)}")
         return False
     if stats_dict:
         dist, baz, _ = gps2dist_azimuth(stats_dict['station_latitude'],stats_dict['station_longitude'],stats_dict['event_latitude'],stats_dict['event_longitude'])
@@ -165,9 +265,10 @@ def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",att
     st.merge()
     # if all 3 components present and no gap or overlap in data
     if len(st) == 3 and not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
+        # print(f"Stream obtained {len(st)}")
         return RFStream(st)
     elif not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
-        # print("--------> There's a gap/overlap in the data")
+        print("--------> There's a gap/overlap in the data")
         return False
 
 def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons,stalats,staNetNames,phase='P',locations=[""]):
@@ -178,48 +279,51 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
     model = TauPyModel('iasp91')
     arrivals = model.get_travel_times_geo(float(evdp),slat,slon,float(elat),float(elon),phase_list=[phase])
     if phase=='P':
-        t1 = UTC(str(evtime)) + int(arrivals[0].time - 25)
-        t2 = UTC(str(evtime)) + int(arrivals[0].time + 75)
+        t1 = UTC(str(evtime)) + int(arrivals[0].time - 50)
+        t2 = UTC(str(evtime)) + int(arrivals[0].time + 110)
+        # t1 = UTC(str(evtime)) + int(arrivals[0].time - 25)
+        # t2 = UTC(str(evtime)) + int(arrivals[0].time + 75)
     elif phase=='SKS':
-        t1 = UTC(str(evtime)) + int(arrivals[0].time - 60)
-        t2 = UTC(str(evtime)) + int(arrivals[0].time + 60)
+        t1 = UTC(str(evtime)) + int(arrivals[0].time - 80)
+        t2 = UTC(str(evtime)) + int(arrivals[0].time + 80)
     # sel_inv = inv.select(network=net).select(station=stn)[0][0]
     # if not sel_inv.is_active(starttime=t1, endtime=t2):
     #     # logger.warning(f"------> Station not active during {evtime}")
     #     msg = f"Station not active during {evtime}"
     #     return strm, 0, msg
     # process_id = os.getpid()
+    pharr = UTC(str(evtime)) + arrivals[0].time
     while not strm:
         client_local = Client(client[j])
         stats_args = {"_format":'H5', "onset" : UTC(str(evtime)) + arrivals[0].time, "event_latitude": elat, "event_longitude": elon,"event_depth":evdp, "event_magnitude":em,"event_time":UTC(str(evtime)),"phase":phase,"station_latitude":slat,"station_longitude":slon,"inclination":arrivals[0].incident_angle,"slowness":arrivals[0].ray_param_sec_degree}
         if phase=='P':
             for loc in locations:
-                # print(f"loc is {loc}.")
-                try:
-                    with Timeout(5):
-                        strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",loc=loc)
-                        if strm:
-                            break
-                except Exception as exception:
-                    pass
+                with Timeout(5):
+                    strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",loc=loc,pharr = pharr, phasenm = phase)
+                    if strm:
+                        break
+                
         elif phase=='SKS':
             for loc in locations:
-                try:
-                    with Timeout(5):
-                        strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",attach_response=True,loc=loc)
-                        if strm:
-                            break
-                except Exception as e:
-                    pass
+                # print(f"Location: {loc}")
+                with Timeout(5):
+                    
+                    strm = retrieve_waveform(client_local,net,stn,t1,t2,stats_dict=stats_args,cha="BHE,BHN,BHZ",attach_response=True,loc=loc,pharr = pharr, phasenm = phase)
+                    if strm:
+                        break #break the locations loop
+                
         if strm:
             fcat.write('{} | {:9.4f}, {:9.4f} | {:5.1f} | {:5.1f} {:4s} | {}\n'.format(evtime,elat,elon,evdp,em,emt,client[j]))
             stalons.append(slon)
             stalats.append(slat)
             staNetNames.append(f"{net}_{stn}")
+            # print("stream obtained\n")
+            msg = f"Data obtained for {evtime}"
             res = 1
             break
         elif j == len(client)-1:
             res = 0
+            msg = f"No data for {evtime}"
             break
         j+=1
     return strm, res, msg

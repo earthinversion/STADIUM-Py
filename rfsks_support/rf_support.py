@@ -9,7 +9,7 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
-from rfsks_support.rfsks_extras import filter_traces
+# from rfsks_support.rfsks_extras import filter_traces_rf
 import logging
 
 
@@ -84,7 +84,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         
     rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
     stream = read_rf(rffiles[0], 'H5')
-    filter_traces(stream,lenphase=100)
+    # filter_traces_rf(stream,lenphase=100)
     ppoints_tmp = stream.ppoints(depth)
     ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
     list_of_dfs.append(ppdf_tmp)
@@ -97,7 +97,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         logger.info(f"----> reading profile {rffile}")
         try:
             st_tmp = read_rf(rffile, 'H5')
-            filter_traces(st_tmp,lenphase=100)
+            # filter_traces_rf(st_tmp,lenphase=100)
             list_of_streams.append(st_tmp)
             ppoints_tmp = st_tmp.ppoints(depth)
             ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})

@@ -1,13 +1,13 @@
 PARAMETERS|VALUES|DESCRIPTION
 fresh_start|0
-client|ORFEUS|enter all the clients separated by commas
+client|IRIS,GFZ,ORFEUS|enter all the clients separated by commas
 mnlong|6
 mxlong|15
 mnlat|47
 mxlat|56
 network|*
-station|NE002
-locations|"","00"|List all locations, e.g "","00"
+station|STU
+locations|""|List all locations, e.g "","00"
 ###########|####
 RF|INPUT PARAMETERS
 ###########|####

@@ -68,8 +68,6 @@ class sks_measurements:
                 ev_endtime = st[0].stats.endtime
                 # print('t',t,t+30, t + 110)
                 trace1 = st.trim(t+30, t+110)
-#                dsfix = (ev_endtime - ev_sttime)%2
-#                trace1 = st.trim(ev_sttime, ev_endtime-dsfix)
 
 
                 ## plot the ENZ
@@ -153,7 +151,7 @@ class sks_measurements:
                     # trace1 = st.trim(t+40, t+110)
                     trace1.rotate('RT->NE')
                     trace2 = trace1
-                    self.logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
+                    # self.logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
                     realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps)
                     try:
                         measure = sw.EigenM(realdata, lags=(3,))
@@ -170,7 +168,7 @@ class sks_measurements:
                             plot_SKS_measure(measure)
                             plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                             plt.close('all')  
-                            self.logger.info(f"Measurement stored for {trace1[0].stats.event_time}; dfast = {measure.dfast}, dlag = {measure.dlag}")
+                            self.logger.info(f"Measurement accepted for {trace1[0].stats.event_time}; dfast = {measure.dfast}, dlag = {measure.dlag}")
                     else:
                         self.logger.warning(f"Measurement rejected! dfast = {measure.dfast}, dlag = {measure.dlag}; Consider changing the trim window")
 
