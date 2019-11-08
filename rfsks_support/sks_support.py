@@ -323,7 +323,7 @@ class sks_measurements:
 
         fig = plt.figure(figsize=(10,10))
         ax = fig.add_subplot(111)
-        map = Basemap(projection='merc',resolution = 'i', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat, epsg=4839)
+        map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat, epsg=4839)
         map.drawmapboundary(color='k', linewidth=2, zorder=1)
         map.arcgisimage(service='World_Physical_Map', xpixels = 5000, verbose= True, dpi=300)
 
@@ -355,14 +355,19 @@ class sks_measurements:
         for a in [1, 2, 3]:
             legendarray.append(map.scatter([], [], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k'))
         
-        legendarray.append(map.scatter([], [], c='lightgray', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='r', alpha=0.99, s=60, edgecolors='k'))
         legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
         legendarray.append(map.scatter([], [], c='navy', alpha=0.99, s=60, edgecolors='k'))
         legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='gold', marker='^', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='red', marker='^', alpha=0.99, s=60, edgecolors='k'))
 
 #        map.scatter(X[:3], Y[:3], color='orange', s=abs(corr[:3])*scale, label='Prairie')
 #        map.scatter(X[3:6], Y[3:6], color='violet', s=abs(corr[3:6])*scale, label='Tundra')
 #        map.scatter(X[6:], Y[6:], color='purple', s=abs(corr[6:])*scale, label='Taiga')
+
+         
+
 
         for jj in range(station_data_one.shape[0]):
             plot_point_on_basemap(map, point=(station_data_one['lon'].values[jj],station_data_one['lat'].values[jj]), angle = station_data_one['AvgFastDir'].values[jj], length = 1.5)
@@ -374,7 +379,9 @@ class sks_measurements:
             plot_point_on_basemap(map, point=(station_data_five['lon'].values[jj],station_data_five['lat'].values[jj]), angle = station_data_five['AvgFastDir'].values[jj], length = 1.5)
 
         # plt.tight_layout()
-        
+
+
+
         
         #draw mapscale
         msclon,msclat = ublon-4,lblat+1.0
@@ -386,4 +393,58 @@ class sks_measurements:
         ax.add_artist(leg1)
 
         plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight',dpi=300)
+        self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
+
+######### Station map  ###############
+
+
+
+            # plot all stations    
+        df = pd.read_csv('results/InfoSKS/stations_SKS.txt',delimiter='|')
+        stations = df['Station'].values
+        laat = df['Latitude'].values
+        loon = df['Longitude'].values
+
+
+        fig = plt.figure(figsize=(10,10))
+        ax = fig.add_subplot(111)
+        map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat, epsg=4839)
+        map.drawmapboundary(color='k', linewidth=2, zorder=1)
+        map.arcgisimage(service='World_Physical_Map', xpixels = 5000, verbose= True, dpi=300)
+
+        map.etopo(scale=2.5, alpha=0.5, zorder=2) # decrease scale (0-1) to downsample the etopo resolution
+        #The image has a 1" arc resolution
+        #map.shadedrelief(scale=1, zorder=1)
+        map.drawcoastlines(color='k',linewidth=0.5)
+        # map.fillcontinents()
+        map.drawcountries(color='k',linewidth=0.5)
+        map.drawstates(color='gray',linewidth=0.05)
+        map.drawrivers(color='blue',linewidth=0.05)
+        
+        map.drawparallels(np.linspace(lblat,ublat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+        map.drawmeridians(np.linspace(lblon,ublon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
+
+
+        allstlons,allstlats = map(df['Longitude'].values,df['Latitude'].values)
+        map.scatter(allstlons,allstlats , c='gold', marker='^', s=60, facecolors='none', edgecolors='b',linewidths=0.3, zorder=2)
+        
+
+
+        stlons,stlats = map(station_data_all['lon'].values,station_data_all['lat'].values)
+#        print('test = ',stlons, stlats,station_data_all['AvgLagTime'])
+#        map.scatter(stlons, stlats, c='b', marker='o', s=60*station_data_all['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlons, stlats, c='red', marker='^', s=60, edgecolors='k',linewidths=0.3, zorder=2)
+
+
+        #draw mapscale
+        msclon,msclat = ublon-4,lblat+1.0
+        msclon0,msclat0 = station_data_all['lon'].mean(),station_data_all['lat'].mean()
+        map.drawmapscale(msclon,msclat,msclon0,msclat0, 250, barstyle='fancy', zorder=6)
+        leg2 = plt.legend([legendarray[7],legendarray[8]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+        ax.add_artist(leg2)
+
+        leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+        ax.add_artist(leg2)
+
+        plt.savefig(self.plot_measure_loc+'../SKS_station_Map.png',bbox_inches='tight',dpi=300)
         self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
