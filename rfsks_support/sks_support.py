@@ -215,6 +215,7 @@ class sks_measurements:
         station_data_zero = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_one = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_four = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
+        station_data_five = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         for i,sksfile in enumerate(all_sks_files):
           if sum(1 for line in open(sksfile)) == 3:
             stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
@@ -247,7 +248,7 @@ class sks_measurements:
             station_data_one.loc[i] = [net_net,sta_sta,round( stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),round(mean_angle(sksdata['FastDirection(degs)']),3),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
 
 
-          elif sum(1 for line in open(sksfile)) > 7:
+          elif sum(1 for line in open(sksfile)) > 7 and sum(1 for line in open(sksfile)) <= 14:
             stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
             sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
             print('sksfile:',sksfile)
@@ -268,6 +269,27 @@ class sks_measurements:
             station_data_four.loc[i] = [net_net,sta_sta,round( stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),round(mean_angle(sksdata['FastDirection(degs)']),3),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
 
 
+          elif sum(1 for line in open(sksfile)) > 15:
+            stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
+            sksdata = pd.read_csv(sksfile,skiprows=2,delimiter='\s+')
+            print('sksfile:',sksfile)
+            net_net = sksfile.split("/")[-1].split("_")[0]
+            sta_sta = sksfile.split("/")[-1].split("_")[1]
+            print('sksfile:',net_net,sta_sta)
+            #net_sta = f"{sksfile.split("_")["/"][-1].split("_")[0]}_{sksfile.split("_")[1]}"
+            newfastdir=[]
+            for val in sksdata['FastDirection(degs)']:
+                if val<-45 and val>-91:
+                    newfastdir.append(val+180)
+                else:
+                    newfastdir.append(val)
+
+            sksdata['FastDirection(degs)'] = np.array(newfastdir)
+            print(sksdata['FastDirection(degs)'])
+            station_data_all.loc[i] = [net_net,sta_sta,round( stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),round(mean_angle(sksdata['FastDirection(degs)']),3),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
+            station_data_five.loc[i] = [net_net,sta_sta,round( stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),round(mean_angle(sksdata['FastDirection(degs)']),3),sksdata['LagTime(s)'].mean(),sksdata.shape[0]]
+
+
         print(station_data_all.head())
         station_data_all['NumMeasurements'] = np.array([int(val) for val in station_data_all['NumMeasurements']])
         station_data_all.to_csv(self.plot_measure_loc+"../all_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
@@ -281,6 +303,9 @@ class sks_measurements:
         station_data_four['NumMeasurements'] = np.array([int(val) for val in station_data_four['NumMeasurements']])
         station_data_four.to_csv(self.plot_measure_loc+"../4_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
         print(self.plot_measure_loc+"../4_sks_measure.txt")
+        station_data_five['NumMeasurements'] = np.array([int(val) for val in station_data_five['NumMeasurements']])
+        station_data_five.to_csv(self.plot_measure_loc+"../5_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+        print(self.plot_measure_loc+"../5_sks_measure.txt")
 
         
         if np.abs(station_data_all['lon'].max()-station_data_all['lon'].min())<10 or np.abs(station_data_all['lat'].max()-station_data_all['lat'].min())<2:
@@ -298,8 +323,9 @@ class sks_measurements:
 
         fig = plt.figure(figsize=(10,10))
         ax = fig.add_subplot(111)
-        map = Basemap(projection='merc',resolution = 'i', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat)
+        map = Basemap(projection='merc',resolution = 'i', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat, epsg=4839)
         map.drawmapboundary(color='k', linewidth=2, zorder=1)
+        map.arcgisimage(service='World_Physical_Map', xpixels = 5000, verbose= True, dpi=300)
 
         map.etopo(scale=2.5, alpha=0.5, zorder=2) # decrease scale (0-1) to downsample the etopo resolution
         #The image has a 1" arc resolution
@@ -316,20 +342,23 @@ class sks_measurements:
         stlon0s,stlat0s = map(station_data_zero['lon'].values,station_data_zero['lat'].values)
         stlon1s,stlat1s = map(station_data_one['lon'].values,station_data_one['lat'].values)
         stlon4s,stlat4s = map(station_data_four['lon'].values,station_data_four['lat'].values)
+        stlon5s,stlat5s = map(station_data_five['lon'].values,station_data_five['lat'].values)
 #        print('test = ',stlons, stlats,station_data_all['AvgLagTime'])
 #        map.scatter(stlons, stlats, c='b', marker='o', s=60*station_data_all['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
         map.scatter(stlon0s, stlat0s, c='lightgray', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=2)
         map.scatter(stlon1s, stlat1s, c='cornflowerblue', marker='o', s=60*station_data_one['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
         map.scatter(stlon4s, stlat4s, c='navy', marker='o', s=60*station_data_four['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon5s, stlat5s, c='black', marker='o', s=60*station_data_four['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
 
 
         legendarray = []
         for a in [1, 2, 3]:
             legendarray.append(map.scatter([], [], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k'))
         
-        legendarray.append(map.scatter([], [], c='lightgray', alpha=0.6, s=60, edgecolors='k'))
-        legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.6, s=60, edgecolors='k'))
-        legendarray.append(map.scatter([], [], c='navy', alpha=0.6, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='lightgray', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='navy', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
 
 #        map.scatter(X[:3], Y[:3], color='orange', s=abs(corr[:3])*scale, label='Prairie')
 #        map.scatter(X[3:6], Y[3:6], color='violet', s=abs(corr[3:6])*scale, label='Tundra')
@@ -340,15 +369,19 @@ class sks_measurements:
 
         for jj in range(station_data_four.shape[0]):
             plot_point_on_basemap(map, point=(station_data_four['lon'].values[jj],station_data_four['lat'].values[jj]), angle = station_data_four['AvgFastDir'].values[jj], length = 1.5)
+
+        for jj in range(station_data_five.shape[0]):
+            plot_point_on_basemap(map, point=(station_data_five['lon'].values[jj],station_data_five['lat'].values[jj]), angle = station_data_five['AvgFastDir'].values[jj], length = 1.5)
+
         # plt.tight_layout()
         
         
         #draw mapscale
-        msclon,msclat = ublon-3,lblat+1.0
+        msclon,msclat = ublon-4,lblat+1.0
         msclon0,msclat0 = station_data_all['lon'].mean(),station_data_all['lat'].mean()
-        map.drawmapscale(msclon,msclat,msclon0,msclat0, 500, barstyle='fancy', zorder=6)
+        map.drawmapscale(msclon,msclat,msclon0,msclat0, 250, barstyle='fancy', zorder=6)
 
-        leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5]],['No measurement','1-3 measurements','4+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+        leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement','1-3 measurements','4-14 measurements','15+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
         leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
         ax.add_artist(leg1)
 
