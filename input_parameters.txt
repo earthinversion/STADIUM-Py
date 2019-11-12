@@ -1,5 +1,6 @@
 PARAMETERS|VALUES|DESCRIPTION
 fresh_start|0
+project_name|project01
 client|ORFEUS|enter all the clients separated by commas
 mnlong|6
 mxlong|15

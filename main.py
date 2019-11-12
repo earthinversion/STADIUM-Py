@@ -15,7 +15,7 @@ import time
 
 
 inp = pd.read_csv("input_parameters.txt",sep="|",index_col ='PARAMETERS')
-res_dir = 'results/'
+res_dir = str(inp.loc['project_name','VALUES']) #'results/'
 dirs = oss.read_directories(res_dir)
 
 ## Input parameters  ## General

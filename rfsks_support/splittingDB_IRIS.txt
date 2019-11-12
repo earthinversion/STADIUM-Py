@@ -1,0 +1,912 @@
+id	Station	Latitude	Longitude	phi	dt	refID	Phase	pmax	pmin	dtmax	dtmin	remark
+2	GRA1	49.69	11.22	77.0	1.05	0	SKS	4.0		0.15		
+54	BRG	50.9	14.0	100.0	1.2	4	SKS					
+58	CLL	51.3	13.0	100.0	1.0	4	SKS					
+66	GRF	49.5	11.2	90.0	0.7	4	SKS					
+74	KHC	49.1	13.6	100.0	1.1	4	SKS					
+82	MOX	50.7	11.6	100.0	0.7	4	SKS					
+101	STU	48.8	9.2	50.0	0.5	4	SKS					
+112	BRG	50.9	14.0	100.0	1.2	5	SKS					
+113	CLL	51.3	13.0	100.0	1.0	5	SKS					
+114	MOX	50.7	11.6	100.0	0.7	5	SKS					
+115	GRF	49.4	11.3	90.0	0.7	5	SKS					
+116	STU	48.8	9.2	50.0	0.5	5	SKS					
+119	KHC	49.1	13.6	100.0	1.1	5	SKS					
+244	BFO	48.3319	8.3311	40.0	1.0	13	SKS					
+245	CLZ	51.84	10.37	110.0	0.6	13	SKS					
+246	FUR	48.16	11.28	60.0	1.2	13	SKS					
+247	HAM	53.47	9.92	120.0	0.4	13	SKS					
+248	TNS	50.22	8.45	80.0	0.8	13	SKS					
+249	WET	49.14	12.88	90.0	1.4	13	SKS					
+493	STU	48.8	9.2	50.0	0.5	29	SKS					
+494	GRF	49.5	11.2	90.0	0.7	29	SKS					
+495	KHC	49.1	13.6	10.0	1.1	29	SKS					
+496	MOX	50.7	11.6	100.0	0.7	29	SKS					
+497	BRG	50.9	14.0	100.0	1.2	29	SKS					
+499	CLL	51.3	13.0	100.0	1.0	29	SKS					
+658	ECH	48.216	7.158	85.0	0.88	39	SKS	9.0		0.09		
+744	BRG	50.875	13.947	101.0	0.3	47	SKS					
+745	BRNL	52.428	13.358	119.0	0.68	47	SKS					
+746	BSD	55.11	14.91	15.0	0.5	47	SKS					
+747	BSEG	53.94	10.32	86.0	0.5	47	SKS					
+748	BUG	51.445	7.264	92.0	0.63	47	SKS					
+749	CLZ	51.8429	10.374	90.0	0.6	47	SKS					
+753	HLG	54.184	7.884	104.0	0.9	47	SKS					
+754	IBBN	52.307	7.757	69.0	0.77	47	SKS					
+756	LEN	53.09	11.479	105.0	1.07	47	SKS					
+758	MOX	50.646	11.616	79.0	1.3	47	SKS					
+760	RGN	54.548	13.321	43.0	0.7	47	SKS					
+761	RUE	52.477	13.779	97.0	0.68	47	SKS					
+762	T0BG	52.958	12.034	107.0	0.7	47	SKS					
+765	T1BD	55.863	12.24	104.0	1.1	47	SKS					
+766	T1BG	54.073	10.457	101.0	0.5	47	SKS					
+767	T2BD	55.703	11.55	104.0	1.17	47	SKS					
+768	T2BG	54.217	10.067	83.0	1.3	47	SKS					
+770	T3BD	55.536	12.078	104.0	0.9	47	SKS					
+771	T3BG	54.328	10.547	83.0	1.0	47	SKS					
+773	T4BD	55.219	11.595	109.0	0.4	47	SKS					
+774	T4BG	53.137	9.802	62.0	0.6	47	SKS					
+775	T5BD	54.886	11.815	94.0	0.3	47	SKS					
+776	T5BG	53.19	9.337	90.0	0.6	47	SKS					
+778	T6BD	54.887	11.254	144.0	1.1	47	SKS					
+779	T6BG	53.38	9.594	88.0	0.37	47	SKS					
+781	T7BG	52.258	8.556	89.0	0.98	47	SKS					
+783	T8BG	53.85	12.905	88.0	0.6	47	SKS					
+784	T9BG	52.724	11.48	113.0	0.55	47	SKS					
+785	TBBG	52.87	13.633	85.0	0.6	47	SKS					
+2144	A02	52.422	7.935	114.0	1.0	120						
+2145	A03	52.258	8.556	132.0	1.0	120						
+2146	A04	52.188	8.081	133.0	0.7	120						
+2147	A05	51.949	8.684	80.0	2.0	120						
+2148	A06	51.683	7.441	89.0	0.6	120						
+2149	A07	51.696	8.01		0.0	120						
+2150	A09	51.492	8.064		0.0	120						
+2151	A10	51.494	8.453		0.0	120						
+2152	A11	51.3	7.414	94.0	1.0	120						
+2153	A12	51.245	7.199	89.0	1.2	120						
+2154	A13	51.131	7.135	96.0	1.7	120						
+2155	A14	50.947	7.421	130.0	1.9	120						
+2156	A15	50.75	7.449	132.0	1.2	120						
+2157	A18	50.564	8.086	137.0	1.0	120						
+2158	A19	50.605	7.81	110.0	0.7	120						
+2159	A20	50.702	8.226	136.0	1.2	120						
+2160	A21	50.776	8.04	132.0	1.5	120						
+2161	A31	52.258	7.332		0.0	120						
+2162	A33	51.951	7.407		0.0	120						
+2163	A50	51.218	7.993	109.0	0.9	120						
+2164	A51	51.113	7.889	97.0	1.9	120						
+2165	A53	50.874	7.638	135.0	1.5	120						
+2166	A54	50.724	7.555	134.0	1.0	120						
+2167	A80	50.74	8.639	149.0	1.3	120						
+2168	A82	51.051	9.176	98.0	0.8	120						
+2169	A83	51.426	9.684		0.0	120						
+2170	A85	50.917	8.943	116.0	1.1	120						
+2171	B01	50.614	6.632	84.0	2.6	120						
+2172	B02	50.576	6.945	178.0	0.3	120						
+2173	B03	50.648	7.307		0.0	120						
+2174	B04	50.572	7.686		0.0	120						
+2175	B08	50.463	7.168	60.0	1.7	120						
+2176	B09	50.488	7.475	2.0	1.3	120						
+2177	B10	50.335	6.577		0.0	120						
+2178	B11	50.353	6.823	52.0	0.7	120						
+2179	B13	50.35	7.368	79.0	3.6	120						
+2180	B14	50.346	7.749	79.0	3.3	120						
+2181	B15	50.212	6.981	166.0	1.2	120						
+2182	B16	50.222	7.235	76.0	3.4	120						
+2183	B17	50.209	7.495	88.0	1.8	120						
+2184	B19	50.181	6.524		0.0	120						
+2185	B22	50.033	7.518	11.0	0.5	120						
+2186	B23	49.916	6.346	78.0	3.4	120						
+2187	B24	49.921	6.574	84.0	3.4	120						
+2188	B26	49.903	7.392	25.0	0.8	120						
+2189	B27	49.9	7.713	43.0	0.7	120						
+2190	B29	49.719	6.794	39.0	0.6	120						
+2191	B30	49.759	7.24	167.0	1.5	120						
+2192	B33	49.761	8.186		0.0	120						
+2193	B34	49.521	7.712	59.0	1.6	120						
+2194	B35	49.516	6.609	64.0	1.0	120						
+2195	B36	49.501	6.782		0.0	120						
+2196	B37	49.482	7.032	55.0	1.2	120						
+2197	B38	49.507	7.453		0.0	120						
+2198	B40	49.171	6.822	59.0	2.1	120						
+2199	B41	49.197	7.145	60.0	1.8	120						
+2200	B43	50.027	7.683	15.0	1.0	120						
+2201	B44	50.036	7.95	4.0	1.4	120						
+2202	B46	50.213	7.992		0.0	120						
+2203	B49	50.454	8.081	149.0	1.6	120						
+2204	B50	50.621	7.431	174.0	0.8	120						
+2205	B51	50.482	7.267	57.0	1.3	120						
+2206	B52	50.349	7.197	55.0	1.7	120						
+2207	B53	50.251	7.074	41.0	0.6	120						
+2208	B54	50.177	7.043	3.0	1.6	120						
+2209	B55	50.158	6.985		0.0	120						
+2210	B56	50.112	6.971	6.0	0.9	120						
+2211	B57	50.065	6.947	13.0	1.2	120						
+2212	B58	50.028	6.872	53.0	1.8	120						
+2213	B59	50.01	6.839	50.0	0.8	120						
+2214	B60	49.967	6.827	6.0	0.6	120						
+2215	B61	49.915	6.78	173.0	0.7	120						
+2216	B62	49.871	6.711	4.0	0.7	120						
+2217	B63	49.848	6.659		0.0	120						
+2218	B64	49.814	6.618	58.0	2.4	120						
+2219	B65	49.761	6.56	77.0	1.5	120						
+2220	B66	49.691	6.47	78.0	1.9	120						
+2221	B67	49.556	6.472		0.0	120						
+2222	B70	50.262	6.66		0.0	120						
+2223	B71	50.195	6.74	81.0	3.2	120						
+2224	B72	50.148	6.824	49.0	2.2	120						
+2225	B73	50.027	7.071	61.0	1.2	120						
+2226	B74	49.984	7.149	47.0	0.8	120						
+2227	B75	49.939	7.217	34.0	0.8	120						
+2228	B82	50.559	6.236		0.0	120						
+2234	C08	50.342	6.314		0.0	120						
+2238	C22	49.806	6.267		0.0	120						
+2239	C23	49.597	6.004		0.0	120						
+2243	D51	49.312	6.281		0.0	120						
+2477	FUR	48.1655	11.2763	60.0	0.8	129		6.0	6.0	0.2	0.2	60 individual splitting measurements
+2478	DGO	47.8348	11.8067	69.0	0.8	129		4.0	4.0	0.3	0.3	10 individual splitting measurements
+2479	DSC	47.7385	11.8682	56.0	0.6	129		5.0	5.0	0.1	0.1	17 individual splitting measurements
+2480	DSR	47.6818	11.7515	57.0	0.9	129		4.0	4.0	0.2	0.2	17 individual splitting measurements
+2481	DVA	47.6169	11.8934	64.0	1.0	129		4.0	4.0	0.2	0.2	15 individual splitting measurements
+2482	ASC	47.591	12.0494	71.0	1.6	129		3.0	3.0	0.3	0.3	15 individual splitting measurements
+2483	AAW	47.5682	11.6787	60.0	1.3	129		2.0	2.0	0.2	0.2	12 individual splitting measurements
+2484	ABR	47.493	11.8887	67.0	1.3	129		2.0	2.0	0.2	0.2	14 individual splitting measurements
+2485	AKU	47.4566	11.9908	69.0	1.0	129		2.0	2.0	0.2	0.2	14 individual splitting measurements
+2486	ARO	47.4414	11.7627	64.0	0.8	129		6.0	6.0	0.3	0.3	16 individual splitting measurements
+2487	AHY	47.4064	11.8778	68.0	1.1	129		4.0	4.0	0.3	0.3	14 individual splitting measurements
+2488	AIA	47.3622	11.9866	64.0	1.0	129		3.0	3.0	0.2	0.2	15 individual splitting measurements
+2489	AKO	47.3549	11.7547	65.0	1.5	129		2.0	2.0	0.2	0.2	15 individual splitting measurements
+2490	AST	47.2875	11.8944	60.0	1.2	129		3.0	3.0	0.2	0.2	15 individual splitting measurements
+2491	AHO	47.2712	11.7779	67.0	1.3	129		3.0	3.0	0.3	0.3	14 individual splitting measurements
+2492	ADU	47.2344	12.0848	66.0	1.0	129		6.0	6.0	0.2	0.2	20 individual splitting measurements
+2493	AZZ	47.2336	11.8529	58.0	1.5	129		3.0	3.0	0.1	0.1	7 individual splitting measurements
+2494	ARA	47.2067	11.8792	60.0	0.9	129		3.0	3.0	0.1	0.1	18 individual splitting measurements
+2495	AZG	47.1577	11.943	71.0	1.1	129		4.0	4.0	0.1	0.1	8 individual splitting measurements
+2496	AZI	47.1229	12.0605	64.0	1.0	129		4.0	4.0	0.2	0.2	24 individual splitting measurements
+2497	ASS	47.1224	11.8692	65.0	1.0	129		4.0	4.0	0.2	0.2	22 individual splitting measurements
+2498	AZE	47.0901	11.7952	56.0	0.9	129		18.0	18.0	0.3	0.3	10 individual splitting measurements
+2499	AGW	47.0696	11.9208	68.0	1.3	129		2.0	2.0	0.1	0.1	13 individual splitting measurements
+2500	ASP	47.0384	11.7105	72.0	1.6	129		3.0	3.0	0.3	0.3	13 individual splitting measurements
+2501	ISP	47.0228	12.0581	66.0	1.2	129		2.0	2.0	0.2	0.2	14 individual splitting measurements
+4770	BALST	47.336	7.695	37.82	1.66	177		15.45	15.45	0.47	0.47	5 good individual splitting measurements
+4787	LIENZ	47.295	9.493	52.94	1.44	177		10.18	10.18	0.19	0.19	17 good individual splitting measurements
+4796	PLONS	47.049	9.381	59.93	1.42	177		5.88	5.88	0.13	0.13	18 good individual splitting measurements
+4802	SLE	47.764	8.492	57.33	1.58	177		6.82	6.82	0.31	0.31	7 good individual splitting measurements
+4806	SULZ	47.527	8.112	45.8	1.88	177		11.72	11.72	0.29	0.29	5 good individual splitting measurements
+4812	WILA	47.415	8.908	60.19	1.68	177		8.88	8.88	0.15	0.15	8 good individual splitting measurements
+4814	ZUR	47.369	8.589	52.39	1.57	177		14.21	14.21	0.51	0.51	5 good individual splitting measurements
+7333	BG32	50.534	14.722	280.6	0.75	204	SKSac	3.7	3.7	0.09	0.09	good quality individual splitting measurement
+7334	BG32	50.534	14.722	265.4	3.25	204	SKSac	1.2	1.2	0.29	0.29	poor quality individual splitting measurement
+7335	BG32	50.534	14.722	87.3	2.21	204	SKSac	1.2	1.2	0.12	0.12	good quality individual splitting measurement
+7336	BG32	50.534	14.722	94.6	1.47	204	SKSac	2.7	2.7	0.12	0.12	good quality individual splitting measurement
+7358	BRG	50.873	13.943	105.6	0.47	204	SKSac	19.4	19.4	0.1	0.1	fair quality individual splitting measurement
+7359	BRG	50.873	13.943	264.1	0.93	204	SKSac	5.5	5.5	0.34	0.34	fair quality individual splitting measurement
+7360	BRG	50.873	13.943	277.5	1.88	204	SKSac	2.7	2.7	0.66	0.66	poor quality individual splitting measurement
+7361	BRG	50.873	13.943	312.2	1.18	204	SKSac	6.8	6.8	0.25	0.25	good quality individual splitting measurement
+7362	BRG	50.873	13.943	257.8	1.38	204	SKSac	38.4	38.4	1.2	1.2	poor quality individual splitting measurement
+7363	BRG	50.873	13.943	97.3	1.33	204	SKSac	3.4	3.4	0.12	0.12	good quality individual splitting measurement
+7364	BRG	50.873	13.943	93.2	1.33	204	SKSac	3.3	3.3	0.14	0.14	good quality individual splitting measurement
+7365	BRG	50.873	13.943	104.2	2.03	204	SKKSac	1.4	1.4	0.32	0.32	fair quality individual splitting measurement
+7366	BRG	50.873	13.943	139.4	0.93	204	SKSac	9.6	9.6	0.08	0.08	fair quality individual splitting measurement
+7367	CLL	51.308	13.003	73.9	1.12	204	SKSac	13.6	13.6	0.47	0.47	fair quality individual splitting measurement
+7368	CLL	51.308	13.003	195.4	2.12	204	SKSac	3.5	3.5	0.19	0.19	poor quality individual splitting measurement
+7369	CLL	51.308	13.003	73.9	2.18	204	SKSac	1.5	1.5	0.25	0.25	poor quality individual splitting measurement
+7370	CLL	51.308	13.003	273.0	0.68	204	SKKSac	1.5	1.5	0.0	0.0	good quality individual splitting measurement
+7391	GEC2	48.845	13.702	131.9	0.78	204	SKSac	23.0	23.0	0.51	0.51	fair quality individual splitting measurement
+7392	GEC2	48.845	13.702	254.8	0.7	204	SKSac	19.5	19.5	0.58	0.58	fair quality individual splitting measurement
+7393	GEC2	48.845	13.702	272.6	1.03	204	SKSac	8.2	8.2	0.16	0.16	fair quality individual splitting measurement
+7394	GEC2	48.845	13.702	261.0	1.23	204	SKSac	1.3	1.3	0.13	0.13	fair quality individual splitting measurement
+7395	GEC2	48.845	13.702	257.5	1.73	204	SKSac	1.5	1.5	0.31	0.31	fair quality individual splitting measurement
+7396	GEC2	48.845	13.702	75.0	1.88	204	SKSac	2.6	2.6	0.4	0.4	poor quality individual splitting measurement
+7397	GEC2	48.845	13.702	98.1	0.88	204	SKSac	12.3	12.3	0.22	0.22	fair quality individual splitting measurement
+7398	GEC2	48.845	13.702	272.8	1.08	204	SKKSac	1.6	1.6	0.06	0.06	good quality individual splitting measurement
+7399	GRA1	49.692	11.222	114.4	0.97	204	SKKSac	4.2	4.2	0.08	0.08	good quality individual splitting measurement
+7400	GRA1	49.692	11.222	75.5	1.62	204	SKSac	1.8	1.8	0.17	0.17	poor quality individual splitting measurement
+7401	GRA1	49.692	11.222	281.8	0.78	204	SKSac	5.0	5.0	0.19	0.19	fair quality individual splitting measurement
+7402	GRA1	49.692	11.222	187.0	1.08	204	SKSac	7.4	7.4	0.44	0.44	poor quality individual splitting measurement
+7403	GRA1	49.692	11.222	276.9	0.82	204	SKSac	17.2	17.2	0.37	0.37	fair quality individual splitting measurement
+7404	GRA1	49.692	11.222	80.4	1.43	204	SKSac	1.1	1.1	0.09	0.09	good quality individual splitting measurement
+7405	GRA1	49.692	11.222	81.8	1.98	204	SKSac	2.0	2.0	0.09	0.09	fair quality individual splitting measurement
+7406	GRA1	49.692	11.222	260.6	0.68	204	SKKSac	4.3	4.3	0.03	0.03	good quality individual splitting measurement
+7407	GRB1	49.391	11.652	285.1	0.42	204	SKSac	5.9	5.9	0.09	0.09	good quality individual splitting measurement
+7408	GRB1	49.391	11.652	277.0	0.38	204	SKSac	19.4	19.4	0.17	0.17	fair quality individual splitting measurement
+7409	GRB1	49.391	11.652	314.6	0.68	204	SKSac	14.8	14.8	0.31	0.31	fair quality individual splitting measurement
+7410	GRC1	48.996	11.521	77.5	1.78	204	SKSac	1.1	1.1	0.13	0.13	good quality individual splitting measurement
+7411	GRC1	48.996	11.521	272.7	0.93	204	SKSac	1.9	1.9	0.08	0.08	good quality individual splitting measurement
+7412	GRC1	48.996	11.521	213.9	0.42	204	SKSac	16.9	16.9	0.12	0.12	fair quality individual splitting measurement
+7413	GRC1	48.996	11.521	281.7	1.12	204	SKSac	3.5	3.5	0.15	0.15	fair quality individual splitting measurement
+7414	GRC1	48.996	11.521	78.1	1.33	204	SKSac	1.8	1.8	0.17	0.17	good quality individual splitting measurement
+7415	GRC1	48.996	11.521	77.1	1.18	204	SKSac	1.1	1.1	0.07	0.07	good quality individual splitting measurement
+7416	GRC1	48.996	11.521	269.3	1.08	204	SKKSac	1.5	1.5	0.05	0.05	good quality individual splitting measurement
+7441	KHC	49.131	13.578	128.6	1.43	204	SKKSac	11.1	11.1	0.33	0.33	poor quality individual splitting measurement
+7442	KHC	49.131	13.578	101.5	1.23	204	SKSac	13.9	13.9	0.24	0.24	fair quality individual splitting measurement
+7443	KHC	49.131	13.578	255.3	0.78	204	SKSac	3.5	3.5	0.19	0.19	good quality individual splitting measurement
+7444	KHC	49.131	13.578	260.8	1.18	204	SKSac	0.7	0.7	0.07	0.07	good quality individual splitting measurement
+7445	KHC	49.131	13.578	270.7	0.82	204	SKSac	4.6	4.6	0.12	0.12	fair quality individual splitting measurement
+7446	KHC	49.131	13.578	260.2	2.23	204	SKSac	2.5	2.5	0.85	0.85	fair quality individual splitting measurement
+7447	KHC	49.131	13.578	263.8	1.43	204	SKSac	1.6	1.6	0.17	0.17	good quality individual splitting measurement
+7448	KHC	49.131	13.578	112.1	1.08	204	SKSac	12.1	12.1	0.14	0.14	fair quality individual splitting measurement
+7449	KHC	49.131	13.578	96.2	1.43	204	SKSac	4.4	4.4	0.2	0.2	good quality individual splitting measurement
+7450	KHC	49.131	13.578	273.7	1.18	204	SKKSac	3.3	3.3	0.12	0.12	good quality individual splitting measurement
+7474	LAC	49.967	12.514	76.7	2.08	204	SKSac	1.2	1.2	0.16	0.16	good quality individual splitting measurement
+7475	LAC	49.967	12.514	233.4	0.62	204	SKSac	13.6	13.6	0.17	0.17	fair quality individual splitting measurement
+7476	LAC	49.967	12.514	336.9	1.08	204	SKSac	40.1	40.1	0.56	0.56	poor quality individual splitting measurement
+7477	LAC	49.967	12.514	198.2	0.72	204	SKSac	17.2	17.2	0.4	0.4	fair quality individual splitting measurement
+7478	LAC	49.967	12.514	254.4	2.62	204	SKSac	1.5	1.5	0.55	0.55	poor quality individual splitting measurement
+7479	LAC	49.967	12.514	78.6	1.73	204	SKSac	1.8	1.8	0.14	0.14	good quality individual splitting measurement
+7480	LAC	49.967	12.514	88.4	0.47	204	SKSac	12.9	12.9	0.25	0.25	fair quality individual splitting measurement
+7481	LAC	49.967	12.514	275.8	0.47	204	SKKSac	12.7	12.7	0.09	0.09	fair quality individual splitting measurement
+7482	LIP		51.01	14.359	277.0	1.12	204	SKSac	6.1	6.1	0.44	0.44	fair quality individual splitting measurement
+7483	LIP		51.01	14.359	306.6	0.23	204	SKSac	45.1	45.1	0.5	0.5	fair quality individual splitting measurement
+7484	LIP		51.01	14.359	88.5	1.33	204	SKSac	2.0	2.0	0.09	0.09	good quality individual splitting measurement
+7485	LIP		51.01	14.359	89.4	1.28	204	SKSac	1.4	1.4	0.06	0.06	good quality individual splitting measurement
+7504	MOX	50.645	11.616	186.3	1.08	204	SKSac	2.9	2.9	0.22	0.22	fair quality individual splitting measurement
+7505	MOX	50.645	11.616	262.3	0.78	204	SKSac	5.8	5.8	0.34	0.34	fair quality individual splitting measurement
+7506	MOX	50.645	11.616	195.3	1.12	204	SKSac	2.4	2.4	0.09	0.09	good quality individual splitting measurement
+7507	MOX	50.645	11.616	283.3	1.28	204	SKSac	2.5	2.5	0.08	0.08	fair quality individual splitting measurement
+7508	MOX	50.645	11.616	73.9	1.98	204	SKSac	1.1	1.1	0.25	0.25	poor quality individual splitting measurement
+7509	MOX	50.645	11.616	87.3	1.23	204	SKSac	4.3	4.3	0.16	0.16	fair quality individual splitting measurement
+7510	MOX	50.645	11.616	123.1	0.47	204	SKSac	24.5	24.5	0.38	0.38	fair quality individual splitting measurement
+7511	NKC	50.233	12.448	72.8	2.73	204	SKSac	1.5	1.5	0.23	0.23	poor quality individual splitting measurement
+7512	NKC	50.233	12.448	204.0	0.57	204	SKSac	9.0	9.0	0.09	0.09	fair quality individual splitting measurement
+7513	NKC	50.233	12.448	285.1	1.18	204	SKSac	6.8	6.8	0.16	0.16	fair quality individual splitting measurement
+7514	NKC	50.233	12.448	313.1	0.57	204	SKSac	20.5	20.5	0.42	0.42	fair quality individual splitting measurement
+7515	NKC	50.233	12.448	82.0	2.27	204	SKSac	4.1	4.1	0.25	0.25	poor quality individual splitting measurement
+7516	NKC	50.233	12.448	269.2	1.28	204	SKKSac	2.6	2.6	0.08	0.08	poor quality individual splitting measurement
+7525	PRU	49.988	14.542	125.8	1.28	204	SKSac	4.8	4.8	0.17	0.17	good quality individual splitting measurement
+7526	PRU	49.988	14.542	187.3	2.38	204	SKSac	0.9	0.9	0.34	0.34	poor quality individual splitting measurement
+7527	PRU	49.988	14.542	265.9	1.73	204	SKSac	5.7	5.7	0.6	0.6	fair quality individual splitting measurement
+7528	PRU	49.988	14.542	90.6	1.23	204	SKSac	2.2	2.2	0.08	0.08	good quality individual splitting measurement
+7529	PRU	49.988	14.542	85.5	1.43	204	SKSac	1.8	1.8	0.09	0.09	good quality individual splitting measurement
+7530	PRU	49.988	14.542	292.4	1.43	204	SKKSac	2.8	2.8	0.14	0.14	fair quality individual splitting measurement
+7531	PVCC	50.528	14.569	95.9	1.58	204	SKSac	4.8	4.8	0.17	0.17	good quality individual splitting measurement
+7532	PVCC	50.528	14.569	270.3	1.12	204	SKSac	2.0	2.0	0.19	0.19	fair quality individual splitting measurement
+7553	WET	49.844	12.878	271.4	0.68	204	SKSac	3.0	3.0	0.09	0.09	good quality individual splitting measurement
+7554	WET	49.844	12.878	265.1	1.98	204	SKSac	1.0	1.0	0.19	0.19	fair quality individual splitting measurement
+7555	WET	49.844	12.878	276.0	0.93	204	SKSac	12.8	12.8	0.34	0.34	fair quality individual splitting measurement
+7556	WET	49.844	12.878	269.7	0.93	204	SKSac	5.5	5.5	0.21	0.21	good quality individual splitting measurement
+7557	WET	49.844	12.878	101.9	1.58	204	SKSac	2.2	2.2	0.15	0.15	good quality individual splitting measurement
+8695	DAVA	47.2867	9.8803	56.0	1.35	214		5.0	5.0	0.11	0.11	Mean value calculated from 36 individual SKS smeasurements, 20 good quality events
+8696	FETA	47.0211	10.7291	63.0	0.76	214		33.0	33.0	0.12	0.12	Mean value calculated from 12 individual SKS smeasurements, 5 good quality events
+8697	KBA	47.0784	13.3447	107.0	0.98	214		16.0	16.0	0.29	0.29	Mean value calculated from 14 individual SKS smeasurements, 6 good quality events
+8698	MOA	47.8495	14.2659	109.0	1.08	214		5.0	5.0	0.13	0.13	Mean value calculated from 55 individual SKS smeasurements, 32 good quality events
+8701	RETA	47.4871	10.7623	50.0	0.82	214		6.0	6.0	0.1	0.1	Mean value calculated from 19 individual SKS smeasurements, 13 good quality events
+8703	WTTA	47.2638	11.6363	68.0	1.55	214		8.0	8.0	0.27	0.27	Mean value calculated from 28 individual SKS smeasurements, 11 good quality events
+33284	FUR	48.1629	11.2752	357.0	0.9	326	SKS					individual measurement
+33285	FUR	48.1629	11.2752	345.0	1.3	326	SKS					individual measurement
+33286	FUR	48.1629	11.2752	79.0	1.2	326	SKS					individual measurement
+33287	FUR	48.1629	11.2752	74.0	1.2	326	SKS					individual measurement
+33288	FUR	48.1629	11.2752	70.0	2.0	326	SKS					individual measurement
+33289	FUR	48.1629	11.2752	68.0	0.7	326	SKS					individual measurement
+33290	FUR	48.1629	11.2752	67.0	1.5	326	SKS					individual measurement
+33291	FUR	48.1629	11.2752	65.0	2.4	326	SKS					individual measurement
+33292	FUR	48.1629	11.2752	65.0	1.5	326	SKS					individual measurement
+33293	FUR	48.1629	11.2752	64.0	2.5	326	SKS					individual measurement
+33294	FUR	48.1629	11.2752	64.0	2.2	326	SKS					individual measurement
+33295	FUR	48.1629	11.2752	63.0	0.9	326	SKS					individual measurement
+33296	FUR	48.1629	11.2752	62.0	0.6	326	SKS					individual measurement
+33297	FUR	48.1629	11.2752	56.0	1.0	326	SKS					individual measurement
+33298	FUR	48.1629	11.2752	55.0	0.9	326	SKS					individual measurement
+33299	FUR	48.1629	11.2752	48.0	1.2	326	SKS					individual measurement
+33300	FUR	48.1629	11.2752	47.0	1.1	326	SKS					individual measurement
+33301	FUR	48.1629	11.2752	47.0	0.7	326	SKS					individual measurement
+33302	FUR	48.1629	11.2752	40.0	0.6	326	SKS					individual measurement
+33303	FUR	48.1629	11.2752	39.0	0.6	326	SKS					individual measurement
+33304	FUR	48.1629	11.2752	38.0	0.7	326	SKS					individual measurement
+33305	FUR	48.1629	11.2752	37.0	0.5	326	SKS					individual measurement
+33306	FUR	48.1629	11.2752	37.0	1.1	326	SKS					individual measurement
+33307	FUR	48.1629	11.2752	36.0	0.6	326	SKS					individual measurement
+33308	FUR	48.1629	11.2752	33.0	1.1	326	SKS					individual measurement
+33309	FUR	48.1629	11.2752	31.0	0.6	326	SKS					individual measurement
+33310	FUR	48.1629	11.2752	26.0	0.6	326	SKS					individual measurement
+33311	FUR	48.1629	11.2752	23.0	0.4	326	SKS					individual measurement
+33312	FUR	48.1629	11.2752	11.0	1.0	326	SKS					individual measurement
+33313	FUR	48.1629	11.2752	0.0	1.3	326	SKS					individual measurement
+33314	BFO	48.3301	8.3296	356.0	2.6	326	SKS					individual measurement
+33315	BFO	48.3301	8.3296	351.0	2.1	326	SKS					individual measurement
+33316	BFO	48.3301	8.3296	347.0	2.3	326	SKS					individual measurement
+33317	BFO	48.3301	8.3296	56.0	2.2	326	SKS					individual measurement
+33318	BFO	48.3301	8.3296	55.0	2.0	326	SKS					individual measurement
+33319	BFO	48.3301	8.3296	54.0	1.5	326	SKS					individual measurement
+33320	BFO	48.3301	8.3296	30.0	1.3	326	SKS					individual measurement
+33321	BFO	48.3301	8.3296	28.0	0.5	326	SKS					individual measurement
+33322	BFO	48.3301	8.3296	28.0	1.4	326	SKS					individual measurement
+33323	BFO	48.3301	8.3296	21.0	1.2	326	SKS					individual measurement
+33324	BFO	48.3301	8.3296	19.0	1.8	326	SKS					individual measurement
+33325	BFO	48.3301	8.3296	12.0	0.7	326	SKS					individual measurement
+33326	BFO	48.3301	8.3296	12.0	0.8	326	SKS					individual measurement
+33327	BFO	48.3301	8.3296	6.0	1.0	326	SKS					individual measurement
+33328	BFO	48.3301	8.3296	2.0	0.9	326	SKS					individual measurement
+33329	STU	48.7708	9.1933	271.0	2.6	326	SKS					individual measurement
+33330	STU	48.7708	9.1933	75.0	1.4	326	SKS					individual measurement
+33331	STU	48.7708	9.1933	74.0	2.2	326	SKS					individual measurement
+33332	STU	48.7708	9.1933	72.0	1.8	326	SKS					individual measurement
+33333	STU	48.7708	9.1933	70.0	1.5	326	SKS					individual measurement
+33334	STU	48.7708	9.1933	69.0	1.8	326	SKS					individual measurement
+33335	STU	48.7708	9.1933	69.0	1.6	326	SKS					individual measurement
+33336	STU	48.7708	9.1933	68.0	1.5	326	SKS					individual measurement
+33337	STU	48.7708	9.1933	68.0	1.7	326	SKS					individual measurement
+33338	STU	48.7708	9.1933	67.0	1.3	326	SKS					individual measurement
+33339	STU	48.7708	9.1933	65.0	2.1	326	SKS					individual measurement
+33340	STU	48.7708	9.1933	61.0	2.2	326	SKS					individual measurement
+33341	STU	48.7708	9.1933	60.0	1.8	326	SKS					individual measurement
+33342	STU	48.7708	9.1933	55.0	1.1	326	SKS					individual measurement
+33343	STU	48.7708	9.1933	53.0	2.1	326	SKS					individual measurement
+33344	STU	48.7708	9.1933	53.0	0.8	326	SKS					individual measurement
+33345	STU	48.7708	9.1933	44.0	1.9	326	SKS					individual measurement
+33346	STU	48.7708	9.1933	40.0	1.2	326	SKS					individual measurement
+33347	GEC2	48.8451	13.7016	321.0	0.5	326	SKS					individual measurement
+33348	GEC2	48.8451	13.7016	298.0	0.6	326	SKS					individual measurement
+33349	GEC2	48.8451	13.7016	292.0	0.6	326	SKS					individual measurement
+33350	GEC2	48.8451	13.7016	286.0	0.9	326	SKS					individual measurement
+33351	GEC2	48.8451	13.7016	285.0	0.8	326	SKS					individual measurement
+33352	GEC2	48.8451	13.7016	282.0	0.6	326	SKS					individual measurement
+33353	GEC2	48.8451	13.7016	282.0	1.1	326	SKS					individual measurement
+33354	GEC2	48.8451	13.7016	273.0	1.3	326	SKS					individual measurement
+33355	GEC2	48.8451	13.7016	272.0	1.1	326	SKS					individual measurement
+33356	GEC2	48.8451	13.7016	271.0	1.0	326	SKS					individual measurement
+33357	GEC2	48.8451	13.7016	87.0	0.6	326	SKS					individual measurement
+33358	GEC2	48.8451	13.7016	87.0	2.5	326	SKS					individual measurement
+33359	GEC2	48.8451	13.7016	86.0	1.0	326	SKS					individual measurement
+33360	GEC2	48.8451	13.7016	86.0	1.0	326	SKS					individual measurement
+33361	GEC2	48.8451	13.7016	83.0	1.0	326	SKS					individual measurement
+33362	GEC2	48.8451	13.7016	81.0	1.4	326	SKS					individual measurement
+33363	GEC2	48.8451	13.7016	80.0	1.2	326	SKS					individual measurement
+33364	GEC2	48.8451	13.7016	79.0	1.4	326	SKS					individual measurement
+33365	GEC2	48.8451	13.7016	77.0	1.2	326	SKS					individual measurement
+33366	GEC2	48.8451	13.7016	74.0	1.8	326	SKS					individual measurement
+33367	GRC1	48.9962	11.5214	342.0	1.2	326	SKS					individual measurement
+33368	GRC1	48.9962	11.5214	293.0	1.8	326	SKS					individual measurement
+33369	GRC1	48.9962	11.5214	283.0	1.3	326	SKS					individual measurement
+33370	GRC1	48.9962	11.5214	277.0	1.1	326	SKS					individual measurement
+33371	GRC1	48.9962	11.5214	277.0	1.1	326	SKS					individual measurement
+33372	GRC1	48.9962	11.5214	276.0	1.3	326	SKS					individual measurement
+33373	GRC1	48.9962	11.5214	274.0	1.3	326	SKS					individual measurement
+33374	GRC1	48.9962	11.5214	274.0	3.0	326	SKS					individual measurement
+33375	GRC1	48.9962	11.5214	274.0	0.8	326	SKS					individual measurement
+33376	GRC1	48.9962	11.5214	271.0	0.5	326	SKS					individual measurement
+33377	GRC1	48.9962	11.5214	90.0	0.9	326	SKS					individual measurement
+33378	GRC1	48.9962	11.5214	86.0	1.2	326	SKS					individual measurement
+33379	GRC1	48.9962	11.5214	86.0	0.8	326	SKS					individual measurement
+33380	GRC1	48.9962	11.5214	86.0	0.9	326	SKS					individual measurement
+33381	GRC1	48.9962	11.5214	85.0	1.1	326	SKS					individual measurement
+33382	GRC1	48.9962	11.5214	85.0	0.9	326	SKS					individual measurement
+33383	GRC1	48.9962	11.5214	84.0	1.0	326	SKS					individual measurement
+33384	GRC1	48.9962	11.5214	84.0	1.2	326	SKS					individual measurement
+33385	GRC1	48.9962	11.5214	84.0	1.4	326	SKS					individual measurement
+33386	GRC1	48.9962	11.5214	83.0	1.4	326	SKS					individual measurement
+33387	GRC1	48.9962	11.5214	83.0	2.0	326	SKS					individual measurement
+33388	GRC1	48.9962	11.5214	82.0	1.3	326	SKS					individual measurement
+33389	GRC1	48.9962	11.5214	81.0	1.7	326	SKS					individual measurement
+33390	GRC1	48.9962	11.5214	81.0	1.3	326	SKS					individual measurement
+33391	GRC1	48.9962	11.5214	80.0	1.0	326	SKS					individual measurement
+33392	GRC1	48.9962	11.5214	80.0	1.5	326	SKS					individual measurement
+33393	GRC1	48.9962	11.5214	80.0	1.3	326	SKS					individual measurement
+33394	GRC1	48.9962	11.5214	80.0	1.2	326	SKS					individual measurement
+33395	GRC1	48.9962	11.5214	79.0	1.2	326	SKS					individual measurement
+33396	GRC1	48.9962	11.5214	79.0	1.3	326	SKS					individual measurement
+33397	GRC1	48.9962	11.5214	79.0	1.5	326	SKS					individual measurement
+33398	GRC1	48.9962	11.5214	79.0	1.3	326	SKS					individual measurement
+33399	GRC1	48.9962	11.5214	79.0	1.1	326	SKS					individual measurement
+33400	GRC1	48.9962	11.5214	78.0	1.7	326	SKS					individual measurement
+33401	GRC1	48.9962	11.5214	78.0	1.3	326	SKS					individual measurement
+33402	GRC1	48.9962	11.5214	78.0	1.7	326	SKS					individual measurement
+33403	GRC1	48.9962	11.5214	77.0	1.3	326	SKS					individual measurement
+33404	GRC1	48.9962	11.5214	77.0	1.4	326	SKS					individual measurement
+33405	GRC1	48.9962	11.5214	77.0	2.5	326	SKS					individual measurement
+33406	GRC1	48.9962	11.5214	23.0	1.6	326	SKS					individual measurement
+33407	WET	49.144	12.8782	328.0	1.5	326	SKS					individual measurement
+33408	WET	49.144	12.8782	323.0	0.7	326	SKS					individual measurement
+33409	WET	49.144	12.8782	320.0	1.0	326	SKS					individual measurement
+33410	WET	49.144	12.8782	314.0	3.0	326	SKS					individual measurement
+33411	WET	49.144	12.8782	307.0	0.8	326	SKS					individual measurement
+33412	WET	49.144	12.8782	306.0	0.9	326	SKS					individual measurement
+33413	WET	49.144	12.8782	305.0	2.0	326	SKS					individual measurement
+33414	WET	49.144	12.8782	305.0	1.4	326	SKS					individual measurement
+33415	WET	49.144	12.8782	303.0	1.2	326	SKS					individual measurement
+33416	WET	49.144	12.8782	303.0	1.1	326	SKS					individual measurement
+33417	WET	49.144	12.8782	302.0	1.4	326	SKS					individual measurement
+33418	WET	49.144	12.8782	301.0	1.8	326	SKS					individual measurement
+33419	WET	49.144	12.8782	300.0	0.5	326	SKS					individual measurement
+33420	WET	49.144	12.8782	295.0	1.1	326	SKS					individual measurement
+33421	WET	49.144	12.8782	294.0	1.5	326	SKS					individual measurement
+33422	WET	49.144	12.8782	294.0	1.2	326	SKS					individual measurement
+33423	WET	49.144	12.8782	293.0	1.8	326	SKS					individual measurement
+33424	WET	49.144	12.8782	292.0	0.9	326	SKS					individual measurement
+33425	WET	49.144	12.8782	292.0	1.0	326	SKS					individual measurement
+33426	WET	49.144	12.8782	292.0	1.8	326	SKS					individual measurement
+33427	WET	49.144	12.8782	290.0	1.4	326	SKS					individual measurement
+33428	WET	49.144	12.8782	289.0	0.7	326	SKS					individual measurement
+33429	WET	49.144	12.8782	288.0	1.1	326	SKS					individual measurement
+33430	WET	49.144	12.8782	288.0	1.1	326	SKS					individual measurement
+33431	WET	49.144	12.8782	288.0	1.1	326	SKS					individual measurement
+33432	WET	49.144	12.8782	287.0	1.1	326	SKS					individual measurement
+33433	WET	49.144	12.8782	287.0	1.2	326	SKS					individual measurement
+33434	WET	49.144	12.8782	287.0	1.4	326	SKS					individual measurement
+33435	WET	49.144	12.8782	286.0	1.2	326	SKS					individual measurement
+33436	WET	49.144	12.8782	286.0	1.3	326	SKS					individual measurement
+33437	WET	49.144	12.8782	286.0	0.7	326	SKS					individual measurement
+33438	WET	49.144	12.8782	285.0	1.2	326	SKS					individual measurement
+33439	WET	49.144	12.8782	284.0	1.4	326	SKS					individual measurement
+33440	WET	49.144	12.8782	284.0	0.7	326	SKS					individual measurement
+33441	WET	49.144	12.8782	284.0	1.5	326	SKS					individual measurement
+33442	WET	49.144	12.8782	284.0	1.4	326	SKS					individual measurement
+33443	WET	49.144	12.8782	282.0	1.4	326	SKS					individual measurement
+33444	WET	49.144	12.8782	282.0	1.2	326	SKS					individual measurement
+33445	WET	49.144	12.8782	280.0	1.3	326	SKS					individual measurement
+33446	WET	49.144	12.8782	280.0	1.6	326	SKS					individual measurement
+33447	WET	49.144	12.8782	279.0	1.2	326	SKS					individual measurement
+33448	WET	49.144	12.8782	278.0	1.1	326	SKS					individual measurement
+33449	WET	49.144	12.8782	277.0	0.8	326	SKS					individual measurement
+33450	WET	49.144	12.8782	276.0	0.9	326	SKS					individual measurement
+33451	WET	49.144	12.8782	275.0	1.8	326	SKS					individual measurement
+33452	WET	49.144	12.8782	275.0	1.4	326	SKS					individual measurement
+33453	WET	49.144	12.8782	275.0	1.5	326	SKS					individual measurement
+33454	WET	49.144	12.8782	275.0	1.4	326	SKS					individual measurement
+33455	WET	49.144	12.8782	274.0	0.9	326	SKS					individual measurement
+33456	WET	49.144	12.8782	274.0	0.9	326	SKS					individual measurement
+33457	WET	49.144	12.8782	273.0	1.5	326	SKS					individual measurement
+33458	WET	49.144	12.8782	273.0	2.0	326	SKS					individual measurement
+33459	WET	49.144	12.8782	272.0	1.0	326	SKS					individual measurement
+33460	WET	49.144	12.8782	272.0	1.5	326	SKS					individual measurement
+33461	WET	49.144	12.8782	271.0	1.1	326	SKS					individual measurement
+33462	WET	49.144	12.8782	271.0	0.7	326	SKS					individual measurement
+33463	WET	49.144	12.8782	90.0	1.6	326	SKS					individual measurement
+33464	WET	49.144	12.8782	90.0	1.6	326	SKS					individual measurement
+33465	WET	49.144	12.8782	89.0	1.1	326	SKS					individual measurement
+33466	WET	49.144	12.8782	89.0	0.9	326	SKS					individual measurement
+33467	WET	49.144	12.8782	89.0	1.4	326	SKS					individual measurement
+33468	WET	49.144	12.8782	88.0	0.9	326	SKS					individual measurement
+33469	WET	49.144	12.8782	86.0	1.2	326	SKS					individual measurement
+33470	WET	49.144	12.8782	86.0	2.2	326	SKS					individual measurement
+33471	WET	49.144	12.8782	86.0	2.4	326	SKS					individual measurement
+33472	WET	49.144	12.8782	85.0	2.0	326	SKS					individual measurement
+33473	WET	49.144	12.8782	85.0	2.0	326	SKS					individual measurement
+33474	WET	49.144	12.8782	84.0	1.3	326	SKS					individual measurement
+33475	WET	49.144	12.8782	84.0	1.2	326	SKS					individual measurement
+33476	WET	49.144	12.8782	83.0	2.0	326	SKS					individual measurement
+33477	WET	49.144	12.8782	81.0	1.0	326	SKS					individual measurement
+33478	WET	49.144	12.8782	76.0	1.2	326	SKS					individual measurement
+33479	WET	49.144	12.8782	50.0	1.6	326	SKS					individual measurement
+33480	WET	49.144	12.8782	14.0	1.9	326	SKS					individual measurement
+33481	GRB1	49.3913	11.652	334.0	0.9	326	SKS					individual measurement
+33482	GRB1	49.3913	11.652	305.0	0.7	326	SKS					individual measurement
+33483	GRB1	49.3913	11.652	287.0	0.4	326	SKS					individual measurement
+33484	GRB1	49.3913	11.652	285.0	1.2	326	SKS					individual measurement
+33485	GRB1	49.3913	11.652	278.0	0.7	326	SKS					individual measurement
+33486	GRB1	49.3913	11.652	277.0	0.9	326	SKS					individual measurement
+33487	GRB1	49.3913	11.652	277.0	0.9	326	SKS					individual measurement
+33488	GRB1	49.3913	11.652	274.0	1.1	326	SKS					individual measurement
+33489	GRB1	49.3913	11.652	273.0	1.4	326	SKS					individual measurement
+33490	GRB1	49.3913	11.652	273.0	1.4	326	SKS					individual measurement
+33491	GRB1	49.3913	11.652	273.0	1.0	326	SKS					individual measurement
+33492	GRB1	49.3913	11.652	273.0	1.0	326	SKS					individual measurement
+33493	GRB1	49.3913	11.652	88.0	1.6	326	SKS					individual measurement
+33494	GRB1	49.3913	11.652	88.0	1.2	326	SKS					individual measurement
+33495	GRB1	49.3913	11.652	87.0	1.6	326	SKS					individual measurement
+33496	GRB1	49.3913	11.652	86.0	0.9	326	SKS					individual measurement
+33497	GRB1	49.3913	11.652	85.0	1.4	326	SKS					individual measurement
+33498	GRB1	49.3913	11.652	85.0	1.2	326	SKS					individual measurement
+33499	GRB1	49.3913	11.652	84.0	1.0	326	SKS					individual measurement
+33500	GRB1	49.3913	11.652	84.0	1.3	326	SKS					individual measurement
+33501	GRB1	49.3913	11.652	84.0	1.6	326	SKS					individual measurement
+33502	GRB1	49.3913	11.652	83.0	1.7	326	SKS					individual measurement
+33503	GRB1	49.3913	11.652	83.0	1.7	326	SKS					individual measurement
+33504	GRB1	49.3913	11.652	83.0	1.5	326	SKS					individual measurement
+33505	GRB1	49.3913	11.652	83.0	1.3	326	SKS					individual measurement
+33506	GRB1	49.3913	11.652	82.0	1.3	326	SKS					individual measurement
+33507	GRB1	49.3913	11.652	82.0	1.6	326	SKS					individual measurement
+33508	GRB1	49.3913	11.652	81.0	1.8	326	SKS					individual measurement
+33509	GRB1	49.3913	11.652	81.0	1.9	326	SKS					individual measurement
+33510	GRB1	49.3913	11.652	80.0	1.3	326	SKS					individual measurement
+33511	GRB1	49.3913	11.652	80.0	1.9	326	SKS					individual measurement
+33512	GRB1	49.3913	11.652	79.0	1.5	326	SKS					individual measurement
+33513	WLF	49.6646	6.1526	328.0	1.3	326	SKS					individual measurement
+33514	WLF	49.6646	6.1526	325.0	2.3	326	SKS					individual measurement
+33515	WLF	49.6646	6.1526	323.0	1.6	326	SKS					individual measurement
+33516	WLF	49.6646	6.1526	322.0	2.4	326	SKS					individual measurement
+33517	WLF	49.6646	6.1526	297.0	0.7	326	SKS					individual measurement
+33518	WLF	49.6646	6.1526	286.0	1.7	326	SKS					individual measurement
+33519	WLF	49.6646	6.1526	285.0	0.8	326	SKS					individual measurement
+33520	WLF	49.6646	6.1526	273.0	0.7	326	SKS					individual measurement
+33521	WLF	49.6646	6.1526	82.0	1.0	326	SKS					individual measurement
+33522	WLF	49.6646	6.1526	80.0	1.3	326	SKS					individual measurement
+33523	WLF	49.6646	6.1526	79.0	1.0	326	SKS					individual measurement
+33524	WLF	49.6646	6.1526	76.0	1.2	326	SKS					individual measurement
+33525	WLF	49.6646	6.1526	75.0	1.0	326	SKS					individual measurement
+33526	WLF	49.6646	6.1526	74.0	2.1	326	SKS					individual measurement
+33527	WLF	49.6646	6.1526	72.0	1.5	326	SKS					individual measurement
+33528	WLF	49.6646	6.1526	72.0	1.2	326	SKS					individual measurement
+33529	WLF	49.6646	6.1526	70.0	0.7	326	SKS					individual measurement
+33530	WLF	49.6646	6.1526	69.0	1.1	326	SKS					individual measurement
+33531	WLF	49.6646	6.1526	66.0	0.8	326	SKS					individual measurement
+33532	WLF	49.6646	6.1526	66.0	1.2	326	SKS					individual measurement
+33533	WLF	49.6646	6.1526	65.0	1.1	326	SKS					individual measurement
+33534	WLF	49.6646	6.1526	62.0	1.6	326	SKS					individual measurement
+33535	WLF	49.6646	6.1526	40.0	3.0	326	SKS					individual measurement
+33536	WLF	49.6646	6.1526	30.0	2.3	326	SKS					individual measurement
+33537	GRA1	49.6919	11.2217	285.0	2.6	326	SKS					individual measurement
+33538	GRA1	49.6919	11.2217	284.0	2.7	326	SKS					individual measurement
+33539	GRA1	49.6919	11.2217	283.0	2.2	326	SKS					individual measurement
+33540	GRA1	49.6919	11.2217	275.0	2.0	326	SKS					individual measurement
+33541	GRA1	49.6919	11.2217	274.0	1.3	326	SKS					individual measurement
+33542	GRA1	49.6919	11.2217	274.0	0.8	326	SKS					individual measurement
+33543	GRA1	49.6919	11.2217	272.0	2.0	326	SKS					individual measurement
+33544	GRA1	49.6919	11.2217	89.0	1.6	326	SKS					individual measurement
+33545	GRA1	49.6919	11.2217	88.0	1.9	326	SKS					individual measurement
+33546	GRA1	49.6919	11.2217	88.0	1.3	326	SKS					individual measurement
+33547	GRA1	49.6919	11.2217	87.0	2.4	326	SKS					individual measurement
+33548	GRA1	49.6919	11.2217	87.0	1.0	326	SKS					individual measurement
+33549	GRA1	49.6919	11.2217	86.0	1.5	326	SKS					individual measurement
+33550	GRA1	49.6919	11.2217	85.0	1.7	326	SKS					individual measurement
+33551	GRA1	49.6919	11.2217	85.0	1.4	326	SKS					individual measurement
+33552	GRA1	49.6919	11.2217	84.0	1.7	326	SKS					individual measurement
+33553	GRA1	49.6919	11.2217	84.0	1.3	326	SKS					individual measurement
+33554	GRA1	49.6919	11.2217	83.0	2.1	326	SKS					individual measurement
+33555	GRA1	49.6919	11.2217	83.0	2.2	326	SKS					individual measurement
+33556	GRA1	49.6919	11.2217	82.0	2.1	326	SKS					individual measurement
+33557	GRA1	49.6919	11.2217	82.0	1.0	326	SKS					individual measurement
+33558	GRA1	49.6919	11.2217	81.0	1.9	326	SKS					individual measurement
+33559	GRA1	49.6919	11.2217	81.0	2.1	326	SKS					individual measurement
+33560	GRA1	49.6919	11.2217	80.0	2.0	326	SKS					individual measurement
+33561	GRA1	49.6919	11.2217	80.0	1.7	326	SKS					individual measurement
+33562	GRA1	49.6919	11.2217	80.0	1.9	326	SKS					individual measurement
+33563	GRA1	49.6919	11.2217	80.0	1.8	326	SKS					individual measurement
+33564	GRA1	49.6919	11.2217	80.0	1.8	326	SKS					individual measurement
+33565	GRA1	49.6919	11.2217	80.0	2.2	326	SKS					individual measurement
+33566	GRA1	49.6919	11.2217	79.0	1.7	326	SKS					individual measurement
+33567	GRA1	49.6919	11.2217	79.0	2.3	326	SKS					individual measurement
+33568	GRA1	49.6919	11.2217	79.0	1.4	326	SKS					individual measurement
+33569	GRA1	49.6919	11.2217	79.0	1.4	326	SKS					individual measurement
+33570	GRA1	49.6919	11.2217	79.0	1.6	326	SKS					individual measurement
+33571	GRA1	49.6919	11.2217	79.0	1.5	326	SKS					individual measurement
+33572	GRA1	49.6919	11.2217	79.0	1.7	326	SKS					individual measurement
+33573	GRA1	49.6919	11.2217	79.0	1.4	326	SKS					individual measurement
+33574	GRA1	49.6919	11.2217	78.0	1.8	326	SKS					individual measurement
+33575	GRA1	49.6919	11.2217	78.0	1.2	326	SKS					individual measurement
+33576	GRA1	49.6919	11.2217	78.0	1.9	326	SKS					individual measurement
+33577	GRA1	49.6919	11.2217	78.0	1.7	326	SKS					individual measurement
+33578	GRA1	49.6919	11.2217	77.0	1.9	326	SKS					individual measurement
+33579	GRA1	49.6919	11.2217	77.0	2.1	326	SKS					individual measurement
+33580	GRA1	49.6919	11.2217	77.0	2.2	326	SKS					individual measurement
+33581	GRA1	49.6919	11.2217	77.0	1.4	326	SKS					individual measurement
+33582	GRA1	49.6919	11.2217	76.0	1.7	326	SKS					individual measurement
+33583	GRA1	49.6919	11.2217	76.0	1.6	326	SKS					individual measurement
+33584	GRA1	49.6919	11.2217	75.0	1.0	326	SKS					individual measurement
+33585	GRA1	49.6919	11.2217	74.0	0.9	326	SKS					individual measurement
+33586	GRA1	49.6919	11.2217	74.0	2.1	326	SKS					individual measurement
+33587	GRA1	49.6919	11.2217	64.0	1.7	326	SKS					individual measurement
+33588	GRA1	49.6919	11.2217	0.0	2.6	326	SKS					individual measurement
+33589	TNS	50.2225	8.4473	289.0	1.2	326	SKS					individual measurement
+33590	TNS	50.2225	8.4473	283.0	0.7	326	SKS					individual measurement
+33591	TNS	50.2225	8.4473	277.0	1.4	326	SKS					individual measurement
+33592	TNS	50.2225	8.4473	77.0	0.8	326	SKS					individual measurement
+33593	TNS	50.2225	8.4473	73.0	1.9	326	SKS					individual measurement
+33594	TNS	50.2225	8.4473	68.0	1.4	326	SKS					individual measurement
+33595	TNS	50.2225	8.4473	64.0	1.1	326	SKS					individual measurement
+33596	TNS	50.2225	8.4473	61.0	1.5	326	SKS					individual measurement
+33597	TNS	50.2225	8.4473	10.0	0.8	326	SKS					individual measurement
+33598	TNS	50.2225	8.4473	2.0	1.1	326	SKS					individual measurement
+33599	GUNZ	50.3635	12.3316	293.0	2.4	326	SKS					individual measurement
+33600	GUNZ	50.3635	12.3316	279.0	1.8	326	SKS					individual measurement
+33601	GUNZ	50.3635	12.3316	278.0	2.6	326	SKS					individual measurement
+33602	GUNZ	50.3635	12.3316	275.0	1.8	326	SKS					individual measurement
+33603	GUNZ	50.3635	12.3316	275.0	2.8	326	SKS					individual measurement
+33604	GUNZ	50.3635	12.3316	274.0	2.1	326	SKS					individual measurement
+33605	GUNZ	50.3635	12.3316	272.0	2.3	326	SKS					individual measurement
+33606	GUNZ	50.3635	12.3316	73.0	1.6	326	SKS					individual measurement
+33607	GUNZ	50.3635	12.3316	68.0	2.8	326	SKS					individual measurement
+33608	GUNZ	50.3635	12.3316	46.0	2.1	326	SKS					individual measurement
+33609	TANN	50.415	12.461	283.0	1.3	326	SKS					individual measurement
+33610	TANN	50.415	12.461	280.0	2.4	326	SKS					individual measurement
+33611	TANN	50.415	12.461	87.0	1.1	326	SKS					individual measurement
+33612	TANN	50.415	12.461	86.0	2.2	326	SKS					individual measurement
+33613	TANN	50.415	12.461	86.0	1.2	326	SKS					individual measurement
+33614	TANN	50.415	12.461	86.0	2.1	326	SKS					individual measurement
+33615	TANN	50.415	12.461	81.0	2.3	326	SKS					individual measurement
+33616	TANN	50.415	12.461	80.0	2.2	326	SKS					individual measurement
+33617	TANN	50.415	12.461	78.0	2.0	326	SKS					individual measurement
+33618	TANN	50.415	12.461	76.0	2.3	326	SKS					individual measurement
+33619	TANN	50.415	12.461	76.0	2.4	326	SKS					individual measurement
+33620	TANN	50.415	12.461	55.0	2.1	326	SKS					individual measurement
+33621	MOX	50.6447	11.6156	298.0	0.8	326	SKS					individual measurement
+33622	MOX	50.6447	11.6156	288.0	1.6	326	SKS					individual measurement
+33623	MOX	50.6447	11.6156	280.0	0.9	326	SKS					individual measurement
+33624	MOX	50.6447	11.6156	279.0	1.2	326	SKS					individual measurement
+33625	MOX	50.6447	11.6156	277.0	0.9	326	SKS					individual measurement
+33626	MOX	50.6447	11.6156	274.0	1.3	326	SKS					individual measurement
+33627	MOX	50.6447	11.6156	273.0	1.1	326	SKS					individual measurement
+33628	MOX	50.6447	11.6156	273.0	1.1	326	SKS					individual measurement
+33629	MOX	50.6447	11.6156	272.0	2.4	326	SKS					individual measurement
+33630	MOX	50.6447	11.6156	272.0	0.8	326	SKS					individual measurement
+33631	MOX	50.6447	11.6156	88.0	1.0	326	SKS					individual measurement
+33632	MOX	50.6447	11.6156	86.0	1.5	326	SKS					individual measurement
+33633	MOX	50.6447	11.6156	83.0	1.3	326	SKS					individual measurement
+33634	MOX	50.6447	11.6156	81.0	1.5	326	SKS					individual measurement
+33635	MOX	50.6447	11.6156	81.0	1.7	326	SKS					individual measurement
+33636	MOX	50.6447	11.6156	81.0	1.7	326	SKS					individual measurement
+33637	MOX	50.6447	11.6156	79.0	1.7	326	SKS					individual measurement
+33638	MOX	50.6447	11.6156	78.0	1.9	326	SKS					individual measurement
+33639	MOX	50.6447	11.6156	78.0	1.8	326	SKS					individual measurement
+33640	MOX	50.6447	11.6156	76.0	1.7	326	SKS					individual measurement
+33641	MOX	50.6447	11.6156	76.0	2.6	326	SKS					individual measurement
+33642	MOX	50.6447	11.6156	75.0	1.9	326	SKS					individual measurement
+33643	MOX	50.6447	11.6156	75.0	1.8	326	SKS					individual measurement
+33644	MOX	50.6447	11.6156	74.0	1.3	326	SKS					individual measurement
+33645	MOX	50.6447	11.6156	73.0	1.1	326	SKS					individual measurement
+33646	MOX	50.6447	11.6156	72.0	1.7	326	SKS					individual measurement
+33647	MOX	50.6447	11.6156	72.0	2.2	326	SKS					individual measurement
+33648	MOX	50.6447	11.6156	64.0	1.7	326	SKS					individual measurement
+33649	MOX	50.6447	11.6156	63.0	1.8	326	SKS					individual measurement
+33650	MOX	50.6447	11.6156	60.0	1.5	326	SKS					individual measurement
+33651	MOX	50.6447	11.6156	18.0	1.3	326	SKS					individual measurement
+33652	MOX	50.6447	11.6156	4.0	2.0	326	SKS					individual measurement
+33653	GSH	50.737	6.3798	85.0	1.8	326	SKS					individual measurement
+33654	UBBA	50.8188	10.001	317.0	1.2	326	SKS					individual measurement
+33655	UBBA	50.8188	10.001	315.0	1.3	326	SKS					individual measurement
+33656	UBBA	50.8188	10.001	300.0	0.8	326	SKS					individual measurement
+33657	UBBA	50.8188	10.001	299.0	0.8	326	SKS					individual measurement
+33658	UBBA	50.8188	10.001	277.0	2.6	326	SKS					individual measurement
+33659	UBBA	50.8188	10.001	84.0	1.7	326	SKS					individual measurement
+33660	UBBA	50.8188	10.001	84.0	1.4	326	SKS					individual measurement
+33661	UBBA	50.8188	10.001	81.0	1.9	326	SKS					individual measurement
+33662	UBBA	50.8188	10.001	81.0	3.0	326	SKS					individual measurement
+33663	UBBA	50.8188	10.001	78.0	1.2	326	SKS					individual measurement
+33664	UBBA	50.8188	10.001	77.0	2.3	326	SKS					individual measurement
+33665	UBBA	50.8188	10.001	73.0	1.6	326	SKS					individual measurement
+33666	UBBA	50.8188	10.001	66.0	1.5	326	SKS					individual measurement
+33667	UBBA	50.8188	10.001	64.0	0.8	326	SKS					individual measurement
+33668	BRG	50.8732	13.9428	322.0	0.9	326	SKS					individual measurement
+33669	BRG	50.8732	13.9428	314.0	1.1	326	SKS					individual measurement
+33670	BRG	50.8732	13.9428	298.0	1.4	326	SKS					individual measurement
+33671	BRG	50.8732	13.9428	297.0	1.3	326	SKS					individual measurement
+33672	BRG	50.8732	13.9428	296.0	0.8	326	SKS					individual measurement
+33673	BRG	50.8732	13.9428	296.0	1.0	326	SKS					individual measurement
+33674	BRG	50.8732	13.9428	296.0	1.4	326	SKS					individual measurement
+33675	BRG	50.8732	13.9428	292.0	1.3	326	SKS					individual measurement
+33676	BRG	50.8732	13.9428	291.0	1.2	326	SKS					individual measurement
+33677	BRG	50.8732	13.9428	291.0	1.2	326	SKS					individual measurement
+33678	BRG	50.8732	13.9428	290.0	1.0	326	SKS					individual measurement
+33679	BRG	50.8732	13.9428	288.0	1.1	326	SKS					individual measurement
+33680	BRG	50.8732	13.9428	286.0	1.0	326	SKS					individual measurement
+33681	BRG	50.8732	13.9428	284.0	1.4	326	SKS					individual measurement
+33682	BRG	50.8732	13.9428	284.0	1.3	326	SKS					individual measurement
+33683	BRG	50.8732	13.9428	282.0	0.9	326	SKS					individual measurement
+33684	BRG	50.8732	13.9428	282.0	1.1	326	SKS					individual measurement
+33685	BRG	50.8732	13.9428	281.0	0.8	326	SKS					individual measurement
+33686	BRG	50.8732	13.9428	281.0	0.9	326	SKS					individual measurement
+33687	BRG	50.8732	13.9428	281.0	1.6	326	SKS					individual measurement
+33688	BRG	50.8732	13.9428	281.0	1.4	326	SKS					individual measurement
+33689	BRG	50.8732	13.9428	281.0	1.3	326	SKS					individual measurement
+33690	BRG	50.8732	13.9428	280.0	1.5	326	SKS					individual measurement
+33691	BRG	50.8732	13.9428	279.0	1.0	326	SKS					individual measurement
+33692	BRG	50.8732	13.9428	279.0	1.2	326	SKS					individual measurement
+33693	BRG	50.8732	13.9428	279.0	1.2	326	SKS					individual measurement
+33694	BRG	50.8732	13.9428	278.0	1.5	326	SKS					individual measurement
+33695	BRG	50.8732	13.9428	277.0	1.4	326	SKS					individual measurement
+33696	BRG	50.8732	13.9428	277.0	0.8	326	SKS					individual measurement
+33697	BRG	50.8732	13.9428	277.0	1.0	326	SKS					individual measurement
+33698	BRG	50.8732	13.9428	276.0	1.1	326	SKS					individual measurement
+33699	BRG	50.8732	13.9428	276.0	1.5	326	SKS					individual measurement
+33700	BRG	50.8732	13.9428	276.0	2.1	326	SKS					individual measurement
+33701	BRG	50.8732	13.9428	274.0	1.5	326	SKS					individual measurement
+33702	BRG	50.8732	13.9428	274.0	0.8	326	SKS					individual measurement
+33703	BRG	50.8732	13.9428	274.0	2.1	326	SKS					individual measurement
+33704	BRG	50.8732	13.9428	272.0	1.5	326	SKS					individual measurement
+33705	BRG	50.8732	13.9428	90.0	2.0	326	SKS					individual measurement
+33706	BRG	50.8732	13.9428	90.0	1.4	326	SKS					individual measurement
+33707	BRG	50.8732	13.9428	82.0	1.3	326	SKS					individual measurement
+33708	BRG	50.8732	13.9428	79.0	2.4	326	SKS					individual measurement
+33709	CLL	51.3077	13.0026	354.0	1.9	326	SKS					individual measurement
+33710	CLL	51.3077	13.0026	302.0	2.4	326	SKS					individual measurement
+33711	CLL	51.3077	13.0026	292.0	1.2	326	SKS					individual measurement
+33712	CLL	51.3077	13.0026	289.0	0.6	326	SKS					individual measurement
+33713	CLL	51.3077	13.0026	86.0	0.8	326	SKS					individual measurement
+33714	CLL	51.3077	13.0026	84.0	1.2	326	SKS					individual measurement
+33715	CLL	51.3077	13.0026	77.0	1.9	326	SKS					individual measurement
+33716	CLL	51.3077	13.0026	72.0	1.4	326	SKS					individual measurement
+33717	CLL	51.3077	13.0026	68.0	1.5	326	SKS					individual measurement
+33718	CLL	51.3077	13.0026	61.0	1.6	326	SKS					individual measurement
+33719	CLL	51.3077	13.0026	56.0	2.5	326	SKS					individual measurement
+33720	CLL	51.3077	13.0026	37.0	1.5	326	SKS					individual measurement
+33721	CLL	51.3077	13.0026	13.0	0.7	326	SKS					individual measurement
+33722	CLL	51.3077	13.0026	8.0	1.4	326	SKS					individual measurement
+33723	BUG	51.4406	7.2693	301.0	0.9	326	SKS					individual measurement
+33724	BUG	51.4406	7.2693	301.0	1.7	326	SKS					individual measurement
+33725	BUG	51.4406	7.2693	296.0	2.1	326	SKS					individual measurement
+33726	BUG	51.4406	7.2693	294.0	0.9	326	SKS					individual measurement
+33727	BUG	51.4406	7.2693	293.0	0.6	326	SKS					individual measurement
+33728	BUG	51.4406	7.2693	292.0	1.1	326	SKS					individual measurement
+33729	BUG	51.4406	7.2693	289.0	0.8	326	SKS					individual measurement
+33730	BUG	51.4406	7.2693	286.0	1.4	326	SKS					individual measurement
+33731	BUG	51.4406	7.2693	280.0	0.9	326	SKS					individual measurement
+33732	BUG	51.4406	7.2693	271.0	0.5	326	SKS					individual measurement
+33733	BUG	51.4406	7.2693	90.0	1.5	326	SKS					individual measurement
+33734	BUG	51.4406	7.2693	90.0	1.8	326	SKS					individual measurement
+33735	BUG	51.4406	7.2693	88.0	0.9	326	SKS					individual measurement
+33736	BUG	51.4406	7.2693	84.0	1.3	326	SKS					individual measurement
+33737	BUG	51.4406	7.2693	81.0	1.2	326	SKS					individual measurement
+33738	BUG	51.4406	7.2693	81.0	2.5	326	SKS					individual measurement
+33739	BUG	51.4406	7.2693	74.0	1.9	326	SKS					individual measurement
+33740	BUG	51.4406	7.2693	62.0	1.9	326	SKS					individual measurement
+33741	BUG	51.4406	7.2693	22.0	2.7	326	SKS					individual measurement
+33742	CLZ	51.8416	10.3724	343.0	2.6	326	SKS					individual measurement
+33743	CLZ	51.8416	10.3724	340.0	1.2	326	SKS					individual measurement
+33744	CLZ	51.8416	10.3724	335.0	1.0	326	SKS					individual measurement
+33745	CLZ	51.8416	10.3724	332.0	1.5	326	SKS					individual measurement
+33746	CLZ	51.8416	10.3724	60.0	2.3	326	SKS					individual measurement
+33747	CLZ	51.8416	10.3724	32.0	1.2	326	SKS					individual measurement
+33748	CLZ	51.8416	10.3724	16.0	0.8	326	SKS					individual measurement
+33749	IBBN	52.3072	7.7566	296.0	0.8	326	SKS					individual measurement
+33750	IBBN	52.3072	7.7566	278.0	1.0	326	SKS					individual measurement
+33751	IBBN	52.3072	7.7566	273.0	0.9	326	SKS					individual measurement
+33752	IBBN	52.3072	7.7566	272.0	1.3	326	SKS					individual measurement
+33753	IBBN	52.3072	7.7566	271.0	0.9	326	SKS					individual measurement
+33754	IBBN	52.3072	7.7566	84.0	0.8	326	SKS					individual measurement
+33755	IBBN	52.3072	7.7566	72.0	2.2	326	SKS					individual measurement
+33756	IBBN	52.3072	7.7566	63.0	1.1	326	SKS					individual measurement
+33757	BRNL	52.4278	13.358	325.0	1.2	326	SKS					individual measurement
+33758	BRNL	52.4278	13.358	309.0	2.0	326	SKS					individual measurement
+33759	BRNL	52.4278	13.358	303.0	1.3	326	SKS					individual measurement
+33760	BRNL	52.4278	13.358	295.0	0.9	326	SKS					individual measurement
+33761	RUE	52.4759	13.78	338.0	2.0	326	SKS					individual measurement
+33762	RUE	52.4759	13.78	333.0	1.1	326	SKS					individual measurement
+33763	RUE	52.4759	13.78	331.0	1.7	326	SKS					individual measurement
+33764	RUE	52.4759	13.78	320.0	1.5	326	SKS					individual measurement
+33765	RUE	52.4759	13.78	317.0	1.0	326	SKS					individual measurement
+33766	RUE	52.4759	13.78	314.0	1.2	326	SKS					individual measurement
+33767	RUE	52.4759	13.78	313.0	1.0	326	SKS					individual measurement
+33768	RUE	52.4759	13.78	310.0	1.1	326	SKS					individual measurement
+33769	RUE	52.4759	13.78	304.0	2.2	326	SKS					individual measurement
+33770	RUE	52.4759	13.78	302.0	0.7	326	SKS					individual measurement
+33771	RUE	52.4759	13.78	302.0	1.3	326	SKS					individual measurement
+33772	RUE	52.4759	13.78	300.0	1.4	326	SKS					individual measurement
+33773	RUE	52.4759	13.78	299.0	1.3	326	SKS					individual measurement
+33774	RUE	52.4759	13.78	298.0	1.0	326	SKS					individual measurement
+33775	RUE	52.4759	13.78	296.0	1.1	326	SKS					individual measurement
+33776	RUE	52.4759	13.78	292.0	0.8	326	SKS					individual measurement
+33777	RUE	52.4759	13.78	292.0	0.6	326	SKS					individual measurement
+33778	RUE	52.4759	13.78	288.0	1.5	326	SKS					individual measurement
+33779	RUE	52.4759	13.78	285.0	1.1	326	SKS					individual measurement
+33780	RUE	52.4759	13.78	282.0	0.9	326	SKS					individual measurement
+33781	RUE	52.4759	13.78	280.0	0.6	326	SKS					individual measurement
+33782	RUE	52.4759	13.78	276.0	1.1	326	SKS					individual measurement
+33783	RUE	52.4759	13.78	87.0	0.8	326	SKS					individual measurement
+33784	RUE	52.4759	13.78	74.0	0.8	326	SKS					individual measurement
+33785	NRDL	52.4943	10.1073	290.0	1.6	326	SKS					individual measurement
+33786	NRDL	52.4943	10.1073	285.0	1.5	326	SKS					individual measurement
+33787	NRDL	52.4943	10.1073	88.0	1.6	326	SKS					individual measurement
+33788	BSEG	53.9353	10.3169	355.0	2.2	326	SKS					individual measurement
+33789	BSEG	53.9353	10.3169	329.0	1.9	326	SKS					individual measurement
+33790	BSEG	53.9353	10.3169	328.0	1.4	326	SKS					individual measurement
+33791	BSEG	53.9353	10.3169	327.0	0.9	326	SKS					individual measurement
+33792	BSEG	53.9353	10.3169	327.0	1.8	326	SKS					individual measurement
+33793	BSEG	53.9353	10.3169	323.0	1.6	326	SKS					individual measurement
+33794	BSEG	53.9353	10.3169	321.0	1.9	326	SKS					individual measurement
+33795	BSEG	53.9353	10.3169	297.0	2.7	326	SKS					individual measurement
+33796	BSEG	53.9353	10.3169	89.0	2.4	326	SKS					individual measurement
+33797	RGN	54.5477	13.3214	356.0	1.2	326	SKS					individual measurement
+33798	RGN	54.5477	13.3214	353.0	1.0	326	SKS					individual measurement
+33799	RGN	54.5477	13.3214	342.0	0.8	326	SKS					individual measurement
+33800	RGN	54.5477	13.3214	62.0	2.5	326	SKS					individual measurement
+33801	RGN	54.5477	13.3214	56.0	2.5	326	SKS					individual measurement
+33802	RGN	54.5477	13.3214	14.0	1.1	326	SKS					individual measurement
+33803	RGN	54.5477	13.3214	14.0	1.2	326	SKS					individual measurement
+33804	RGN	54.5477	13.3214	11.0	0.9	326	SKS					individual measurement
+35286	PLONS	47.049	9.381	58.39	1.8	333	SKS	1.5	1.5	0.23	0.23	individual measurement, Good
+35299	LIENZ	47.295	9.493	54.08	1.85	333	SKS	2.0	2.0	0.19	0.19	individual measurement, Good
+35306	SULZ	47.528	8.112	48.65	2.2	333	SKS	2.0	2.0	0.23	0.23	individual measurement, Good
+35307	ZUR	47.369	8.581	48.17	1.8	333	SKS	2.0	2.0	0.06	0.06	individual measurement, Good
+35309	BALST	47.336	7.695	66.28	2.25	333	SKS	2.5	2.5	0.6	0.6	individual measurement, Fair
+35315	WILA	47.415	8.908	52.1	2.6	333	SKS	2.5	2.5	0.22	0.22	individual measurement, Fair
+35332	ZUR	47.369	8.581	70.73	1.55	333	SKS	2.5	2.5	0.2	0.2	individual measurement, Good
+35333	ZUR	47.369	8.581	48.31	1.9	333	SKS	2.5	2.5	0.15	0.15	individual measurement, Good
+35346	LIENZ	47.295	9.493	57.59	1.3	333	SKS	3.0	3.0	0.2	0.2	individual measurement, Good
+35353	PLONS	47.049	9.381	65.19	1.3	333	SKS	3.0	3.0	0.08	0.08	individual measurement, Good
+35355	SLE	47.765	8.492	56.86	1.85	333	SKS	3.0	3.0	0.2	0.2	individual measurement, Good
+35356	SLE	47.765	8.492	55.2	1.55	333	SKS	3.0	3.0	0.23	0.23	individual measurement, Good
+35362	WILA	47.415	8.908	64.87	1.65	333	SKS	3.0	3.0	0.21	0.21	individual measurement, Good
+35380	PLONS	47.049	9.381	50.09	1.5	333	SKS	3.5	3.5	0.28	0.28	individual measurement, Good
+35391	WILA	47.415	8.908	58.09	1.6	333	SKS	3.5	3.5	0.25	0.25	individual measurement, Good
+35406	LIENZ	47.295	9.493	65.52	1.65	333	SKS	4.0	4.0	0.2	0.2	individual measurement, Good
+35421	SULZ	47.528	8.112	46.99	1.95	333	SKS	4.0	4.0	0.23	0.23	individual measurement, Good
+35427	PLONS	47.049	9.381	54.8	1.65	333	SKS	4.5	4.5	0.41	0.41	individual measurement, Fair
+35446	PLONS	47.049	9.381	74.99	1.4	333	SKS	4.5	4.5	0.1	0.1	individual measurement, Good
+35447	PLONS	47.049	9.381	63.63	2.0	333	SKS	4.5	4.5	0.28	0.28	individual measurement, Good
+35452	SLE	47.765	8.492	70.03	1.55	333	SKS	4.5	4.5	0.41	0.41	individual measurement, Good
+35461	WILA	47.415	8.908	60.69	1.65	333	SKS	4.5	4.5	0.21	0.21	individual measurement, Good
+35467	PLONS	47.049	9.381	38.06	1.5	333	SKS	5.0	5.0	0.25	0.25	individual measurement, Fair
+35469	SLE	47.765	8.492	54.31	2.95	333	SKS	5.0	5.0	0.57	0.57	individual measurement, Fair
+35472	SULZ	47.528	8.112	49.6	1.9	333	SKS	5.0	5.0	0.31	0.31	individual measurement, Fair
+35473	SULZ	47.528	8.112	47.68	2.1	333	SKS	5.0	5.0	0.29	0.29	individual measurement, Fair
+35474	ZUR	47.369	8.581	66.01	1.8	333	SKS	5.0	5.0	0.21	0.21	individual measurement, Fair
+35475	ZUR	47.369	8.581	52.11	2.8	333	SKS	5.0	5.0	0.5	0.5	individual measurement, Fair
+35485	LIENZ	47.295	9.493	348.99	1.95	333	SKS	5.0	5.0	0.15	0.15	individual measurement, Good
+35489	PLONS	47.049	9.381	62.82	1.55	333	SKS	5.0	5.0	0.26	0.26	individual measurement, Good
+35490	PLONS	47.049	9.381	65.17	1.5	333	SKS	5.0	5.0	0.17	0.17	individual measurement, Good
+35491	PLONS	47.049	9.381	53.14	1.5	333	SKS	5.0	5.0	0.12	0.12	individual measurement, Good
+35503	SULZ	47.528	8.112	46.49	1.8	333	SKS	5.0	5.0	0.11	0.11	individual measurement, Good
+35504	WILA	47.415	8.908	56.67	1.6	333	SKS	5.0	5.0	0.2	0.2	individual measurement, Good
+35505	WILA	47.415	8.908	47.02	2.0	333	SKS	5.0	5.0	0.15	0.15	individual measurement, Good
+35506	WILA	47.415	8.908	63.96	1.55	333	SKS	5.0	5.0	0.25	0.25	individual measurement, Good
+35512	LIENZ	47.295	9.493	32.99	3.15	333	SKS	5.5	5.5	0.69	0.69	individual measurement, Fair
+35513	LIENZ	47.295	9.493	56.14	1.85	333	SKS	5.5	5.5	0.39	0.39	individual measurement, Fair
+35519	WILA	47.415	8.908	52.21	3.35	333	SKS	5.5	5.5	0.61	0.61	individual measurement, Fair
+35520	ZUR	47.369	8.581	60.36	1.6	333	SKS	5.5	5.5	0.3	0.3	individual measurement, Fair
+35535	PLONS	47.049	9.381	76.79	1.4	333	SKS	5.5	5.5	0.12	0.12	individual measurement, Good
+35541	SLE	47.765	8.492	51.67	1.65	333	SKS	5.5	5.5	0.17	0.17	individual measurement, Good
+35548	WILA	47.415	8.908	65.09	1.65	333	SKS	5.5	5.5	0.24	0.24	individual measurement, Good
+35576	LIENZ	47.295	9.493	64.56	1.85	333	SKS	6.0	6.0	0.29	0.29	individual measurement, Good
+35582	SLE	47.765	8.492	51.64	1.55	333	SKS	6.0	6.0	0.29	0.29	individual measurement, Good
+35603	LIENZ	47.295	9.493	279.78	2.8	333	SKS	6.5	6.5	0.25	0.25	individual measurement, Fair
+35604	LIENZ	47.295	9.493	57.18	2.15	333	SKS	6.5	6.5	0.42	0.42	individual measurement, Fair
+35607	PLONS	47.049	9.381	62.36	2.0	333	SKS	6.5	6.5	0.62	0.62	individual measurement, Fair
+35613	SULZ	47.528	8.112	44.58	1.7	333	SKS	6.5	6.5	0.36	0.36	individual measurement, Fair
+35624	LIENZ	47.295	9.493	73.15	1.0	333	SKS	6.5	6.5	0.06	0.06	individual measurement, Good
+35629	SLE	47.765	8.492	51.7	1.5	333	SKS	6.5	6.5	0.3	0.3	individual measurement, Good
+35633	ZUR	47.369	8.581	39.98	1.6	333	SKS	6.5	6.5	0.21	0.21	individual measurement, Good
+35650	LIENZ	47.295	9.493	61.06	1.15	333	SKS	7.0	7.0	0.09	0.09	individual measurement, Good
+35661	BALST	47.336	7.695	48.92	1.35	333	SKS	7.5	7.5	0.69	0.69	individual measurement, Fair
+35672	LIENZ	47.295	9.493	50.16	1.75	333	SKS	7.5	7.5	0.16	0.16	individual measurement, Good
+35673	LIENZ	47.295	9.493	47.21	1.8	333	SKS	7.5	7.5	0.16	0.16	individual measurement, Good
+35674	LIENZ	47.295	9.493	55.06	1.85	333	SKS	7.5	7.5	0.45	0.45	individual measurement, Good
+35695	PLONS	47.049	9.381	57.99	1.4	333	SKS	8.0	8.0	0.23	0.23	individual measurement, Fair
+35703	LIENZ	47.295	9.493	44.4	1.8	333	SKS	8.0	8.0	0.17	0.17	individual measurement, Good
+35717	ZUR	47.369	8.581	52.26	0.85	333	SKS	8.0	8.0	0.16	0.16	individual measurement, Good
+35734	LIENZ	47.295	9.493	46.14	1.75	333	SKS	8.5	8.5	0.19	0.19	individual measurement, Good
+35738	SLE	47.765	8.492	58.21	1.7	333	SKS	8.5	8.5	0.24	0.24	individual measurement, Good
+35753	BALST	47.336	7.695	52.14	1.9	333	SKS	9.0	9.0	0.2	0.2	individual measurement, Good
+35758	LIENZ	47.295	9.493	46.57	1.1	333	SKS	9.0	9.0	0.12	0.12	individual measurement, Good
+35759	LIENZ	47.295	9.493	57.35	1.2	333	SKS	9.0	9.0	0.14	0.14	individual measurement, Good
+35783	BALST	47.336	7.695	46.28	1.85	333	SKS	9.5	9.5	0.41	0.41	individual measurement, Good
+35802	PLONS	47.049	9.381	85.94	1.4	333	SKS	10.0	10.0	0.33	0.33	individual measurement, Fair
+35817	PLONS	47.049	9.381	64.04	1.5	333	SKS	10.0	10.0	0.4	0.4	individual measurement, Good
+35822	SLE	47.765	8.492	48.18	1.05	333	SKS	10.0	10.0	0.29	0.29	individual measurement, Good
+35834	ZUR	47.369	8.581	39.28	2.7	333	SKS	10.5	10.5	0.49	0.49	individual measurement, Fair
+35843	LIENZ	47.295	9.493	44.81	1.8	333	SKS	10.5	10.5	0.21	0.21	individual measurement, Good
+35864	PLONS	47.049	9.381	67.59	1.9	333	SKS	11.0	11.0	0.43	0.43	individual measurement, Good
+35865	PLONS	47.049	9.381	79.77	1.15	333	SKS	11.0	11.0	0.21	0.21	individual measurement, Good
+35866	PLONS	47.049	9.381	49.49	0.95	333	SKS	11.0	11.0	0.18	0.18	individual measurement, Good
+35867	SULZ	47.528	8.112	44.81	1.65	333	SKS	11.0	11.0	0.41	0.41	individual measurement, Good
+35876	LIENZ	47.295	9.493	35.32	1.65	333	SKS	11.5	11.5	0.59	0.59	individual measurement, Fair
+35885	BALST	47.336	7.695	23.01	2.1	333	SKS	11.5	11.5	0.54	0.54	individual measurement, Good
+35886	BALST	47.336	7.695	32.72	1.1	333	SKS	11.5	11.5	0.23	0.23	individual measurement, Good
+35891	LIENZ	47.295	9.493	51.43	0.95	333	SKS	11.5	11.5	0.2	0.2	individual measurement, Good
+35906	ZUR	47.369	8.581	51.24	0.95	333	SKS	12.0	12.0	0.34	0.34	individual measurement, Fair
+35915	LIENZ	47.295	9.493	75.04	1.05	333	SKS	12.0	12.0	0.21	0.21	individual measurement, Good
+35934	SULZ	47.528	8.112	32.11	1.35	333	SKS	12.5	12.5	0.35	0.35	individual measurement, Fair
+35938	ZUR	47.369	8.581	38.46	1.45	333	SKS	12.5	12.5	0.36	0.36	individual measurement, Fair
+35944	PLONS	47.049	9.381	60.76	1.2	333	SKS	12.5	12.5	0.38	0.38	individual measurement, Good
+35962	PLONS	47.049	9.381	44.75	1.6	333	SKS	13.0	13.0	0.28	0.28	individual measurement, Good
+35968	BALST	47.336	7.695	19.31	1.5	333	SKS	13.5	13.5	0.35	0.35	individual measurement, Fair
+35998	PLONS	47.049	9.381	50.3	1.6	333	SKS	14.0	14.0	0.35	0.35	individual measurement, Good
+36010	SLE	47.765	8.492	50.86	1.85	333	SKS	14.5	14.5	0.33	0.33	individual measurement, Fair
+36012	BALST	47.336	7.695	27.38	1.65	333	SKS	14.5	14.5	0.31	0.31	individual measurement, Good
+36020	PLONS	47.049	9.381	42.25	1.6	333	SKS	14.5	14.5	0.35	0.35	individual measurement, Good
+36035	PLONS	47.049	9.381	69.87	1.6	333	SKS	15.0	15.0	0.45	0.45	individual measurement, Fair
+36036	SLE	47.765	8.492	65.15	1.6	333	SKS	15.0	15.0	0.54	0.54	individual measurement, Fair
+36042	SLE	47.765	8.492	61.48	0.95	333	SKS	15.0	15.0	0.38	0.38	individual measurement, Good
+36043	WILA	47.415	8.908	80.7	1.45	333	SKS	15.0	15.0	0.39	0.39	individual measurement, Good
+36048	PLONS	47.049	9.381	50.51	0.7	333	SKS	15.5	15.5	0.18	0.18	individual measurement, Fair
+36066	PLONS	47.049	9.381	54.16	1.6	333	SKS	16.0	16.0	0.65	0.65	individual measurement, Fair
+36083	BALST	47.336	7.695	21.31	1.5	333	SKS	16.5	16.5	0.46	0.46	individual measurement, Fair
+36091	PLONS	47.049	9.381	45.89	1.3	333	SKS	16.5	16.5	0.25	0.25	individual measurement, Good
+36101	LIENZ	47.295	9.493	77.97	1.2	333	SKS	17.0	17.0	0.33	0.33	individual measurement, Good
+36104	BALST	47.336	7.695	37.78	1.4	333	SKS	17.5	17.5	0.39	0.39	individual measurement, Fair
+36111	WILA	47.415	8.908	86.29	0.8	333	SKS	17.5	17.5	0.25	0.25	individual measurement, Fair
+36117	PLONS	47.049	9.381	43.02	1.4	333	SKS	17.5	17.5	0.48	0.48	individual measurement, Good
+36123	BALST	47.336	7.695	35.58	1.5	333	SKS	18.0	18.0	0.5	0.5	individual measurement, Fair
+36130	WILA	47.415	8.908	74.14	1.35	333	SKS	18.0	18.0	0.41	0.41	individual measurement, Fair
+36143	BALST	47.336	7.695	39.36	0.85	333	SKS	19.0	19.0	0.43	0.43	individual measurement, Fair
+36150	LIENZ	47.295	9.493	49.1	1.55	333	SKS	19.0	19.0	0.68	0.68	individual measurement, Fair
+36165	ZUR	47.369	8.581	46.23	1.45	333	SKS	19.5	19.5	0.65	0.65	individual measurement, Fair
+36168	WILA	47.415	8.908	49.24	1.4	333	SKS	19.5	19.5	0.56	0.56	individual measurement, Good
+36169	BALST	47.336	7.695	45.6	1.1	333	SKS	20.0	20.0	0.74	0.74	individual measurement, Fair
+36173	ZUR	47.369	8.581	66.61	2.4	333	SKS	20.0	20.0	0.85	0.85	individual measurement, Fair
+36181	LIENZ	47.295	9.493	42.98	2.15	333	SKS	21.0	21.0	0.88	0.88	individual measurement, Fair
+36209	SULZ	47.528	8.112	25.85	1.65	333	SKS	22.5	22.5	0.69	0.69	individual measurement, Good
+36213	LIENZ	47.295	9.493	68.09	1.9	333	SKS	23.0	23.0	0.85	0.85	individual measurement, Fair
+36216	SLE	47.765	8.492	46.31	1.25	333	SKS	23.0	23.0	0.88	0.88	individual measurement, Fair
+36229	BALST	47.336	7.695	45.91	1.75	333	SKS	24.5	24.5	0.91	0.91	individual measurement, Fair
+36241	PLONS	47.049	9.381	37.2	0.55	333	SKS	25.5	25.5	0.44	0.44	individual measurement, Fair
+36267	PLONS	47.049	9.381	71.01	0.8	333	SKS	27.5	27.5	0.28	0.28	individual measurement, Fair

@@ -321,6 +321,7 @@ class sks_measurements:
             ublon = station_data_all['lon'].max() + 0.5
             ublat = station_data_all['lat'].max() + 0.5
 
+        ## Visualize
         fig = plt.figure(figsize=(10,10))
         ax = fig.add_subplot(111)
         map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lblon, llcrnrlat=lblat,urcrnrlon=ublon, urcrnrlat=ublat, epsg=4839)
