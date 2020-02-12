@@ -23,6 +23,18 @@
 #### If having some issues with Cartopy, one simple fix may be:
 ```pip uninstall shapely; pip install --no-binary :all: shapely```
 
+#### With some UBUNTU distributions, it was impossible to call pip from conda. Therefore, some of the necessary dependencies were not installed and needed to be installed manually:
+    - cartopy
+        -- ```conda install -c conda-forge cartopy```
+    - h5py
+        -- ```conda install h5py```
+    - obspyh5
+        -- ```pip install obspyh5``` or
+        -- ```conda install obspyh5```
+    - rf
+        -- ```pip install rf```
+    - splitwavepy
+        -- ```pip install splitwavepy```
 
 ## Run:
 ```python main.py```
