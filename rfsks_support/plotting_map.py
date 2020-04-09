@@ -114,8 +114,8 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     # map.fillcontinents()
     map.drawcountries(color='k',linewidth=0.1)
     map.drawmapboundary()
-    map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,5).tolist(),labels=[1,0,0,0],linewidth=0)
-    map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,5).tolist(),labels=[0,0,0,1],linewidth=0)
+    map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+    map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
     return map
 
         
