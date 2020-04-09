@@ -1,5 +1,6 @@
 name: rfsksenv
 channels:
+  - anaconda
   - conda-forge
   - defaults
 dependencies:
@@ -10,8 +11,8 @@ dependencies:
   - binutils_impl_linux-64=2.31.1=h6176602_1
   - binutils_linux-64=2.31.1=h6176602_8
   - bzip2=1.0.8=h516909a_0
-  - ca-certificates=2019.6.16=hecc5488_0
-  - certifi=2019.6.16=py37_1
+  - ca-certificates=2019.9.11=hecc5488_0
+  - certifi=2019.9.11=py37_0
   - cffi=1.12.3=py37h8022711_0
   - chardet=3.0.4=py37_1003
   - cryptography=2.7=py37h72c5cf5_0
@@ -45,19 +46,25 @@ dependencies:
   - libopenblas=0.3.7=h6e990d7_1
   - libpng=1.6.37=hed695b0_0
   - libstdcxx-ng=9.1.0=hdf63c60_0
+  - libtiff=4.0.10=hfc65ed5_1004
   - libuuid=2.32.1=h14c3975_1000
   - libxcb=1.13=h14c3975_1002
   - libxml2=2.9.9=hee79883_5
   - libxslt=1.1.32=h31b3aaa_1004
+  - llvmlite=0.29.0=py37hfd453ef_1
   - lxml=4.4.1=py37h7ec2d77_0
+  - lz4-c=1.8.3=he1b5a44_1001
   - matplotlib=3.1.1=py37_1
   - matplotlib-base=3.1.1=py37he7580a8_1
   - ncurses=6.1=hf484d3e_1002
+  - numba=0.45.1=py37hb3f55d8_0
   - numpy=1.17.1=py37h95a1406_0
   - obspy=1.1.0=py37h3010b51_1002
+  - olefile=0.46=py_0
   - openssl=1.1.1c=h516909a_0
   - pandas=0.25.1=py37hb3f55d8_0
   - pcre=8.41=hf484d3e_1003
+  - pillow=6.2.1=py37h6b7be26_0
   - pip=19.2.3=py37_0
   - proj4=5.2.0=he1b5a44_1006
   - pthread-stubs=0.4=h14c3975_1001
@@ -71,6 +78,7 @@ dependencies:
   - python=3.7.3=h33d41f4_1
   - python-dateutil=2.8.0=py_0
   - pytz=2019.2=py_0
+  - pyyaml=5.1.2=py37h7b6447c_0
   - qt=5.9.7=h0c104cb_3
   - readline=8.0=hf8c457e_0
   - requests=2.22.0=py37_1
@@ -87,12 +95,15 @@ dependencies:
   - xorg-libxau=1.0.9=h14c3975_0
   - xorg-libxdmcp=1.1.3=h516909a_0
   - xz=5.2.4=h14c3975_1001
+  - yaml=0.1.7=h96e3832_1
   - zlib=1.2.11=h516909a_1005
+  - zstd=1.4.3=h3b9ef0a_0
   - pip:
     - cartopy==0.17.0
     - h5py==2.9.0
     - obspyh5==0.4.1
     - rf==0.7.0
+    - shapely==1.6.4.post2
     - splitwavepy==0.3.0
 prefix: /home/legendre/anaconda3/envs/rfsksenv
 
