@@ -88,7 +88,7 @@ if makeSKS:
     for direc in sksdirs:
         if not os.path.exists(direc):
             oss.create_dir(direc)
-            
+
 for direc in otherdirs:
     if not os.path.exists(direc):
         oss.create_dir(direc)
@@ -109,7 +109,7 @@ logfiles = glob.glob(res_dir+"tmp/*.log")
 for log in logfiles:
     if os.path.exists(log):
         os.remove(log)
-oss.setup_logging(default_level=logging.INFO)
+oss.setup_logging(default_level=logging.INFO,dirname=res_dir)
 logger = logging.getLogger(__name__)
 print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
 time.sleep(3)
