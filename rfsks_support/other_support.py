@@ -67,7 +67,17 @@ def read_directories(res_dir):
         else:
             newdirname.append(f"{direc}")
     dirs['DIR_NAME']= np.array(newdirname)
-    return dirs
+
+    ## Separating RF and SKS directories
+    rfdirs,sksdirs,otherdirs=[],[],[]
+    for indx in dirs.index.values:
+        if indx[:2]=='RF':
+            rfdirs.append(dirs.loc[indx,'DIR_NAME'])
+        elif indx[:3]=='SKS':
+            sksdirs.append(dirs.loc[indx,'DIR_NAME'])
+        else:
+            otherdirs.append(dirs.loc[indx,'DIR_NAME'])
+    return dirs,rfdirs,sksdirs,otherdirs
 
 
 avg = lambda num1,num2: (int(num1)+int(num2))/2.0

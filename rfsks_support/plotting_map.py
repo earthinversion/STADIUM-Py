@@ -101,6 +101,102 @@ def equi(m, centerlon, centerlat, radius, *args, **kwargs):
     X,Y = m(X,Y)
     plt.plot(X,Y,**kwargs)
 
+def latlon_grid(bmap, lon_int, lat_int, labels='lb', **kwargs):
+    '''Draws a lat-lon grid in an easy way.
+
+    Some default values are taken from rcParams instead of 'black' (color) and
+    1.0 (linewidth) which is the default in Basemap.
+
+    In Basemap, the label pad is computed in projection units. Now you can use
+    the keyword argument 'labelpad' to control this separation in points. If
+    not specified then this value is taken from rcParams.
+
+    Arguments:
+
+    bmap -- Basemap object.
+    lon_int, lat_int -- Difference in degrees from one longitude or latitude to
+                        the next.
+    labels -- String specifying which margins will be used to write the labels.
+              If None, no label will be shown.
+              It is assummed that left/right margins (i.e. Y axes) correspond
+              to latitudes and top/bottom (X axes) to longitudes. It is valid
+              every combination of the characters 't' | 'b' | 'l' | 'r'
+              (top|bottom|left|right).
+              Ex: 'lrb' means that the longitude values will appear in bottom
+              margin and latitudes in left and right.
+    **kwargs -- Other arguments to drawparallels, drawmeridians and plt.text.
+                labelpad has units of points.
+    '''
+    # Proccesses arguments and rcParams for defult values
+    if 'color' not in kwargs:
+        kwargs['color'] = plt.rcParams['grid.color']
+    if 'linewidth' not in kwargs:
+        kwargs['linewidth'] = plt.rcParams['grid.linewidth']
+    if 'labelpad' in kwargs:
+        padx = pady = kwargs['labelpad']
+        del kwargs['labelpad']
+    else:
+        pady = plt.rcParams['xtick.major.pad']
+        padx = plt.rcParams['ytick.major.pad']
+    if 'size' in kwargs:
+        xfontsize = yfontsize = kwargs['size']
+        del kwargs['size']
+    elif 'fontsize' in kwargs:
+        xfontsize = yfontsize = kwargs['fontsize']
+        del kwargs['fontsize']
+    else:
+        xfontsize = plt.rcParams['xtick.labelsize']
+        yfontsize = plt.rcParams['ytick.labelsize']
+    # Vectors of coordinates
+    lon0 = bmap.lonmin // lon_int * lon_int
+    lat0 = bmap.latmin // lat_int * lat_int
+    lon1 = bmap.lonmax // lon_int * lon_int
+    lat1 = bmap.latmax // lat_int * lat_int
+    nlons = (lon1 - lon0) / lon_int + 1
+    nlats = (lat1 - lat0) / lat_int + 1
+    assert nlons / int(nlons) == 1, nlons
+    assert nlats / int(nlats) == 1, nlats
+    lons = np.linspace(lon0, lon1, int(nlons))
+    lats = np.linspace(lat0, lat1, int(nlats))
+    # If not specified then computes de label offset by 'labelpad'
+    xos = yos = None
+    if 'xoffset' in kwargs:
+        xos = kwargs['xoffset']
+    if 'yoffset' in kwargs:
+        yos = kwargs['yoffset']
+    if xos is None and yos is None:
+        # Page size in inches and axes limits
+        fig_w, fig_h = plt.gcf().get_size_inches()
+        points = plt.gca().get_position().get_points()
+        x1, y1 = tuple(points[0])
+        x2, y2 = tuple(points[1])
+        # Width and height of axes in points
+        w = (x2 - x1) * fig_w * 72
+        h = (y2 - y1) * fig_h * 72
+        # If the aspect relation is fixed then compute the real values
+        if bmap.fix_aspect:
+            aspect = bmap.aspect * w / h
+            if aspect > 1:
+                w = h / bmap.aspect
+            elif aspect < 1:
+                h = w * bmap.aspect
+        # Offset in projection units (meters or degrees)
+        xos = padx * (bmap.urcrnrx - bmap.llcrnrx) / w
+        yos = pady * (bmap.urcrnry - bmap.llcrnry) / h
+    # Set the labels
+    latlabels = [False] * 4
+    lonlabels = [False] * 4
+    if labels is not None:
+        pst = {'l': 0, 'r': 1, 't': 2, 'b': 3}
+        lst = {'l': latlabels, 'r': latlabels, 't': lonlabels, 'b': lonlabels}
+        for i in labels.lower():
+            lst[i][pst[i]] = True
+    # Draws the grid
+    bmap.drawparallels(lats, labels=latlabels, fontsize=yfontsize,
+                       xoffset=xos, yoffset=yos, **kwargs)
+    bmap.drawmeridians(lons, labels=lonlabels, fontsize=xfontsize,
+                       xoffset=xos, yoffset=yos, **kwargs)
+
 
 def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
@@ -114,8 +210,19 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     # map.fillcontinents()
     map.drawcountries(color='k',linewidth=0.1)
     map.drawmapboundary()
-    map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
-    map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
+    ## to fix overlapping of ticks
+    numlatdiv = np.abs(int(urcrnrlat - llcrnrlat))
+    numlondiv = np.abs(int(urcrnrlon - llcrnrlon))
+    # if numlatdiv>5:
+    #     numlatdiv=5
+    # if numlondiv>5:
+    #     numlondiv=5
+
+    # # x and y offsets
+    # xos, yos = 2, 2
+    # map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,numlatdiv,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0, fontsize=6, xoffset=xos, yoffset=yos)
+    # map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,numlondiv,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0, fontsize=6, xoffset=xos, yoffset=yos)
+    latlon_grid(map, numlondiv, numlatdiv, labels='lb',linewidth=0, size=6)
     return map
 
         

@@ -13,10 +13,10 @@ import warnings
 warnings.filterwarnings("ignore")
 import time
 
-
-inp = pd.read_csv("input_parameters.txt",sep="|",index_col ='PARAMETERS')
+inputFile = "input_parameters.txt"
+inp = pd.read_csv(inputFile,sep="|",index_col ='PARAMETERS')
 res_dir = str(inp.loc['project_name','VALUES']) #'results/'
-dirs = oss.read_directories(res_dir)
+dirs,rfdirs,sksdirs,otherdirs = oss.read_directories(res_dir)
 
 ## Input parameters  ## General
 fresh_start=int(inp.loc['fresh_start','VALUES'])       #0/1
@@ -80,7 +80,16 @@ if fresh_start:
     oss.rem_dir(res_dir)
 
 ## Creating directories
-for direc in list(dirs['DIR_NAME']):
+if makeRF:
+    for direc in rfdirs:
+        if not os.path.exists(direc):
+            oss.create_dir(direc)
+if makeSKS:
+    for direc in sksdirs:
+        if not os.path.exists(direc):
+            oss.create_dir(direc)
+            
+for direc in otherdirs:
     if not os.path.exists(direc):
         oss.create_dir(direc)
 
@@ -143,7 +152,7 @@ if makeRF:
         if not os.path.exists(retrived_stn_file):
             logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog!")
             catalogloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
-            datafileloc=str(dirs.loc['dataRFfileloc','DIR_NAME'])
+            datafileloc=str(dirs.loc['RFdatafileloc','DIR_NAME'])
             dest_map=str(dirs.loc['RFstaevnloc','DIR_NAME'])
             ## The stations list can be edited
             oss.select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF')
@@ -151,7 +160,7 @@ if makeRF:
     
 
     if plot_RF:
-        dataRFfileloc = str(dirs.loc['dataRFfileloc','DIR_NAME'])
+        dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
         all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
         if len(all_rfdatafile)>1:
             try:
@@ -159,7 +168,7 @@ if makeRF:
                 rfs.compute_rf(dataRFfileloc)
                 logger.info("\n")
                 logger.info("## Operating plot_RF method")
-                rfs.plot_RF(dataRFfileloc,destImg=str(dirs.loc['plotRFloc','DIR_NAME']))
+                rfs.plot_RF(dataRFfileloc,destImg=str(dirs.loc['RFplotloc','DIR_NAME']))
             except Exception as e:
                 logger.info(e)
         else:
@@ -170,12 +179,12 @@ if makeRF:
         try:
             logger.info("\n")
             logger.info("## Operating plot_priercingpoints_RF method")
-            rfs.plot_pp_profile_map(str(dirs.loc['dataRFfileloc','DIR_NAME']),str(dirs.loc['dataRFfileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70, ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
+            rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70, ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
 
             if plot_RF_profile:
                 logger.info("\n")
                 logger.info("## Operating plot_RF_profile method")
-                rfs.plot_RF_profile(str(dirs.loc['dataRFfileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
+                rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
         except Exception as e:
             logger.info(e)
 
@@ -219,7 +228,7 @@ if makeSKS:
         if not os.path.exists(retrived_stn_file):
             logger.info(f"{retrived_stn_file} does not exist...obtaining inventory!")
             catalogloc = str(dirs.loc['SKSinfoloc','DIR_NAME'])
-            datafileloc=str(dirs.loc['dataSKSfileloc','DIR_NAME'])
+            datafileloc=str(dirs.loc['SKSdatafileloc','DIR_NAME'])
             dest_map=str(dirs.loc['SKSstaevnloc','DIR_NAME'])
             ## The stations list can be edited
             oss.select_to_download_events(catalogloc,datafileloc,dest_map,SKSsta,sks_data,minmagnitudeSKS,maxmagnitudeSKS,plot_SKS_stations,plot_SKS_events,locations,method='SKS')
@@ -237,9 +246,9 @@ if makeSKS:
         trace_loc_RTZ = str(dirs.loc['SKStracesloc_RTZ','DIR_NAME']) if plot_traces_RTZ else None
         trigger_loc = str(dirs.loc['SKS_trigger_loc','DIR_NAME']) if plot_trigger else None
 
-        plot_measure_loc = str(dirs.loc['plot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
+        plot_measure_loc = str(dirs.loc['SKSplot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
         sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
-        sksMeasure.SKScalc(str(dirs.loc['dataSKSfileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = 'recursive_sta_lta')
+        sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = 'recursive_sta_lta')
         sksMeasure.plot_sks_map()
 
 

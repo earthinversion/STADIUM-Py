@@ -1,34 +1,35 @@
 PARAMETERS|VALUES|DESCRIPTION
-fresh_start|0
-client|IRIS,GFZ,ORFEUS|enter all the clients separated by commas
+fresh_start|1
+project_name|results2/
+client|IRIS|enter all the clients separated by commas
 mnlong|6
 mxlong|15
 mnlat|47
 mxlat|56
 network|*
-station|STU
-locations|""|List all locations, e.g "","00"
+station|GRFO
+locations|"","00"|List all locations, e.g "","00"
 ###########|####
 RF|INPUT PARAMETERS
 ###########|####
 makeRF|0
-obtain_inventory|0
-download_data_RF|0
+obtain_inventory|1
+download_data_RF|1
 minradiusRF|30
 maxradiusRF|90
 minmagnitudeRF|6.5
 maxmagnitudeRF|9.5
-plot_stations|0
-plot_events|0
-plot_RF|0
-plot_ppoints|0
+plot_stations|1
+plot_events|1
+plot_RF|1
+plot_ppoints|1
 num_profile_divs_lat|2
 num_profile_divs_lon|3
-plot_RF_profile|0
+plot_RF_profile|1
 ###########|####
 SKS|INPUT PARAMETERS
 ###########|####
-makeSKS|1
+makeSKS|0
 obtain_inventory_SKS|1
 download_data_SKS|1
 minradiusSKS|90  

@@ -213,9 +213,9 @@ class downloadDataclass:
                             succ_dl+=1
                             
                         if not msg:
-                            self.logger.info(f"Event: {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                            self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
                         else:
-                            self.logger.info(f"{msg}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                            self.logger.info(f"{msg}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
 
                         if strm:
                             stream.extend(strm)
@@ -252,12 +252,12 @@ class downloadDataclass:
                     for i,evtime,evdp,elat,elon,em,emt in zip(range(len(df['evtime'])),df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):
                         rem_dl -= 1
                         num_try += 1
-                        # self.logger.info(f"Event: {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                        # self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
                         strm,res,msg = multi_download(self.client,self.inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons = sks_stalons,stalats = sks_stalats,staNetNames = sks_staNetNames,phase='SKS',locations=locations)
                         if not msg:
-                            self.logger.info(f"Event: {evtime}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                            self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
                         else:
-                            self.logger.info(f"{msg}; remaining try: {rem_dl}/{tot_evnt_stns}; successful dl = {succ_dl}/{num_try}")
+                            self.logger.info(f"{msg}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
 
 
                         if strm:
