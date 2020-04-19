@@ -111,10 +111,12 @@ for log in logfiles:
         os.remove(log)
 oss.setup_logging(default_level=logging.INFO,dirname=res_dir)
 logger = logging.getLogger(__name__)
+
 print(f"\nCheck file {res_dir+'tmp/info.log'} for details\n")
 time.sleep(3)
 ## Log
 logger.info(f"Running the program for makeRF: {makeRF}; makeSKS: {makeSKS}")
+
 ############################
 #############################################################
 #############################################################
@@ -150,7 +152,7 @@ if makeRF:
 
         retrived_stn_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+'all_stations_rf_retrieved.txt'
         if not os.path.exists(retrived_stn_file):
-            logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog!")
+            logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog..")
             catalogloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
             datafileloc=str(dirs.loc['RFdatafileloc','DIR_NAME'])
             dest_map=str(dirs.loc['RFstaevnloc','DIR_NAME'])
@@ -162,7 +164,7 @@ if makeRF:
     if plot_RF:
         dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
         all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
-        if len(all_rfdatafile)>1:
+        if len(all_rfdatafile)>=1:
             try:
                 logger.info("\n## Computing RF")
                 rfs.compute_rf(dataRFfileloc)
@@ -179,7 +181,7 @@ if makeRF:
         try:
             logger.info("\n")
             logger.info("## Operating plot_priercingpoints_RF method")
-            rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']),depth=70, ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
+            rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
 
             if plot_RF_profile:
                 logger.info("\n")

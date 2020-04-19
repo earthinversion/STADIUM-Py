@@ -1,0 +1,9 @@
+PARAMETERS|VALUES|DESCRIPTION
+minrad|30|min radius from each station for events search
+maxrad|90|max radius from each station for events search
+minfreq|0.5|stream minfreq for bandpass
+maxfreq|2|stream maxfreq for bandpass
+trace_height|0.1|height of one trace in inches
+trim_min|-5|trim stream relative to onset before plotting
+trim_max|20|trim stream relative to onset before plotting
+ppdepth|70|piercing points depth

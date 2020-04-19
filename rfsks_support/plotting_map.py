@@ -213,10 +213,15 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     ## to fix overlapping of ticks
     numlatdiv = np.abs(int(urcrnrlat - llcrnrlat))
     numlondiv = np.abs(int(urcrnrlon - llcrnrlon))
-    # if numlatdiv>5:
-    #     numlatdiv=5
-    # if numlondiv>5:
-    #     numlondiv=5
+    if numlatdiv>5:
+        numlatdiv=5
+    elif numlatdiv<2:
+        numlatdiv=2
+
+    if numlondiv>5:
+        numlondiv=5
+    elif numlondiv<2:
+        numlondiv=2
 
     # # x and y offsets
     # xos, yos = 2, 2
@@ -243,7 +248,7 @@ def station_map(map, stns_lon, stns_lat,stns_name,figname="", destination="./",f
     plt.close('all')
 
 DEG2KM = 111.2
-def events_map(evlons, evlats, evmgs, evdps, stns_lon, stns_lat, destination, outname="all", topo=True,figfrmt='png', clon = 121):
+def events_map(evlons, evlats, evmgs, evdps, stns_lon, stns_lat, destination, outname="all-events_map", topo=True,figfrmt='png', clon = 121):
     warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)
     plt.figure(figsize=(16,12))
     lon0 = clon-360 if int(clon)>0 else clon
@@ -303,7 +308,7 @@ def events_map(evlons, evlats, evmgs, evdps, stns_lon, stns_lat, destination, ou
     for radius in [30,60,90,120]:
         equi(eq_map, np.mean(stns_lon), np.mean(stns_lat), radius*DEG2KM,lw=0.1, color='k')
 
-    plt.savefig(destination+outname+"-events_map."+figfrmt,dpi=200,bbox_inches='tight')
+    plt.savefig(destination+outname+"."+figfrmt,dpi=200,bbox_inches='tight')
     plt.close('all')
 
 def plot_bm_azimuth(map,stlon,stlat,distval_lat=180,distval_lon=180,ndivlat=4,ndivlon=5):    
@@ -315,8 +320,8 @@ def plot_bm_azimuth(map,stlon,stlat,distval_lat=180,distval_lon=180,ndivlat=4,nd
     yvals_az90 = np.linspace(stlat,stlat+distval_lat/111.2,ndivlat)
     xmap_az90,ymap_az90 = map(xvals_az90,yvals_az90)
 
-    map.plot(xmap_az0,ymap_az0,'-|', markersize=5,color='k',markeredgewidth=1)
-    map.plot(xmap_az90,ymap_az90,'-_', markersize=5,color='k',markeredgewidth=1)
+    map.plot(xmap_az0,ymap_az0,'-|', markersize=5,color='r',markeredgewidth=2)
+    map.plot(xmap_az90,ymap_az90,'-_', markersize=5,color='r',markeredgewidth=2)
 
 
 

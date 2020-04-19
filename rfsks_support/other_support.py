@@ -119,7 +119,7 @@ def obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs
                 logger.info("## Operating get_stnxml method")
                 rf_data.get_stnxml(network=network, station=station)
             except Exception as e:
-                # logger.error('Error occurred')
+                logger.error(e)
                 logger.error("Timeout while requesting...Please try again after some time", exc_info=True)
                 # sys.exit()
     if obtain_events:
@@ -161,7 +161,7 @@ def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minm
         # logger.info(len(all_catalogtxt),all_catalogtxt[0])
         if len(all_catalogtxt)!=0:
             concat_event_catalog(catfile,all_catalogtxt)
-            logger.info(f"Catalog file exists for {net_sta}!")
+            # logger.info(f"Catalog file exists for {net_sta}!")
             if net_sta not in net_sta_list:
                 net_sta_list.append(net_sta)
         else:
@@ -172,21 +172,23 @@ def select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minm
         logger.error("No catalog file found! Exiting...")
         sys.exit()
         
-    total_events=0
+    total_events,rem_events=0,0
     for net_sta in net_sta_list:
         net = net_sta.split("-")[0]
         sta = net_sta.split("-")[1]
-        catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
-        catfileout = catalogloc+f"{net}-{sta}-events-info-{method}-out.txt"
-        rem_duplicate_lines(catfile,catfileout)
-        shutil.move(catfileout,catfile)
+        if not os.path.exists(datafileloc+f'{net}-{sta}-rf_profile_data.h5'):
+            catfile = catalogloc+f"{net}-{sta}-events-info-{method}.txt"
+            catfileout = catalogloc+f"{net}-{sta}-events-info-{method}-out.txt"
+            rem_duplicate_lines(catfile,catfileout)
+            shutil.move(catfileout,catfile)
+            rem_events += int(pd.read_csv(catfile,sep="|",header=None).shape[0])
         total_events += int(pd.read_csv(catfile,sep="|",header=None).shape[0])
       
 
-    if total_events:
+    if rem_events:
         logger.info("\n")
         logger.info("## Operating download method")
-        rf_data.download_data(catalogtxtloc=catalogloc,datafileloc=datafileloc,tot_evnt_stns=total_events, plot_stations=plot_stations, plot_events=plot_events,dest_map=dest_map,locations=locations)
+        rf_data.download_data(catalogtxtloc=catalogloc,datafileloc=datafileloc,tot_evnt_stns=total_events,rem_evnts=rem_events, plot_stations=plot_stations, plot_events=plot_events,dest_map=dest_map,locations=locations)
     else:
         logger.warning("No events found!")
 
@@ -209,29 +211,38 @@ class Timeout():
         signal.alarm(0)    # disable alarm
  
     def raise_timeout(self, *args):
-        raise Timeout.Timeout()
+        logger = logging.getLogger(__name__)
+        try:
+            raise Timeout.Timeout()
+        except:
+            pass
 
 
 def organize_inventory(inventorytxtfile):
+    '''
+    create inventory text file containing information of stations with it's start and end time
+    '''
     out_inventorytxtfile = inventorytxtfile.split(".")[0]+'_new'+'.txt'
     inv_df = pd.read_csv(inventorytxtfile,sep="|",keep_default_na=False, na_values=[""])
     cols = inv_df.columns.values
+    # print(cols)
     inv_df['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
     net_sta_set = set(inv_df['#Network']+'_'+inv_df['Station'])
 
 
     inv_df['StartTimeNum'] = inv_df['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
     inv_df['EndTimeNum'] = inv_df['EndTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
-    new_inv_df = pd.DataFrame(columns = cols)
+    all_dicts=[]
     for net_sta in net_sta_set:
         net = net_sta.split("_")[0]
         sta = net_sta.split("_")[1]
         row = inv_df[(inv_df['#Network']==net) & (inv_df['Station']==sta)]
-        print(row['Latitude'][0])
+        row=row.reset_index()
         rowtimemax = row.loc[row['EndTimeNum'].idxmax()]
         rowtimemin = row.loc[row['StartTimeNum'].idxmin()]
-        dict_row = {'#Network':net,'Station':sta,'Latitude':row['Latitude'][0],'Longitude':row['Longitude'][0],'Elevation':row['Elevation'][0],'SiteName':row['SiteName'][0],'StartTime':rowtimemin['StartTime'],'EndTime':rowtimemax['EndTime']}
-        new_inv_df = new_inv_df.append(dict_row, ignore_index=True)
 
+        dict_row = {'#Network':net,'Station':sta,'Latitude':row.loc[0,'Latitude'],'Longitude':row.loc[0,'Longitude'],'Elevation':row.loc[0,'Elevation'],'SiteName':row.loc[0,'SiteName'],'StartTime':rowtimemin['StartTime'],'EndTime':rowtimemax['EndTime']}
+        all_dicts.append(dict_row)
+    new_inv_df=pd.DataFrame(all_dicts)
     new_inv_df.to_csv(out_inventorytxtfile, index=False,sep="|")
     return out_inventorytxtfile

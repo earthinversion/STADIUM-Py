@@ -14,36 +14,6 @@ import logging
 from rfsks_support.other_support import Timeout
 import matplotlib.gridspec as gridspec
 
-# def filter_traces(stream, lenphase):
-#     logger = logging.getLogger(__name__)
-#     # logger.warning("Filtering traces")
-#     len_tr0 = stream[0].stats.npts
-#     for tr in stream:
-#         lentr=tr.stats.npts
-#         lengt= tr.stats.sampling_rate * lenphase
-#         if lentr != len_tr0 or lentr != lengt:
-#             # logger.warning("Length of traces not consistent")
-#             stream.remove(tr)
-#             continue
-#         elif tr.stats.sampling_rate < 20:
-#             # logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}")
-#             stream.remove(tr)
-#             continue
-#         elif tr.stats.sampling_rate >= 20:
-#             if tr.stats.sampling_rate % 20 == 0:
-#                 factor = int(tr.stats.sampling_rate / 20)
-#                 # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
-#                 tr.decimate(factor, strict_length=False, no_filter=True) 
-#                 continue 
-#                 # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
-#             else:
-#                 tr.resample(20.0)
-#                 logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
-#                 # stream.remove(tr)
-#                 continue
-#         else:
-#             pass
-
 
 
 def minendtime(alledtimes):
@@ -252,7 +222,7 @@ def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",att
         filter_traces_sks(st,pharr = pharr)
 
     if len(st) != 3:
-        print(f"All three components not available: {len(st)}")
+        # print(f"All three components not available: {len(st)}")
         return False
     if stats_dict:
         dist, baz, _ = gps2dist_azimuth(stats_dict['station_latitude'],stats_dict['station_longitude'],stats_dict['event_latitude'],stats_dict['event_longitude'])
@@ -268,7 +238,7 @@ def retrieve_waveform(client,net,stn,t1,t2,stats_dict=None,cha="BHE,BHN,BHZ",att
         # print(f"Stream obtained {len(st)}")
         return RFStream(st)
     elif not any(isinstance(tr.data, np.ma.masked_array) for tr in st):
-        print("--------> There's a gap/overlap in the data")
+        # print("--------> There's a gap/overlap in the data")
         return False
 
 def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons,stalats,staNetNames,phase='P',locations=[""]):
@@ -318,12 +288,12 @@ def multi_download(client,inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fca
             stalats.append(slat)
             staNetNames.append(f"{net}_{stn}")
             # print("stream obtained\n")
-            msg = f"Data obtained for {evtime}"
+            msg = f"Data {evtime}"
             res = 1
             break
         elif j == len(client)-1:
             res = 0
-            msg = f"No data for {evtime}"
+            msg = f"No data {evtime}"
             break
         j+=1
     return strm, res, msg

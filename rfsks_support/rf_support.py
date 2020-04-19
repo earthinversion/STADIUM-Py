@@ -12,7 +12,8 @@ from rfsks_support.profile import profile
 # from rfsks_support.rfsks_extras import filter_traces_rf
 import logging
 
-
+advinputRF = "advRFparam.txt"
+inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 
 ### Compute RF
 def compute_rf(dataRFfileloc):
@@ -36,10 +37,10 @@ def compute_rf(dataRFfileloc):
                     lentr=tr.stats.npts
                     lengt= tr.stats.sampling_rate * 100
                     if lentr != lengt:
-                        print('Wrong trace length ', lentr,lengt)
+                        # print('Wrong trace length ', lentr,lengt)
                         continue
                 
-                stream3c.filter('bandpass', freqmin=0.5, freqmax=2)
+                stream3c.filter('bandpass', freqmin=float(inpRF.loc['minfreq','VALUES']), freqmax=float(inpRF.loc['maxfreq','VALUES']))
 
                 try:
                     stream3c.rf()
@@ -58,7 +59,7 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
     
-        kw = {'trim': (-5, 20), 'fillcolors': ('black', 'gray'), 'trace_height': 0.1}
+        kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('red', 'blue'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
         num_trace=len(stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']))
         if num_trace > 0:
             try:
@@ -66,13 +67,13 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
                 plt.savefig(destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt)
                 stream.select(component='Q', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
                 plt.savefig(destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt)
-                logger.info("----> Working on {}/{}, {}-{} total traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
+                logger.info("----> Plotting RF {}/{}, {}-{} Traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
             except Exception as e:
                 logger.error("Unexpected error", exc_info=True)
         else:
             logger.info("----> {} traces for {}-{}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
 
-def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=70,fig_frmt="png",ndivlat = 2, ndivlon=3):
+def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=int(inpRF.loc['ppdepth','VALUES']),fig_frmt="png",ndivlat = 2, ndivlon=3):
     logger = logging.getLogger(__name__)
     ppoints_df = pd.DataFrame()
     list_of_dfs = []
@@ -140,8 +141,8 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
 
         for n in range(len(divisions)-1):
             initdiv = divisions[n]
-            enddiv = divisions[n+1]
-            widthprof = int(np.abs(enddiv-initdiv)*degkmfac)
+            enddiv = divisions[n+1] #length of profile
+            widthprof = int(np.abs(enddiv-initdiv)*degkmfac) #width of profile
             # print(initdiv,enddiv,widthprof)
             # print(initdiv,enddiv)
             outputfile = profilefileloc+ f"rf_profile_profile{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
@@ -180,11 +181,11 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
     plot_bm_azimuth(map,stlon=stlon,stlat=stlat,distval_lat=width_lat,distval_lon=width_lon,ndivlat=ndivlat,ndivlon=ndivlon)
     outimagename = destination+'piercing_points_map_new.'+fig_frmt
     plt.savefig(outimagename,dpi=200,bbox_inches='tight')
-    logger.info(f"----> Output image is {outimagename}")
+    logger.info(f"----> PP map: {outimagename}")
     plt.close('all')
 
 
-def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
+def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES']))):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the RF profile")
     plt.style.use('classic')
@@ -192,10 +193,11 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
         inpfiles = glob.glob(profilefileloc+ f"rf_profile_profile{azimuth}_*.h5")
 
         for inpfile in inpfiles:
-            logger.info(f"----> Working on {inpfile}")
+            logger.info(f"----> RF profile {inpfile}")
             pstream = read_rf(inpfile)
             divparam = inpfile.split("_")[-4:-1]
             divsuffix = inpfile.split("_")[-1].split(".")[0]
+            print(divparam, divsuffix)
             # logger.info(pstream)
             pstream.trim2(trimrange[0], trimrange[1], 'onset')
             for chn in ['L','Q']:
@@ -203,8 +205,8 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(-5,20)):
                 pstream.select(channel='??'+chn).normalize().plot_profile(scale=1.5, top='hist', fillcolors=('r', 'b'))
                 plt.gcf().set_size_inches(15, 10)
                 plt.title(f'Channel: {chn} Azimuth {azimuth}')
-                outputimage = destination+f"{chn}_{azimuth}_{divparam[0]}_{divparam[1]}_{divparam[2]}_{divsuffix}_profile_plot.png"
+                outputimage = destination+f"{chn}_{azimuth}_{divsuffix}_profile.png"
                 plt.savefig(outputimage,dpi=200,bbox_inches='tight')
-                logger.info(f"------> Output image is {outputimage}")
+                logger.info(f"------> Output image: {outputimage}")
 
 

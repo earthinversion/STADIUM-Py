@@ -10,6 +10,8 @@ from rfsks_support.rfsks_extras import retrieve_waveform, multi_download
 from rfsks_support.plotting_map import plot_merc, station_map, events_map
 import logging
 
+advinputRF = "advRFparam.txt"
+inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 
 class downloadDataclass:
     
@@ -32,7 +34,7 @@ class downloadDataclass:
         self.method = method.upper()
         try:
             if self.method=='RF':
-                self.minradius,self.maxradius=30,90
+                self.minradius,self.maxradius=int(inpRF.loc['minrad','VALUES']),int(inpRF.loc['maxrad','VALUES'])
             elif self.method=='SKS':
                 self.minradius,self.maxradius=90,120
         except Exception as exception:
@@ -68,11 +70,14 @@ class downloadDataclass:
                     inventory +=invt
                 except Exception as exception:
                     self.logger.warning(f"FDSNNoDataException for {cl}")
-        # self.logger.info(self.inventoryfile)
+        # self.logger.info(inventory)
+
         inventory.write(self.inventoryfile, 'STATIONXML')
         self.inv = inventory
         inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
         self.inventorytxtfile = organize_inventory(self.inventorytxtfile)
+        
+
     ## inventory_catalog
     def obtain_events(self, catalogxmlloc,catalogtxtloc,minmagnitude=5.5,maxmagnitude=9.5):
         tot_evnt_stns = 0
@@ -157,17 +162,10 @@ class downloadDataclass:
                     self.logger.info(f"{catalogxml.split('/')[-1]} and {catalogtxt.split('/')[-1]} already exists!")
 
         ################################## Download
-    def download_data(self,catalogtxtloc,datafileloc,tot_evnt_stns, plot_stations=True, plot_events=True,dest_map="./",locations=[""]):
-        # if not self.inv:
-        #     self.logger.info("Reading station inventory to obtain events catalog")
-        #     try:
-        #         # Read the station inventory
-        #         self.inv = read_inventory(self.inventoryfile, format="STATIONXML")
-        #     except Exception as exception:
-        #         self.logger.error("No available data", exc_info=True)
-        #         sys.exit()
+    def download_data(self,catalogtxtloc,datafileloc,tot_evnt_stns,rem_evnts, plot_stations=True, plot_events=True,dest_map="./",locations=[""]):
+     
         self.logger.info(f"Total data files to download: {tot_evnt_stns}")
-        rem_dl = tot_evnt_stns
+        rem_dl = rem_evnts
         succ_dl,num_try = 0, 0 
         rf_stalons,sks_stalons = [],[]
         rf_stalats, sks_stalats = [], []
@@ -213,15 +211,15 @@ class downloadDataclass:
                             succ_dl+=1
                             
                         if not msg:
-                            self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
+                            self.logger.info(f"Event: {evtime}; rem: {rem_dl}/{tot_evnt_stns}; dl: {succ_dl}/{num_try}")
                         else:
-                            self.logger.info(f"{msg}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
+                            self.logger.info(f"{msg}; rem: {rem_dl}/{tot_evnt_stns}; dl: {succ_dl}/{num_try}")
 
                         if strm:
                             stream.extend(strm)
 
                     if not len(stream):
-                        self.logger.warning(f"No data for {rfdatafile}")
+                        self.logger.warning(f"No data {rfdatafile}")
                     stream.write(rfdatafile, 'H5')
                     fcat.close()
                 ### Event map plot
@@ -230,8 +228,10 @@ class downloadDataclass:
                     df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
                     if df.shape[0]:
                         evmg = [float(val.split()[0]) for val in df['evmg']]
-                        self.logger.info(f"Plotting events for {net} {stn}")
-                        events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-RF')
+                        event_plot_name=f'{net}-{stn}-RF-events_map'
+                        if not os.path.exists(dest_map+event_plot_name+f".{self.fig_frmt}"):
+                            self.logger.info(f"Plotting events map "+event_plot_name+f".{self.fig_frmt}")
+                            events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{event_plot_name}')
         
 
                         
@@ -252,12 +252,12 @@ class downloadDataclass:
                     for i,evtime,evdp,elat,elon,em,emt in zip(range(len(df['evtime'])),df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):
                         rem_dl -= 1
                         num_try += 1
-                        # self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
+                        # self.logger.info(f"Event: {evtime}; rem: {rem_dl}/{tot_evnt_stns}; dl: {succ_dl}/{num_try}")
                         strm,res,msg = multi_download(self.client,self.inv,net,stn,slat,slon,elat,elon,evdp,evtime,em,emt,fcat,stalons = sks_stalons,stalats = sks_stalats,staNetNames = sks_staNetNames,phase='SKS',locations=locations)
                         if not msg:
-                            self.logger.info(f"Event: {evtime}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
+                            self.logger.info(f"Event: {evtime}; rem: {rem_dl}/{tot_evnt_stns}; dl: {succ_dl}/{num_try}")
                         else:
-                            self.logger.info(f"{msg}; try: {rem_dl}/{tot_evnt_stns}; success: {succ_dl}/{num_try}")
+                            self.logger.info(f"{msg}; rem: {rem_dl}/{tot_evnt_stns}; dl: {succ_dl}/{num_try}")
 
 
                         if strm:
@@ -265,7 +265,7 @@ class downloadDataclass:
                         if res:
                             succ_dl+=1
                     if not len(stream):
-                        self.logger.warning(f"No data for {sksdatafile}")
+                        self.logger.warning(f"No data {sksdatafile}")
 
                     stream.write(sksdatafile, 'H5')
                     fcat.close()
@@ -285,8 +285,10 @@ class downloadDataclass:
                     df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
                     if df.shape[0]:
                         evmg = [float(val.split()[0]) for val in df['evmg']]
-                        self.logger.info(f"Plotting events for {net} {stn}")
-                        events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-SKS')
+                        event_plot_name=f'{net}-{stn}-SKS-events_map'
+                        if not os.path.exists(dest_map+event_plot_name+f".{self.fig_frmt}"):
+                            self.logger.info(f"Plotting events map "+event_plot_name+f".{self.fig_frmt}")
+                            events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-SKS')
 
         ## plot station map for all the stations for which the data has been successfully retrieved
         if plot_stations and self.method == 'RF' and len(rf_stalons):
