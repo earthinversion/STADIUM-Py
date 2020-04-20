@@ -216,12 +216,12 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     if numlatdiv>5:
         numlatdiv=5
     elif numlatdiv<2:
-        numlatdiv=2
+        numlatdiv=3
 
     if numlondiv>5:
         numlondiv=5
     elif numlondiv<2:
-        numlondiv=2
+        numlondiv=3
 
     # # x and y offsets
     # xos, yos = 2, 2
