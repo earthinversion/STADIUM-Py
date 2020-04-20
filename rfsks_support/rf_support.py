@@ -62,7 +62,7 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
     
-        kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('red', 'blue'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
+        kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
         num_trace=len(stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']))
         if num_trace > 0:
             try:

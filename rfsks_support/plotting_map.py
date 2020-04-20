@@ -320,8 +320,8 @@ def plot_bm_azimuth(map,stlon,stlat,distval_lat=180,distval_lon=180,ndivlat=4,nd
     yvals_az90 = np.linspace(stlat,stlat+distval_lat/111.2,ndivlat)
     xmap_az90,ymap_az90 = map(xvals_az90,yvals_az90)
 
-    map.plot(xmap_az0,ymap_az0,'-|', markersize=5,color='r',markeredgewidth=2)
-    map.plot(xmap_az90,ymap_az90,'-_', markersize=5,color='r',markeredgewidth=2)
+    map.plot(xmap_az0,ymap_az0,'-|', markersize=5,color='dodgerblue',markeredgewidth=2)
+    map.plot(xmap_az90,ymap_az90,'-_', markersize=5,color='dodgerblue',markeredgewidth=2)
 
 
 
