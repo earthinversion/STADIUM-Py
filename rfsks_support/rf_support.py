@@ -134,7 +134,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
             except:
                 logger.error("Error", exc_info=True)
         logger.info("Calculating profile")
-        print(len(list_of_dfs),len(list_of_streams),len(stlons))
+        # print(len(list_of_dfs),len(list_of_streams),len(stlons))
         ppoints_df = pd.DataFrame({"list_of_dfs":list_of_dfs,"stlons": stlons, "stlats": stlats})
         ppoints_lst_df = pd.DataFrame({ "list_of_streams":list_of_streams})
         ppoints_df.to_pickle(profilefileloc+"ppoints_df.pkl")
@@ -199,7 +199,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         x,y = map(lon, lat)
         map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
     
-    xpp,ypp = map(ppoints_df["pplon"].values, ppoints_df["pplat"].values)
+    xpp,ypp = map(pp_lon_lat["pplon"].values, pp_lon_lat["pplat"].values)
     map.plot(xpp, ypp,'x', markersize=5,color='b',markeredgewidth=0.3, zorder=1)
     plt.savefig(destination+'piercing_points_map.'+fig_frmt,dpi=200,bbox_inches='tight')
 
