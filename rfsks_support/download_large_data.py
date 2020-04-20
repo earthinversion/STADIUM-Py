@@ -193,7 +193,7 @@ class downloadDataclass:
             if self.method == 'RF':
                 print("\n")
                 self.logger.info(f"Searching and downloading data for {self.method}; {net}-{stn}")
-                rfdatafile = datafileloc+f'{net}-{stn}-rf_profile_data.h5'
+                rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRF.loc['data_for_rf_comp_suffix','VALUES'])}.h5"
                 if os.path.exists(catfile) and not os.path.exists(rfdatafile) and tot_evnt_stns > 0:
                     stream = RFStream()
 

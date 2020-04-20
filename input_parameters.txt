@@ -14,14 +14,14 @@ RF|INPUT PARAMETERS
 ###########|####
 makeRF|1
 obtain_inventory|0
-download_data_RF|1
+download_data_RF|0
 minradiusRF|30
 maxradiusRF|90
 minmagnitudeRF|6.5
 maxmagnitudeRF|9.5
 plot_stations|1
 plot_events|1
-plot_RF|1
+compute_plot_RF|0
 plot_ppoints|1
 num_profile_divs_lat|1
 num_profile_divs_lon|1

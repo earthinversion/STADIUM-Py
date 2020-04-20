@@ -7,3 +7,9 @@ trace_height|0.1|height of one trace in inches
 trim_min|-5|trim stream relative to onset before plotting
 trim_max|20|trim stream relative to onset before plotting
 ppdepth|70|piercing points depth
+invRFfile|rf_stations.xml|station xml
+RFsta|all_stations_RF.txt|station text catalog
+retr_stations|all_stations_rf_retrieved.txt|retrived stations list file
+data_for_rf_comp_suffix|rf_profile_data|rf data file name: {net}-{stn}-rf_profile_data.h5
+rf_compute_data_suffix|rf_profile_rfs|rf computation result file name: network-station-rf_profile_rfs.h5
+rfprofile_compute_result_prefix|rf_profile_profile|rf profile computation result file name: rf_profile_profile{azimuth}_*.h5

@@ -73,6 +73,7 @@ def _find_box(latlon, boxes, crs=None):
         if p.within(poly):
             return box
 
+
 @_add_processing_info
 def profile(stream, boxes, crs=None):
     """

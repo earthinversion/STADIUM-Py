@@ -18,6 +18,9 @@ inp = pd.read_csv(inputFile,sep="|",index_col ='PARAMETERS')
 res_dir = str(inp.loc['project_name','VALUES']) #'results/'
 dirs,rfdirs,sksdirs,otherdirs = oss.read_directories(res_dir)
 
+advinputRF = "advRFparam.txt"
+inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+
 ## Input parameters  ## General
 fresh_start=int(inp.loc['fresh_start','VALUES'])       #0/1
 mnlong,mxlong=float(inp.loc['mnlong','VALUES']),float(inp.loc['mxlong','VALUES'])   #min and max longitude 
@@ -34,7 +37,7 @@ makeSKS=int(inp.loc['makeSKS','VALUES'])               ######   0/1
 ## Input parameters  ## Plotting
 plot_stations=int(inp.loc['plot_stations','VALUES'])
 plot_events=int(inp.loc['plot_events','VALUES'])
-plot_RF = int(inp.loc['plot_RF','VALUES']) #Plotting the receiver functions
+compute_plot_RF = int(inp.loc['compute_plot_RF','VALUES']) #Plotting the receiver functions
 plot_ppoints=int(inp.loc['plot_ppoints','VALUES'])
 plot_RF_profile = int(inp.loc['plot_RF_profile','VALUES'])
 plot_SKS_stations=int(inp.loc['plot_SKS_stations','VALUES'])
@@ -60,8 +63,9 @@ download_data_RF = int(inp.loc['download_data_RF','VALUES'])
 download_data_SKS = int(inp.loc['download_data_SKS','VALUES'])
 
 
-invRFfile = str(dirs.loc['RFinfoloc','DIR_NAME']) + 'rf_stations.xml'
-RFsta = str(dirs.loc['RFinfoloc','DIR_NAME']) + 'all_stations_RF.txt'
+## Station inventory files
+invRFfile = str(dirs.loc['RFinfoloc','DIR_NAME']) + str(inpRF.loc['invRFfile','VALUES'])
+RFsta = str(dirs.loc['RFinfoloc','DIR_NAME']) + str(inpRF.loc['RFsta','VALUES'])
 
 
 ## Defining paths for SKS
@@ -150,7 +154,7 @@ if makeRF:
             sys.exit()
     
 
-        retrived_stn_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+'all_stations_rf_retrieved.txt'
+        retrived_stn_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRF.loc['retr_stations','VALUES'])
         if not os.path.exists(retrived_stn_file):
             logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog..")
             catalogloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
@@ -161,9 +165,9 @@ if makeRF:
 
     
 
-    if plot_RF:
+    if compute_plot_RF:
         dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
-        all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
+        all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_for_rf_comp_suffix','VALUES'])}.h5")
         if len(all_rfdatafile)>=1:
             try:
                 logger.info("\n## Computing RF")
@@ -178,17 +182,17 @@ if makeRF:
             sys.exit()
 
     if plot_ppoints:
-        try:
-            logger.info("\n")
-            logger.info("## Operating plot_priercingpoints_RF method")
-            rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
+        # try:
+        logger.info("\n")
+        logger.info("## Operating plot_priercingpoints_RF method")
+        rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
 
-            if plot_RF_profile:
-                logger.info("\n")
-                logger.info("## Operating plot_RF_profile method")
-                rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
-        except Exception as e:
-            logger.info(e)
+        if plot_RF_profile:
+            logger.info("\n")
+            logger.info("## Operating plot_RF_profile method")
+            rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
+        # except Exception as e:
+        #     logger.info(e)
 
 
 

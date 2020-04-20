@@ -2,15 +2,17 @@ import matplotlib.pyplot as plt
 import tqdm, sys
 import numpy as np
 import os, glob
-from rf import RFStream, read_rf, IterMultipleComponents, get_profile_boxes
+from rf import RFStream, read_rf, IterMultipleComponents , get_profile_boxes
 from rfsks_support.plotting_map import plot_merc, plot_bm_azimuth
 import pandas as pd
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
-# from rfsks_support.rfsks_extras import filter_traces_rf
+# from rfsks_support.rfsks_extras import get_profile_boxes
 import logging
+
+
 
 advinputRF = "advRFparam.txt"
 inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
@@ -18,14 +20,14 @@ inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 ### Compute RF
 def compute_rf(dataRFfileloc):
     logger = logging.getLogger(__name__)
-    all_rfdatafile = glob.glob(dataRFfileloc+'*-rf_profile_data.h5')
-    for rfdatafile in all_rfdatafile:
+    all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_for_rf_comp_suffix','VALUES'])}.h5")
+    for jj,rfdatafile in enumerate(all_rfdatafile):
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
-        rffile = f'{network}-{station}-rf_profile_rfs.h5'
+        rffile = f"{network}-{station}-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5"
         datatmp = read_rf(rfdatafile, 'H5')
         if not os.path.exists(rffile):
-            logger.info(f"--> Computing RF for {rfdatafile}")
+            logger.info(f"--> Computing RF for {rfdatafile}, {jj}/{len(all_rfdatafile)}")
             data = read_rf(rfdatafile, 'H5')
             stream = RFStream()
             for stream3c in tqdm.tqdm(IterMultipleComponents(data, 'onset', 3)):
@@ -50,12 +52,13 @@ def compute_rf(dataRFfileloc):
                 stream.extend(stream3c)
             stream.write(rffile, 'H5')
         else:
-            logger.info(f"--> {rffile} already exists!")
+            # logger.info(f"--> {rffile} already exists!, {jj}/{len(all_rfdatafile)}")
+            logger.info(f"--> Verifying RF computation {jj}/{len(all_rfdatafile)}")
 
 def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the receiver functions")
-    rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
+    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
     
@@ -73,9 +76,31 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
         else:
             logger.info("----> {} traces for {}-{}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
 
+def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin):
+    logger = logging.getLogger(__name__)
+
+    if not os.path.exists(outputfile):
+        logger.info("Calculating the boxes")
+        if azimuth == 90:
+            logger.info('For az: {} startlat: {:.4f}, startlon: {:.4f}, endlon: {:.4f}, length: {}'.format(azimuth,stlat,initdiv,enddiv,widthprof))
+            boxes = get_profile_boxes((stlat, initdiv), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
+        elif azimuth == 0:
+            # logger.info(f'For az: {azimuth} startlat: {initdiv}, startlon: {stlon}, endlat: {enddiv}, length: {widthprof}')
+            logger.info('For az: {} startlat: {:.4f}, startlon: {:.4f}, endlat: {:.4f}, length: {}'.format(azimuth,initdiv,stlon,enddiv,widthprof))
+            boxes = get_profile_boxes((initdiv, stlon), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
+            
+        pstream = profile(tqdm.tqdm(stream), boxes)
+        if len(pstream):
+            logger.info("------> Calculated profile for azimuth {}: {}; Number of traces in the box: {}\n".format(azimuth,outputfile,len(pstream)))
+            pstream.write(outputfile, 'H5')
+        else:
+            logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
+    else:
+        logger.info(f"----> {outputfile} already exists!")
+
+
 def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=int(inpRF.loc['ppdepth','VALUES']),fig_frmt="png",ndivlat = 2, ndivlon=3):
     logger = logging.getLogger(__name__)
-    ppoints_df = pd.DataFrame()
     list_of_dfs = []
     list_of_streams = []
 
@@ -83,32 +108,48 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
 
     stlons,stlats=[],[]
         
-    rffiles = glob.glob(dataRFfileloc+'*-rf_profile_rfs.h5')
+    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
     stream = read_rf(rffiles[0], 'H5')
     # filter_traces_rf(stream,lenphase=100)
-    ppoints_tmp = stream.ppoints(depth)
-    ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
-    list_of_dfs.append(ppdf_tmp)
 
-    stlons.append(stream[0].stats.station_longitude)
-    stlats.append(stream[0].stats.station_latitude)
+    if not os.path.exists(profilefileloc+"ppoints_df.pkl"):
+        print(f"{profilefileloc+'ppoints_df.pkl'} does not exist")
+        ppoints_tmp = stream.ppoints(depth)
+        ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
+        list_of_dfs.append(ppdf_tmp)
 
-    
-    for rffile in rffiles[1:]:
-        logger.info(f"----> reading profile {rffile}")
-        try:
-            st_tmp = read_rf(rffile, 'H5')
-            # filter_traces_rf(st_tmp,lenphase=100)
-            list_of_streams.append(st_tmp)
-            ppoints_tmp = st_tmp.ppoints(depth)
-            ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
-            list_of_dfs.append(ppdf_tmp)
-            stlons.append(st_tmp[0].stats.station_longitude)
-            stlats.append(st_tmp[0].stats.station_latitude)
-        except:
-            logger.error("Error", exc_info=True)
-    logger.info("Calculating profile")
-    ppoints_df = ppoints_df.append(list_of_dfs , ignore_index=True)
+        stlons.append(stream[0].stats.station_longitude)
+        stlats.append(stream[0].stats.station_latitude)
+        for ii,rffile in enumerate(rffiles[1:]):
+            logger.info(f"----> reading profile {rffile}, {ii+1}/{len(rffiles[1:])}")
+            try:
+                st_tmp = read_rf(rffile, 'H5')
+                # filter_traces_rf(st_tmp,lenphase=100)
+                list_of_streams.append(st_tmp)
+                ppoints_tmp = st_tmp.ppoints(depth)
+                ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
+                list_of_dfs.append(ppdf_tmp)
+                stlons.append(st_tmp[0].stats.station_longitude)
+                stlats.append(st_tmp[0].stats.station_latitude)
+            except:
+                logger.error("Error", exc_info=True)
+        logger.info("Calculating profile")
+        print(len(list_of_dfs),len(list_of_streams),len(stlons))
+        ppoints_df = pd.DataFrame({"list_of_dfs":list_of_dfs,"stlons": stlons, "stlats": stlats})
+        ppoints_lst_df = pd.DataFrame({ "list_of_streams":list_of_streams})
+        ppoints_df.to_pickle(profilefileloc+"ppoints_df.pkl")
+        ppoints_lst_df.to_pickle(profilefileloc+"ppoints_lst_df.pkl")
+    else:
+        ppoints_df = pd.read_pickle(profilefileloc+"ppoints_df.pkl")
+        ppoints_lst_df = pd.read_pickle(profilefileloc+"ppoints_lst_df.pkl")
+
+        list_of_dfs = ppoints_df["list_of_dfs"].values
+        # print(list_of_dfs[0]["pplat"])
+        pp_lon_lat = pd.concat(list_of_dfs)
+        list_of_streams = ppoints_lst_df["list_of_streams"].values
+        stlons = ppoints_df["stlons"].values
+        stlats = ppoints_df["stlats"].values
+
 
 
     for st in list_of_streams:
@@ -116,8 +157,8 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
             stream.append(tr)
 
 
-    abs_latvals = np.absolute(ppoints_df["pplat"].values)
-    abs_lonvals = np.absolute(ppoints_df["pplon"].values)
+    abs_latvals = np.absolute(pp_lon_lat["pplat"].values)
+    abs_lonvals = np.absolute(pp_lon_lat["pplon"].values)
     degkmfac = 111.2
     width_lat = (np.amax(abs_latvals)-np.amin(abs_latvals)) * degkmfac
     # width_lat +=0.2*width_lat
@@ -127,8 +168,8 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         
     ndivlat += 1
     ndivlon += 1
-    stlat = ppoints_df["pplat"].min()
-    stlon = ppoints_df["pplon"].min()
+    stlat = pp_lon_lat["pplat"].min()
+    stlon = pp_lon_lat["pplon"].min()
     for azimuth in [0,90]:
         if azimuth == 90:
             mxbin = width_lat
@@ -145,25 +186,9 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
             widthprof = int(np.abs(enddiv-initdiv)*degkmfac) #width of profile
             # print(initdiv,enddiv,widthprof)
             # print(initdiv,enddiv)
-            outputfile = profilefileloc+ f"rf_profile_profile{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
-            if not os.path.exists(outputfile):
-                # logger.info("Calculating the boxes")
-                if azimuth == 90:
-                    logger.info(f'For az: {azimuth} startlat: {stlat}, startlon: {initdiv}, endlon: {enddiv}, length: {widthprof}')
-                    boxes = get_profile_boxes((stlat, initdiv), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
-                elif azimuth == 0:
-                    logger.info(f'For az: {azimuth} startlat: {initdiv}, startlon: {stlon}, endlat: {enddiv}, length: {widthprof}')
-                    boxes = get_profile_boxes((initdiv, stlon), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
-                    
-                pstream = profile(tqdm.tqdm(stream), boxes)
+            outputfile = profilefileloc+ f"{str(inpRF.loc['rfprofile_compute_result_prefix','VALUES'])}{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
+            write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin)
 
-                if len(pstream):
-                    logger.info(f"------> Calculated profile for azimuth {azimuth}: {outputfile}; Number of traces in the box: {len(pstream)}\n")
-                    pstream.write(outputfile, 'H5')
-                else:
-                    logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
-            else:
-                logger.info(f"----> {outputfile} already exists!")
 
 
     logger.info("Plotting the piercing point maps")
@@ -190,7 +215,7 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['tr
     logger.info("--> Plotting the RF profile")
     plt.style.use('classic')
     for azimuth in [0,90]:
-        inpfiles = glob.glob(profilefileloc+ f"rf_profile_profile{azimuth}_*.h5")
+        inpfiles = glob.glob(profilefileloc+ f"{str(inpRF.loc['rfprofile_compute_result_prefix','VALUES'])}{azimuth}_*.h5")
 
         for inpfile in inpfiles:
             logger.info(f"----> RF profile {inpfile}")
