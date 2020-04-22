@@ -13,21 +13,32 @@ import warnings
 warnings.filterwarnings("ignore")
 import time
 
-inputFile = "input_parameters.txt"
+inputFile = "input_file.txt"
 inp = pd.read_csv(inputFile,sep="|",index_col ='PARAMETERS')
 res_dir = str(inp.loc['project_name','VALUES']) #'results/'
 dirs,rfdirs,sksdirs,otherdirs = oss.read_directories(res_dir)
 
+## Step wise mode
+input_stepwise = "stepwise.txt"
+inp_step = pd.read_csv(input_stepwise,sep="|",index_col ='PARAMETERS')
+
+
+## Fine tuning of RF
 advinputRF = "advRFparam.txt"
 inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+
+## Fine tuning of SKS
+advinputSKS = "advSKSparam.txt"
+inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
+
 
 ## Input parameters  ## General
 fresh_start=int(inp.loc['fresh_start','VALUES'])       #0/1
 mnlong,mxlong=float(inp.loc['mnlong','VALUES']),float(inp.loc['mxlong','VALUES'])   #min and max longitude 
 mnlat,mxlat=float(inp.loc['mnlat','VALUES']),float(inp.loc['mxlat','VALUES'])   #min and max latitude 
-client=inp.loc['client','VALUES'].split(",")   #client name to retrieve the data
-network=str(inp.loc['network','VALUES'])
-station=str(inp.loc['station','VALUES'])
+client=inp_step.loc['client','VALUES'].split(",")   #client name to retrieve the data
+network=str(inp_step.loc['network','VALUES'])
+station=str(inp_step.loc['station','VALUES'])
 fig_frmt="png"
 
 ## Input parameters  ## User's choice
@@ -35,32 +46,29 @@ makeRF=int(inp.loc['makeRF','VALUES'])                ######   0/1
 makeSKS=int(inp.loc['makeSKS','VALUES'])               ######   0/1
 
 ## Input parameters  ## Plotting
-plot_stations=int(inp.loc['plot_stations','VALUES'])
-plot_events=int(inp.loc['plot_events','VALUES'])
-compute_plot_RF = int(inp.loc['compute_plot_RF','VALUES']) #Plotting the receiver functions
-plot_ppoints=int(inp.loc['plot_ppoints','VALUES'])
-plot_RF_profile = int(inp.loc['plot_RF_profile','VALUES'])
-plot_SKS_stations=int(inp.loc['plot_SKS_stations','VALUES'])
-plot_SKS_events=int(inp.loc['plot_SKS_events','VALUES'])
-plot_SKS = int(inp.loc['plot_SKS','VALUES']) #Plotting the receiver functions
-picking_SKS=int(inp.loc['picking_SKS','VALUES'])
+plot_stations=int(inp_step.loc['plot_stations','VALUES'])
+plot_events=int(inp_step.loc['plot_events','VALUES'])
+compute_plot_RF = int(inp_step.loc['compute_plot_RF','VALUES']) #Plotting the receiver functions
+plot_ppoints=int(inp_step.loc['plot_ppoints','VALUES'])
+plot_RF_profile = int(inp_step.loc['plot_RF_profile','VALUES'])
+
+# plot_SKS_stations=int(inp.loc['plot_SKS_stations','VALUES'])
+# plot_SKS_events=int(inp.loc['plot_SKS_events','VALUES'])
+plot_SKS = int(inp_step.loc['plot_SKS','VALUES']) #Plotting the receiver functions
+picking_SKS=int(inp_step.loc['picking_SKS','VALUES'])
 
 
 ## Input parameters  ## RF
-minradiusRF=float(inp.loc['minradiusRF','VALUES'])
-maxradiusRF=float(inp.loc['maxradiusRF','VALUES'])
-minmagnitudeRF=float(inp.loc['minmagnitudeRF','VALUES'])
-maxmagnitudeRF=float(inp.loc['maxmagnitudeRF','VALUES'])
+minmagnitudeRF=float(inpRF.loc['minmagnitudeRF','VALUES'])
+maxmagnitudeRF=float(inpRF.loc['maxmagnitudeRF','VALUES'])
 
 ## Input parameters  ## SKS
-minradiusSKS=float(inp.loc['minradiusSKS','VALUES'])
-maxradiusSKS=float(inp.loc['maxradiusSKS','VALUES'])
-minmagnitudeSKS=float(inp.loc['minmagnitudeSKS','VALUES'])
-maxmagnitudeSKS=float(inp.loc['maxmagnitudeSKS','VALUES'])
+minmagnitudeSKS=float(inpSKS.loc['minmagnitudeSKS','VALUES'])
+maxmagnitudeSKS=float(inpSKS.loc['maxmagnitudeSKS','VALUES'])
 
 ## Download data
-download_data_RF = int(inp.loc['download_data_RF','VALUES'])
-download_data_SKS = int(inp.loc['download_data_SKS','VALUES'])
+download_data_RF = int(inp_step.loc['download_data_RF','VALUES'])
+download_data_SKS = int(inp_step.loc['download_data_SKS','VALUES'])
 
 
 ## Station inventory files
@@ -69,8 +77,8 @@ RFsta = str(dirs.loc['RFinfoloc','DIR_NAME']) + str(inpRF.loc['RFsta','VALUES'])
 
 
 ## Defining paths for SKS
-invSKSfile = str(dirs.loc['SKSinfoloc','DIR_NAME']) + 'sks_stations.xml'
-SKSsta = str(dirs.loc['SKSinfoloc','DIR_NAME']) + 'stations_SKS.txt'
+invSKSfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+ str(inpSKS.loc['invSKSfile','VALUES'])
+SKSsta = str(dirs.loc['SKSinfoloc','DIR_NAME']) + str(inpSKS.loc['SKSsta','VALUES'])
 
 
 #############################################################
@@ -81,7 +89,13 @@ SKSsta = str(dirs.loc['SKSinfoloc','DIR_NAME']) + 'stations_SKS.txt'
 #############################################################
 #############################################################
 if fresh_start:
-    oss.rem_dir(res_dir)
+    if os.path.exists(res_dir):
+        response = input("Are you sure you want to start fresh? (Input 'yes' to continue): ")
+        if response == "yes":
+            oss.rem_dir(res_dir)
+        else:
+            print(f"Response: {response}, Exiting!")
+            sys.exit()
 
 ## Creating directories
 if makeRF:
@@ -98,10 +112,10 @@ for direc in otherdirs:
         oss.create_dir(direc)
 
 ## List the given station locations
-if inp.loc['locations','VALUES'] is np.nan:
+if inp_step.loc['locations','VALUES'] is np.nan:
     locations=[""]
 else:
-    locations = inp.loc['locations','VALUES'].split(",")
+    locations = inp_step.loc['locations','VALUES'].split(",")
 if not len(locations):
     locations=[""]
 
@@ -136,7 +150,7 @@ if makeRF:
     rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF')
     catalogxmlloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
     ## Obtain inventory and events info
-    if int(inp.loc['obtain_inventory','VALUES']):
+    if int(inp_step.loc['obtain_inventory_RF','VALUES']):
         logger.info("Obtaining Inventory")
         oss.obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF)
         logger.info(f"Catalog xml/txt files saved at {dirs.loc['RFinfoloc','DIR_NAME']}")
@@ -167,7 +181,7 @@ if makeRF:
 
     if compute_plot_RF:
         dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
-        all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_for_rf_comp_suffix','VALUES'])}.h5")
+        all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5")
         if len(all_rfdatafile)>=1:
             try:
                 logger.info("\n## Computing RF")
@@ -185,7 +199,7 @@ if makeRF:
         # try:
         logger.info("\n")
         logger.info("## Operating plot_priercingpoints_RF method")
-        rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inp.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inp.loc['num_profile_divs_lon','VALUES']))
+        rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inpRF.loc['num_profile_divs_lat','VALUES']), ndivlon=int(inpRF.loc['num_profile_divs_lon','VALUES']))
 
         if plot_RF_profile:
             logger.info("\n")
@@ -213,7 +227,7 @@ if makeSKS:
 
 
     ## Obtain inventory and events info
-    if int(inp.loc['obtain_inventory_SKS','VALUES']):
+    if int(inp_step.loc['obtain_inventory_SKS','VALUES']):
         
         logger.info("Obtaining Inventory")
         oss.obtain_inventory_events(sks_data,invSKSfile,catalogxmlloc,network,station,dirs,minmagnitudeSKS,maxmagnitudeSKS)
@@ -230,23 +244,23 @@ if makeSKS:
             oss.obtain_inventory_events(sks_data,invSKSfile,catalogxmlloc,network,station,dirs,minmagnitudeSKS,maxmagnitudeSKS)
     
 
-        retrived_stn_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+'all_stations_rf_retrieved.txt'
+        retrived_stn_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKS.loc['retr_stations','VALUES'])
         if not os.path.exists(retrived_stn_file):
             logger.info(f"{retrived_stn_file} does not exist...obtaining inventory!")
             catalogloc = str(dirs.loc['SKSinfoloc','DIR_NAME'])
             datafileloc=str(dirs.loc['SKSdatafileloc','DIR_NAME'])
             dest_map=str(dirs.loc['SKSstaevnloc','DIR_NAME'])
             ## The stations list can be edited
-            oss.select_to_download_events(catalogloc,datafileloc,dest_map,SKSsta,sks_data,minmagnitudeSKS,maxmagnitudeSKS,plot_SKS_stations,plot_SKS_events,locations,method='SKS')
+            oss.select_to_download_events(catalogloc,datafileloc,dest_map,SKSsta,sks_data,minmagnitudeSKS,maxmagnitudeSKS,plot_stations,plot_events,locations,method='SKS')
 
 
     if picking_SKS:
         logger.info("\n")
         logger.info("## Pre-processing")
-        plot_traces_ENZ=int(inp.loc['plot_traces_ENZ','VALUES'])
-        plot_traces_RTZ=int(inp.loc['plot_traces_RTZ','VALUES'])
-        plot_trigger=int(inp.loc['plot_trigger','VALUES'])
-        plot_SKS_measure=int(inp.loc['plot_SKS_measure','VALUES'])
+        plot_traces_ENZ=int(inp_step.loc['plot_traces_ENZ','VALUES'])
+        plot_traces_RTZ=int(inp_step.loc['plot_traces_RTZ','VALUES'])
+        plot_trigger=int(inp_step.loc['plot_trigger','VALUES'])
+        plot_SKS_measure=int(inp_step.loc['plot_SKS_measure','VALUES'])
 
         trace_loc_ENZ = str(dirs.loc['SKStracesloc_ENZ','DIR_NAME']) if plot_traces_ENZ else None
         trace_loc_RTZ = str(dirs.loc['SKStracesloc_RTZ','DIR_NAME']) if plot_traces_RTZ else None
@@ -254,8 +268,9 @@ if makeSKS:
 
         plot_measure_loc = str(dirs.loc['SKSplot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
         sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
-        sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = 'recursive_sta_lta')
-        sksMeasure.plot_sks_map()
+        sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKS.loc['sks_picking_algo','VALUES']))
+        
+        sksMeasure.plot_sks_map(sks_stations_infofile=SKSsta)
 
 
 

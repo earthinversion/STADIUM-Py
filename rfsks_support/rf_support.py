@@ -20,7 +20,7 @@ inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 ### Compute RF
 def compute_rf(dataRFfileloc):
     logger = logging.getLogger(__name__)
-    all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_for_rf_comp_suffix','VALUES'])}.h5")
+    all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5")
     for jj,rfdatafile in enumerate(all_rfdatafile):
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
@@ -63,6 +63,11 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
         stream = read_rf(rffile, 'H5')
     
         kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
+        if str(inpRF.loc['rf_info','VALUES']) == "default":
+            kw['info'] = (('back_azimuth', u'baz (°)', 'C0'),('distance', u'dist (°)', 'C3'))
+        else:
+            kw['info'] = None
+
         num_trace=len(stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']))
         if num_trace > 0:
             try:
@@ -139,12 +144,17 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         ppoints_lst_df = pd.DataFrame({ "list_of_streams":list_of_streams})
         ppoints_df.to_pickle(profilefileloc+"ppoints_df.pkl")
         ppoints_lst_df.to_pickle(profilefileloc+"ppoints_lst_df.pkl")
+
+        list_of_dfs = ppoints_df["list_of_dfs"].values
+        pp_lon_lat = pd.concat(list_of_dfs)
+        list_of_streams = ppoints_lst_df["list_of_streams"].values
+        stlons = ppoints_df["stlons"].values
+        stlats = ppoints_df["stlats"].values
     else:
         ppoints_df = pd.read_pickle(profilefileloc+"ppoints_df.pkl")
         ppoints_lst_df = pd.read_pickle(profilefileloc+"ppoints_lst_df.pkl")
 
         list_of_dfs = ppoints_df["list_of_dfs"].values
-        # print(list_of_dfs[0]["pplat"])
         pp_lon_lat = pd.concat(list_of_dfs)
         list_of_streams = ppoints_lst_df["list_of_streams"].values
         stlons = ppoints_df["stlons"].values
@@ -222,7 +232,7 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['tr
             pstream = read_rf(inpfile)
             divparam = inpfile.split("_")[-4:-1]
             divsuffix = inpfile.split("_")[-1].split(".")[0]
-            print(divparam, divsuffix)
+            # print(divparam, divsuffix)
             # logger.info(pstream)
             pstream.trim2(trimrange[0], trimrange[1], 'onset')
             for chn in ['L','Q']:

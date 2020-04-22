@@ -1,0 +1,13 @@
+PARAMETERS|VALUES|DESCRIPTION
+project_name|Simple_SKS/|project directory will be created if not existing
+
+fresh_start|0|toggle to start fresh, previous files in the project_name directory will be removed
+
+makeRF|0|to toggle receiver functions part of STADIUM-Py
+makeSKS|1|to toggle SKS measurements part of STADIUM-Py
+
+## Define the geographical region
+mnlong|6|minimum longitude
+mxlong|15|maximum longitude
+mnlat|47|minimum latitude
+mxlat|56|maximum latitude

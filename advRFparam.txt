@@ -1,15 +1,24 @@
 PARAMETERS|VALUES|DESCRIPTION
-minrad|30|min radius from each station for events search
-maxrad|90|max radius from each station for events search
+##Filenames||
+invRFfile|rf_stations.xml|station xml
+RFsta|all_stations_RF.txt|station text catalog
+retr_stations|all_stations_rf_retrieved.txt|retrived stations list file
+data_rf_suffix|rf_profile_data|rf data file name: {net}-{stn}-rf_profile_data.h5
+events_map_suffix|RF-events_map|events map filename suffix {net}-{stn}-RF-events_map.png
+retr_station_prefix|RF_stations|retrieved stations prefix
+rf_compute_data_suffix|rf_profile_rfs|rf computation result file name: network-station-rf_profile_rfs.h5
+rfprofile_compute_result_prefix|rf_profile_profile|rf profile computation result file name: rf_profile_profile{azimuth}_*.h5
+##Other Parameters||
+num_profile_divs_lat|2
+num_profile_divs_lon|3
+minradiusRF|30|min radius from each station for events search
+maxradiusRF|90|max radius from each station for events search
+minmagnitudeRF|6.5
+maxmagnitudeRF|9.5
 minfreq|0.5|stream minfreq for bandpass
 maxfreq|2|stream maxfreq for bandpass
 trace_height|0.1|height of one trace in inches
 trim_min|-5|trim stream relative to onset before plotting
 trim_max|20|trim stream relative to onset before plotting
 ppdepth|70|piercing points depth
-invRFfile|rf_stations.xml|station xml
-RFsta|all_stations_RF.txt|station text catalog
-retr_stations|all_stations_rf_retrieved.txt|retrived stations list file
-data_for_rf_comp_suffix|rf_profile_data|rf data file name: {net}-{stn}-rf_profile_data.h5
-rf_compute_data_suffix|rf_profile_rfs|rf computation result file name: network-station-rf_profile_rfs.h5
-rfprofile_compute_result_prefix|rf_profile_profile|rf profile computation result file name: rf_profile_profile{azimuth}_*.h5
+rf_info|default|additional axes for RF plot, None for no additional axes
