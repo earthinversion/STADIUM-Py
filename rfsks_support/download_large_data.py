@@ -10,11 +10,11 @@ from rfsks_support.rfsks_extras import retrieve_waveform, multi_download
 from rfsks_support.plotting_map import plot_merc, station_map, events_map
 import logging
 
-advinputRF = "advRFparam.txt"
+advinputRF = "Settings/advRFparam.txt"
 inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 
 ## Fine tuning of SKS
-advinputSKS = "advSKSparam.txt"
+advinputSKS = "Settings/advSKSparam.txt"
 inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
 
 class downloadDataclass:

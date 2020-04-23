@@ -45,7 +45,7 @@ def mean_angle(deg):
 
 
 ## Fine tuning of SKS
-advinputSKS = "advSKSparam.txt"
+advinputSKS = "Settings/advSKSparam.txt"
 inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
 
 class sks_measurements:
@@ -194,6 +194,8 @@ class sks_measurements:
                     d = measure.srcpoldata_corr().chop()
                     snr = sw.core.snrRH(d.x,d.y) #Restivo and Helffrich (1999) signal to noise ratio
                     # and lam1_lam2 < float(inpSKS.loc['lam12_ratio','VALUES'])
+                    squashfast = np.sum(measure.lam1/measure.lam2, axis=0)
+                    squashlag = np.sum(measure.lam1/measure.lam2, axis=1)
                     if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and snr > float(inpSKS.loc['snratio','VALUES']):
                         '''
                         Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2.
@@ -209,18 +211,25 @@ class sks_measurements:
 
                         if int(inpSKS.loc['error_plot','VALUES']):
                             plt.close('all')
-                            fig,ax = plt.subplots(2,1)
-                            ax[0].plot(measure.degs[0,:],measure.fastprofile(),'b')
-                            ax[0].axvline(measure.fast,color='r')
-                            ax[0].axvline(measure.fast-2*measure.dfast,alpha=0.5,color='r')
-                            ax[0].axvline(measure.fast+2*measure.dfast,alpha=0.5,color='r')
-                            ax[0].set_title('fast direction')
+                            fig,ax = plt.subplots(2,2)
+                            ax[0,0].plot(measure.degs[0,:],measure.fastprofile(),'b')
+                            ax[0,0].axvline(measure.fast,color='r')
+                            ax[0,0].axvline(measure.fast-2*measure.dfast,alpha=0.5,color='r')
+                            ax[0,0].axvline(measure.fast+2*measure.dfast,alpha=0.5,color='r')
+                            ax[0,0].set_title('fast direction')
 
-                            ax[1].plot(measure.lags[:,0],measure.lagprofile(),'b')
-                            ax[1].axvline(measure.lag,color='r')
-                            ax[1].axvline(measure.lag-2*measure.dlag,alpha=0.5,color='r')
-                            ax[1].axvline(measure.lag+2*measure.dlag,alpha=0.5,color='r')
-                            ax[1].set_title('lag time')
+                            ax[0,1].plot(measure.lags[:,0],measure.lagprofile(),'b')
+                            ax[0,1].axvline(measure.lag,color='r')
+                            ax[0,1].axvline(measure.lag-2*measure.dlag,alpha=0.5,color='r')
+                            ax[0,1].axvline(measure.lag+2*measure.dlag,alpha=0.5,color='r')
+                            ax[0,1].set_title('lag time')
+
+                            ax[1,0].plot(measure.degs[0,:],squashfast)
+                            ax[1,0].axvline(x=measure.degs[0,np.argmax(squashfast)],color='r')
+                            ax[1,0].set_title(f'L1/L2 Fast: {measure.degs[0,np.argmax(squashfast)]}')
+                            ax[1,1].plot(measure.lags[:,0],squashlag)
+                            ax[1,1].axvline(x=measure.degs[0,np.argmax(squashlag)],color='r')
+                            ax[1,1].set_title(f'L1/L2 Lag: {measure.degs[0,np.argmax(squashlag)]}')
                             plt.savefig(self.plot_measure_loc+f'errorplot_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
 
                     else:

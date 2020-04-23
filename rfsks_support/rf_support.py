@@ -14,7 +14,7 @@ import logging
 
 
 
-advinputRF = "advRFparam.txt"
+advinputRF = "Settings/advRFparam.txt"
 inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 
 ### Compute RF

@@ -19,16 +19,16 @@ res_dir = str(inp.loc['project_name','VALUES']) #'results/'
 dirs,rfdirs,sksdirs,otherdirs = oss.read_directories(res_dir)
 
 ## Step wise mode
-input_stepwise = "stepwise.txt"
+input_stepwise = "Settings/stepwise.txt"
 inp_step = pd.read_csv(input_stepwise,sep="|",index_col ='PARAMETERS')
 
 
 ## Fine tuning of RF
-advinputRF = "advRFparam.txt"
+advinputRF = "Settings/advRFparam.txt"
 inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
 
 ## Fine tuning of SKS
-advinputSKS = "advSKSparam.txt"
+advinputSKS = "Settings/advSKSparam.txt"
 inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
 
 
