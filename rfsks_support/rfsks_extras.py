@@ -15,64 +15,6 @@ from rfsks_support.other_support import Timeout
 import matplotlib.gridspec as gridspec
 
 
-# ## Profile boxes
-
-# from numba import njit ## Numba integration
-# from rf.util import _add_processing_info, direct_geodetic
-# from shapely.geometry import Polygon
-# from geographiclib.geodesic import Geodesic
-
-
-# _LARGE_BOX_WIDTH = 2000
-
-
-
-# @njit
-# def _get_box(latlon0, azimuth, length, width=_LARGE_BOX_WIDTH, offset=0):
-#     """Create a single box."""
-#     start = direct_geodetic(latlon0, azimuth, offset)
-    
-#     azis = ((azimuth - 90) % 360, azimuth,
-#             (azimuth + 90) % 360, (azimuth + 180) % 360)
-#     dists = (width/2, length, width, length)
-#     latlon = start
-#     corners = []
-#     for a, d in zip(azis, dists):
-#         latlon = direct_geodetic(latlon, a, d)
-#         corners.append(latlon[::-1])
-#     box = {'poly': Polygon(corners),
-#            'length': length,
-#            'pos': offset + length/2,
-#            'latlon': direct_geodetic(start, azimuth, length/2)}
-#     return box
-
-# def get_profile_boxes(latlon0, azimuth, bins, width=_LARGE_BOX_WIDTH):
-#     """
-#     Create 2D boxes for usage in `profile()` function.
-#     :param tuple latlon0: coordinates of starting point of profile
-#     :param azimuth: azimuth of profile direction
-#     :param tuple bins: Edges of the distance bins in km (e.g. (0, 10, 20, 30))
-#     :param width: width of the boxes in km (default: large)
-#     :return: List of box dicts. Each box has the entries
-#         'poly' (shapely polygon with lonlat corners), 'length' (length in km),
-#         'pos' (midpoint of box in km from starting coordinates),
-#         'latlon' (midpoint of box as coordinates)
-#     """
-#     boxes = []
-#     for i in range(len(bins)-1):
-#         length = bins[i+1] - bins[i]
-#         box = _get_box(latlon0, azimuth, length, width, offset=bins[i])
-#         if i == 0:
-#             box['profile'] = {}
-#             box['profile']['latlon'] = latlon0
-#             box['profile']['azimuth'] = azimuth
-#             box['profile']['length'] = bins[-1] - bins[0]
-#             box['profile']['width'] = width
-#         boxes.append(box)
-#     return boxes
-
-
-###
 
 
 def minendtime(alledtimes):
@@ -459,3 +401,97 @@ def plot_SKS_measure(measure):
     kwargs['cmap'] = 'rainbow'
     measure._psurf(ax4,**kwargs)
     plt.tight_layout()
+
+
+def filter_pick_snr(measure,inpSKS,snr):
+    if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and snr > float(inpSKS.loc['snratio','VALUES']):
+        '''
+        Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2. And signal to noise ratio of the trace
+        '''
+        return True
+    else:
+        return False
+
+def filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag):
+    if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and mean_max_lam12_fast > float(inpSKS.loc['lam12fast_threh','VALUES']) and mean_max_lam12_lag > float(inpSKS.loc['lam12lag_threh','VALUES']):
+        '''
+        Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2. And ratio of the lambda1/lambda2 for fast direction and lag time. Empirically found as more robust than snr.
+        '''
+        return True
+    else:
+        return False
+
+def errorplot(measure,squashfast,squashlag,figname):
+    plt.close('all')
+    fig,ax = plt.subplots(2,2)
+    ax[0,0].plot(measure.degs[0,:],measure.fastprofile(),'b')
+    ax[0,0].axvline(measure.fast,color='r')
+    ax[0,0].axvline(measure.fast-2*measure.dfast,alpha=0.5,color='r')
+    ax[0,0].axvline(measure.fast+2*measure.dfast,alpha=0.5,color='r')
+    ax[0,0].set_title('fast direction')
+
+    ax[0,1].plot(measure.lags[:,0],measure.lagprofile(),'b')
+    ax[0,1].axvline(measure.lag,color='r')
+    ax[0,1].axvline(measure.lag-2*measure.dlag,alpha=0.5,color='r')
+    ax[0,1].axvline(measure.lag+2*measure.dlag,alpha=0.5,color='r')
+    ax[0,1].set_title('lag time')
+
+    ax[1,0].plot(measure.degs[0,:],squashfast)
+    ax[1,0].axvline(x=measure.degs[0,np.argmax(squashfast)],color='r')
+    ax[1,0].set_title(f'L1/L2 Fast: {measure.degs[0,np.argmax(squashfast)]}')
+
+    ax[1,1].plot(measure.lags[:,0],squashlag)
+    ax[1,1].axvline(x=measure.lags[np.argmax(squashlag),0],color='r')
+    ax[1,1].set_title(f'L1/L2 Lag: {measure.lags[np.argmax(squashlag),0]}')
+    plt.savefig(figname,bbox_inches='tight')
+
+def errorplot_all(measure_list,squashfast_list,squashlag_list,fast_dir_all,lag_time_all,figname):
+    plt.close('all')
+    fig,ax = plt.subplots(1,2,figsize=(10,6))
+    for meas,sqfast,sqlag in zip(measure_list,squashfast_list,squashlag_list):
+        ax[0].plot(meas.degs[0,:],sqfast,lw=0.5)
+        ax[1].plot(meas.lags[:,0],sqlag,lw=0.5)
+    
+    #plot avg fast dir and lag time
+    ax[0].axvline(x=np.mean(fast_dir_all),color='r',lw=1)
+    ax[0].axvline(x=np.mean(fast_dir_all)+np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
+    ax[0].axvline(x=np.mean(fast_dir_all)-np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
+    ax[0].set_title('Avg. fast direction (abs): {:.2f}'.format(np.mean(fast_dir_all)))
+
+    ax[0].axvline(x=-np.mean(fast_dir_all),color='r',lw=1)
+    ax[0].axvline(x=-np.mean(fast_dir_all)+np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
+    ax[0].axvline(x=-np.mean(fast_dir_all)-np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
+    ax[0].set_title('Avg. fast direction (abs): {:.2f}'.format(np.mean(fast_dir_all)))
+
+    ax[1].axvline(x=np.mean(lag_time_all),color='r',lw=1)
+    min_lag_err = np.mean(lag_time_all)-np.std(lag_time_all)
+    if min_lag_err<0:
+        min_lag_err = 0
+    ax[1].axvline(x=np.mean(lag_time_all)+np.std(lag_time_all),color='r',alpha=0.5,lw=1)
+    ax[1].axvline(x=min_lag_err,color='r',alpha=0.5,lw=1)
+    ax[1].set_title('Avg. lag time: {:.2f}'.format(np.mean(lag_time_all)))
+
+    plt.savefig(figname,bbox_inches='tight',dpi=300)
+
+def null_intensity(diff,mult):
+    sumdiffsq = np.sum(diff**2) #should be maximized for null measurement
+    summult = np.sum(mult) #should be minimized
+    return sumdiffsq/summult
+
+def auto_null_measure(measure,squashfast,squashlag,plot_null=False):
+    '''
+    - Original by Jack Walpole (Modified by Utpal Kumar)
+    We can use the property of self-similarity in null error surfaces at 90 degrees rotation to automatically detect null measurements.
+    The approach developed here is to shift the squashed fast profile by 90 degrees. If this is a perfect null measurement this shifted trace will be very similar to the original trace. The result of multiplying, sample by sample, the two traces will be maximised; the result of subtracting one trace from the other will be minimised. We call these two traces mult and diff. The ratio diff / mult will be small and tend to zero for null measurements.
+    '''
+
+    diff = squashfast - np.roll(squashfast,45)
+    mult = squashfast * np.roll(squashfast,45)
+
+    ratio_diff_mult = null_intensity(diff,mult)    
+    return ratio_diff_mult
+
+    if plot_null:
+        fig, ax = plt.subplots(figsize=(10,6))
+        ax.plot(measure.degs[0,:],squashfast)
+        ax.plot(measure.degs[0,:],np.roll(squashfast,45))

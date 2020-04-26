@@ -24,5 +24,9 @@ minlag|0|minimum allowed lag time in sks measurements
 maxlag|3|maximum allowed lag time in sks measurements
 maxdfast|7|maximum allowed error in the fast direction
 maxdlag|1.5|maximum allowed error in the lag time
+sel_param|lam12|options: snr, lam12; selection parameter of the measurements: either use signal to noise ratio, snr or use the eigenvalue ratio (lambda1/lambda2), lam12
 snratio|2|minimum signal to noise ratio of the traces for filtering good measurements
-error_plot|1|make 1 to plot the error profiles of fast direction and lag time for each measurements
+lam12fast_threh|1.1|threshold for the lambda1/lambda2 for fast direction pick
+lam12lag_threh|1.1|threshold for the lambda1/lambda2 for lag time pick
+error_plot_indiv|0|make 1 to plot the error profiles of fast direction and lag time for each measurements
+error_plot_all|1|make 1 to plot the error profiles of fast direction and lag time for each measurements

@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from obspy.core import read
 from obspy.taup import TauPyModel
-from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure
+from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure, filter_pick_snr, filter_pick_lam12, errorplot, errorplot_all, auto_null_measure
 from obspy.signal.trigger import recursive_sta_lta,classic_sta_lta,z_detect,carl_sta_trig,delayed_sta_lta, trigger_onset
 import splitwavepy as sw
 import logging
@@ -62,7 +62,6 @@ class sks_measurements:
         self.logger.info("Cut the traces around the SKS arrival")
         sksfiles = glob.glob(dataSKSfileloc+f"*-{str(inpSKS.loc['data_sks_suffix','VALUES'])}.h5")
         self.logger.info(sksfiles)
-        count=0
         meas_file = self.plot_measure_loc+'done_measurements.txt'
         if not os.path.exists(meas_file):
             f = open(meas_file, 'w')
@@ -77,7 +76,8 @@ class sks_measurements:
         
         # measurement_list=[]
         for i,sksfile in enumerate(sksfiles):
-            print(f'file = ',sksfile)
+            count=0
+            # print(f'file = ',sksfile)
             data = read_rf(sksfile, 'H5')
             self.logger.info(f"Calculating SKS arrival times for {sksfile}\n")
             net_name = os.path.basename(sksfile).split("-")[0]
@@ -86,15 +86,22 @@ class sks_measurements:
             sks_meas_file = open(self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}",'w')
             sks_meas_file.write("Stlon Stlat Stbaz\n")
             sks_meas_file.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
-            sks_meas_file.write("EventTime EvLong EvLat FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
-            
+            sks_meas_file.write("EventTime EvLong EvLat Evdp FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
+
+            sks_meas_file_null = open(self.plot_measure_loc+f"null_{net_name}_{stn_name}_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}",'w')
+            sks_meas_file_null.write("Stlon Stlat Stbaz\n")
+            sks_meas_file_null.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
+            sks_meas_file_null.write("EventTime EvLong EvLat Evdp FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
+            plt_id=f"{net_name}-{stn_name}"
+            measure_list,squashfast_list,squashlag_list=[],[],[]
+            fast_dir_all, lag_time_all = [], []
             for stream3c in IterMultipleComponents(data, 'onset', 3):
                 count+=1
                 if sksfile in finished_file and str(stream3c[0].stats.event_time) in finished_events:
                     # print("Done Measurents")
                     continue
                 else:
-                    print(f"{sksfile} and {stream3c[0].stats.event_time} not done")
+                    # print(f"{sksfile} and {stream3c[0].stats.event_time} not done")
                     f.write("{},{}\n".format(sksfile,stream3c[0].stats.event_time))
                 # self.logger.info(f"Working on {count}/{int(len(data)/3)}: {stream3c[0].stats.event_time}")
 
@@ -113,8 +120,7 @@ class sks_measurements:
                 sps = st[0].stats.sampling_rate
                 t = st[0].stats.starttime
                 ## trim the trace
-                # ev_sttime = st[0].stats.starttime
-                # ev_endtime = st[0].stats.endtime
+        
                 trace1 = st.trim(t+int(inpSKS.loc['trimstart','VALUES']), t+int(inpSKS.loc['trimend','VALUES']))
 
 
@@ -133,7 +139,7 @@ class sks_measurements:
 #                    continue
 
                 
-                plt_id = f"{trace1[0].stats.network}-{trace1[0].stats.station}"
+                # plt_id = f"{trace1[0].stats.network}-{trace1[0].stats.station}"
                 evyear = trace1[0].stats.event_time.year
                 evmonth = trace1[0].stats.event_time.month
                 evday = trace1[0].stats.event_time.day
@@ -193,59 +199,63 @@ class sks_measurements:
                         continue
                     d = measure.srcpoldata_corr().chop()
                     snr = sw.core.snrRH(d.x,d.y) #Restivo and Helffrich (1999) signal to noise ratio
-                    # and lam1_lam2 < float(inpSKS.loc['lam12_ratio','VALUES'])
+
+                    ##sum the error surfaces along each of the axes, to "squash" the surface into two profiles, one for fast and one for lag
+                    ## the result is best defined for the lam1/lam2 surface than the lam1 surface, or the lam2 surface
+                    #- Jack Walpole
                     squashfast = np.sum(measure.lam1/measure.lam2, axis=0)
                     squashlag = np.sum(measure.lam1/measure.lam2, axis=1)
-                    if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and snr > float(inpSKS.loc['snratio','VALUES']):
-                        '''
-                        Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2.
-                        '''
-                        # lam1_lam2 = float(measure.lam1/measure.lam2)
-                        # print(float(measure.lam1/measure.lam2))
-                        sks_meas_file.write("{} {:8.4f} {:8.4f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,measure.fast,measure.dfast,measure.lag,measure.dlag))
-                        if self.plot_measure_loc:
-                            plot_SKS_measure(measure)
-                            plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
-                            plt.close('all')  
-                            self.logger.info(f"{count}/{int(len(data)/3)} Stored: {trace1[0].stats.event_time}; dfast = {measure.dfast}, dlag = {measure.dlag}")
 
-                        if int(inpSKS.loc['error_plot','VALUES']):
-                            plt.close('all')
-                            fig,ax = plt.subplots(2,2)
-                            ax[0,0].plot(measure.degs[0,:],measure.fastprofile(),'b')
-                            ax[0,0].axvline(measure.fast,color='r')
-                            ax[0,0].axvline(measure.fast-2*measure.dfast,alpha=0.5,color='r')
-                            ax[0,0].axvline(measure.fast+2*measure.dfast,alpha=0.5,color='r')
-                            ax[0,0].set_title('fast direction')
+                    mean_max_lam12_fast = np.max(squashfast)/np.mean(squashfast)
+                    mean_max_lam12_lag = np.max(squashlag)/np.mean(squashlag)
 
-                            ax[0,1].plot(measure.lags[:,0],measure.lagprofile(),'b')
-                            ax[0,1].axvline(measure.lag,color='r')
-                            ax[0,1].axvline(measure.lag-2*measure.dlag,alpha=0.5,color='r')
-                            ax[0,1].axvline(measure.lag+2*measure.dlag,alpha=0.5,color='r')
-                            ax[0,1].set_title('lag time')
+                    if str(inpSKS.loc['sel_param','VALUES']) == "snr":
+                        filtres = filter_pick_snr(measure,inpSKS,snr)
+                    elif str(inpSKS.loc['sel_param','VALUES']) == "lam12":
+                        filtres = filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag)
 
-                            ax[1,0].plot(measure.degs[0,:],squashfast)
-                            ax[1,0].axvline(x=measure.degs[0,np.argmax(squashfast)],color='r')
-                            ax[1,0].set_title(f'L1/L2 Fast: {measure.degs[0,np.argmax(squashfast)]}')
-                            ax[1,1].plot(measure.lags[:,0],squashlag)
-                            ax[1,1].axvline(x=measure.degs[0,np.argmax(squashlag)],color='r')
-                            ax[1,1].set_title(f'L1/L2 Lag: {measure.degs[0,np.argmax(squashlag)]}')
-                            plt.savefig(self.plot_measure_loc+f'errorplot_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
+
+                    if filtres:
+                        ## Null test
+                        diff_mult = auto_null_measure(measure,squashfast,squashlag,plot_null=False)
+                        null_thresh = 0.05 #below this value, the measurement is classified as null
+                        if diff_mult<null_thresh:
+                            sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth))
+                            self.logger.info("{}/{} Null measurement {}".format(count,int(len(data)/3),trace1[0].stats.event_time))
+                        else:
+                            sks_meas_file.write("{} {:8.4f} {:8.4f} {:4.1f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,measure.fast,measure.dfast,measure.lag,measure.dlag))
+                            if self.plot_measure_loc:
+                                plot_SKS_measure(measure)
+                                plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
+                                plt.close('all')  
+                                self.logger.info("{}/{} Good measurement: {}; fast = {:.2f}+-{:.2f}, lag = {:.2f}+-{:.2f}".format(count,int(len(data)/3),trace1[0].stats.event_time,measure.fast,measure.dfast,measure.lag,measure.dlag))
+
+                            if int(inpSKS.loc['error_plot_indiv','VALUES']):
+                                errorplot(measure,squashfast,squashlag,figname=self.plot_measure_loc+f'errorplot_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
+
+                            if int(inpSKS.loc['error_plot_all','VALUES']):
+                                measure_list.append(measure)
+                                squashfast_list.append(squashfast)
+                                squashlag_list.append(squashlag)
+                                fast_dir_all.append(np.abs(measure.degs[0,np.argmax(squashfast)]))
+                                lag_time_all.append(measure.lags[np.argmax(squashlag),0])
 
                     else:
-                        self.logger.warning("{}/{} Rejected: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
+                        self.logger.info("{}/{} Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
                 else:
                     self.logger.info(f"{count}/{int(len(data)/3)} Bad phase pick: {stream3c[0].stats.event_time}")
 
             sks_meas_file.close()
+            sks_meas_file_null.close()
+            if int(inpSKS.loc['error_plot_all','VALUES']) and count>0:
+                errorplot_all(measure_list,squashfast_list,squashlag_list,np.array(fast_dir_all),np.array(lag_time_all),figname=self.plot_measure_loc+f'errorplot_{plt_id}.png')
+
         f.close()
 
 
     ## plotting the measurement
     def plot_sks_map(self,sks_stations_infofile):
-#        print('inside ',self.plot_measure_loc)
             
-
         all_sks_files = glob.glob(self.plot_measure_loc+f"*_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}")
         station_data_all = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_zero = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
