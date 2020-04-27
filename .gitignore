@@ -4,6 +4,7 @@ __pycache__
 rfsks_support/__pycache__
 rfsks_support/.DS_Store
 .DS_Store
+.vscode/*
 ./*.png
 input_parameters_archive/*
 RF_USA/*
