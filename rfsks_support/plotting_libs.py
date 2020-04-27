@@ -178,3 +178,26 @@ def station_map(map, stns_lon, stns_lat,stns_name,figname="", destination="./",f
     plt.legend(loc=4,fontsize=8)
     plt.savefig(destination+figname+'_map.'+figfrmt,dpi=200,bbox_inches='tight')
     plt.close('all')
+
+def plot_point_on_basemap(map, point, angle, length):
+    '''
+    point - Tuple (x, y)
+    angle - Angle in degrees.
+    length - Length of the line to plot.
+    '''
+
+    # unpack the point
+    x, y = point
+
+    # find the start and end point
+    halfleny = length/2 * math.sin(math.radians(float(angle)))
+    halflenx = length/2 * math.cos(math.radians(float(angle)))
+
+    endx,endy = map(x+halflenx,y+halfleny)
+    startx,starty = map(x-halflenx,y-halfleny)
+    map.plot([startx,endx],[starty,endy],color='k',zorder=3)
+
+from cmath import rect, phase
+from math import radians, degrees
+def mean_angle(deg):
+    return degrees(phase(sum(rect(1, radians(d)) for d in deg)/len(deg)))

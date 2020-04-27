@@ -453,15 +453,16 @@ def errorplot_all(measure_list,squashfast_list,squashlag_list,fast_dir_all,lag_t
         ax[1].plot(meas.lags[:,0],sqlag,lw=0.5)
     
     #plot avg fast dir and lag time
-    ax[0].axvline(x=np.mean(fast_dir_all),color='r',lw=1)
-    ax[0].axvline(x=np.mean(fast_dir_all)+np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
-    ax[0].axvline(x=np.mean(fast_dir_all)-np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
-    ax[0].set_title('Avg. fast direction (abs): {:.2f}'.format(np.mean(fast_dir_all)))
+    # fast_dir_pos = fast_dir_all[fast_dir_all>0]
+    # ax[0].axvline(x=np.mean(fast_dir_pos),color='r',lw=1)
+    # ax[0].axvline(x=np.mean(fast_dir_pos)+np.std(fast_dir_pos),color='r',alpha=0.5,lw=1)
+    # ax[0].axvline(x=np.mean(fast_dir_pos)-np.std(fast_dir_pos),color='r',alpha=0.5,lw=1)
+    # ax[0].set_title('Avg. fast direction (abs): {:.2f}'.format(np.mean(fast_dir_pos)))
 
-    ax[0].axvline(x=-np.mean(fast_dir_all),color='r',lw=1)
-    ax[0].axvline(x=-np.mean(fast_dir_all)+np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
-    ax[0].axvline(x=-np.mean(fast_dir_all)-np.std(fast_dir_all),color='r',alpha=0.5,lw=1)
-    ax[0].set_title('Avg. fast direction (abs): {:.2f}'.format(np.mean(fast_dir_all)))
+    # fast_dir_neg = fast_dir_all[fast_dir_all<0]
+    # ax[0].axvline(x=-np.mean(fast_dir_neg),color='r',lw=1)
+    # ax[0].axvline(x=-np.mean(fast_dir_neg)+np.std(fast_dir_neg),color='r',alpha=0.5,lw=1)
+    # ax[0].axvline(x=-np.mean(fast_dir_neg)-np.std(fast_dir_neg),color='r',alpha=0.5,lw=1)
 
     ax[1].axvline(x=np.mean(lag_time_all),color='r',lw=1)
     min_lag_err = np.mean(lag_time_all)-np.std(lag_time_all)
@@ -480,7 +481,7 @@ def null_intensity(diff,mult):
 
 def auto_null_measure(measure,squashfast,squashlag,plot_null=False):
     '''
-    - Original by Jack Walpole (Modified by Utpal Kumar)
+    - Jack Walpole (Modified by Utpal Kumar)
     We can use the property of self-similarity in null error surfaces at 90 degrees rotation to automatically detect null measurements.
     The approach developed here is to shift the squashed fast profile by 90 degrees. If this is a perfect null measurement this shifted trace will be very similar to the original trace. The result of multiplying, sample by sample, the two traces will be maximised; the result of subtracting one trace from the other will be minimised. We call these two traces mult and diff. The ratio diff / mult will be small and tend to zero for null measurements.
     '''
@@ -495,3 +496,20 @@ def auto_null_measure(measure,squashfast,squashlag,plot_null=False):
         fig, ax = plt.subplots(figsize=(10,6))
         ax.plot(measure.degs[0,:],squashfast)
         ax.plot(measure.degs[0,:],np.roll(squashfast,45))
+
+def polar_error_surface(measure,figname):
+    plt.close('all')
+    rads = np.deg2rad(np.column_stack((measure.degs,measure.degs+180,measure.degs[:,0]+360)))
+    lags = np.column_stack((measure.lags,measure.lags,measure.lags[:,0]))
+    lam1 = np.column_stack((measure.lam1,measure.lam1,measure.lam1[:,0]))
+    lam2 = np.column_stack((measure.lam2,measure.lam2,measure.lam2[:,0]))                  
+
+
+    fig, ax = plt.subplots(subplot_kw=dict(projection='polar'),nrows=1,ncols=3,figsize=(20,8))
+    ax[0].contourf(rads,lags,lam1,50,cmap='magma')
+    ax[0].set_title('Lam1')
+    ax[1].contourf(rads,lags,lam2,50,cmap='magma')
+    ax[1].set_title('Lam2')
+    ax[2].contourf(rads,lags,lam1/lam2,50,cmap='viridis')
+    ax[2].set_title('Lam1/Lam2')
+    plt.savefig(figname,dpi=300,bbox_inches='tight')

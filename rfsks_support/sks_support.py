@@ -12,36 +12,13 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 from obspy.core import read
 from obspy.taup import TauPyModel
-from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure, filter_pick_snr, filter_pick_lam12, errorplot, errorplot_all, auto_null_measure
+from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure, filter_pick_snr, filter_pick_lam12, errorplot, errorplot_all, auto_null_measure, polar_error_surface
 from obspy.signal.trigger import recursive_sta_lta,classic_sta_lta,z_detect,carl_sta_trig,delayed_sta_lta, trigger_onset
 import splitwavepy as sw
 import logging
 import math
 from mpl_toolkits.basemap import Basemap
-from rfsks_support.plotting_libs import plot_topo, plot_merc
-
-def plot_point_on_basemap(map, point, angle, length):
-    '''
-    point - Tuple (x, y)
-    angle - Angle in degrees.
-    length - Length of the line to plot.
-    '''
-
-    # unpack the point
-    x, y = point
-
-    # find the start and end point
-    halfleny = length/2 * math.sin(math.radians(float(angle)))
-    halflenx = length/2 * math.cos(math.radians(float(angle)))
-
-    endx,endy = map(x+halflenx,y+halfleny)
-    startx,starty = map(x-halflenx,y-halfleny)
-    map.plot([startx,endx],[starty,endy],color='k',zorder=3)
-
-from cmath import rect, phase
-from math import radians, degrees
-def mean_angle(deg):
-    return degrees(phase(sum(rect(1, radians(d)) for d in deg)/len(deg)))
+from rfsks_support.plotting_libs import plot_topo, plot_merc, plot_point_on_basemap, mean_angle
 
 
 ## Fine tuning of SKS
@@ -53,7 +30,7 @@ class sks_measurements:
     def __init__(self,plot_measure_loc=None):
         self.logger = logging.getLogger(__name__)
         self.plot_measure_loc= plot_measure_loc
-        print(self.plot_measure_loc)
+        # print(self.plot_measure_loc)
         # pass
 
     ## Pre-processing
@@ -61,7 +38,7 @@ class sks_measurements:
         
         self.logger.info("Cut the traces around the SKS arrival")
         sksfiles = glob.glob(dataSKSfileloc+f"*-{str(inpSKS.loc['data_sks_suffix','VALUES'])}.h5")
-        self.logger.info(sksfiles)
+        # self.logger.info(sksfiles)
         meas_file = self.plot_measure_loc+'done_measurements.txt'
         if not os.path.exists(meas_file):
             f = open(meas_file, 'w')
@@ -88,7 +65,7 @@ class sks_measurements:
             sks_meas_file.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
             sks_meas_file.write("EventTime EvLong EvLat Evdp FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
 
-            sks_meas_file_null = open(self.plot_measure_loc+f"null_{net_name}_{stn_name}_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}",'w')
+            sks_meas_file_null = open(self.plot_measure_loc+f"{net_name}_{stn_name}_null_measurements.txt",'w')
             sks_meas_file_null.write("Stlon Stlat Stbaz\n")
             sks_meas_file_null.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
             sks_meas_file_null.write("EventTime EvLong EvLat Evdp FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
@@ -209,20 +186,22 @@ class sks_measurements:
                     mean_max_lam12_fast = np.max(squashfast)/np.mean(squashfast)
                     mean_max_lam12_lag = np.max(squashlag)/np.mean(squashlag)
 
-                    if str(inpSKS.loc['sel_param','VALUES']) == "snr":
-                        filtres = filter_pick_snr(measure,inpSKS,snr)
-                    elif str(inpSKS.loc['sel_param','VALUES']) == "lam12":
-                        filtres = filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag)
+                    ## Null test
+                    ## The measurements that fail the constrain of the maximum allowed error in delay time and the maximum delay time can be associated with null measurements because this happens due little energy on the transverse component to constrain delay time (Evans et al., 2006). 
 
+                    diff_mult = auto_null_measure(measure,squashfast,squashlag,plot_null=False)
+                    null_thresh = 0.05 #below this value, the measurement is classified as null
+                    if diff_mult<null_thresh:
+                        sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth))
+                        self.logger.info("{}/{} Null measurement {}".format(count,int(len(data)/3),trace1[0].stats.event_time))
+                    else:
+                        if str(inpSKS.loc['sel_param','VALUES']) == "snr":
+                            filtres = filter_pick_snr(measure,inpSKS,snr)
+                        elif str(inpSKS.loc['sel_param','VALUES']) == "lam12":
+                            filtres = filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag)
 
-                    if filtres:
-                        ## Null test
-                        diff_mult = auto_null_measure(measure,squashfast,squashlag,plot_null=False)
-                        null_thresh = 0.05 #below this value, the measurement is classified as null
-                        if diff_mult<null_thresh:
-                            sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth))
-                            self.logger.info("{}/{} Null measurement {}".format(count,int(len(data)/3),trace1[0].stats.event_time))
-                        else:
+                        ## 
+                        if filtres:
                             sks_meas_file.write("{} {:8.4f} {:8.4f} {:4.1f} {:6.1f} {:6.1f} {:.1f} {:.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,measure.fast,measure.dfast,measure.lag,measure.dlag))
                             if self.plot_measure_loc:
                                 plot_SKS_measure(measure)
@@ -232,16 +211,16 @@ class sks_measurements:
 
                             if int(inpSKS.loc['error_plot_indiv','VALUES']):
                                 errorplot(measure,squashfast,squashlag,figname=self.plot_measure_loc+f'errorplot_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
+                                polar_error_surface(measure,figname=self.plot_measure_loc+f'errorplot_polar_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
 
                             if int(inpSKS.loc['error_plot_all','VALUES']):
                                 measure_list.append(measure)
                                 squashfast_list.append(squashfast)
                                 squashlag_list.append(squashlag)
-                                fast_dir_all.append(np.abs(measure.degs[0,np.argmax(squashfast)]))
+                                fast_dir_all.append(measure.degs[0,np.argmax(squashfast)])
                                 lag_time_all.append(measure.lags[np.argmax(squashlag),0])
-
-                    else:
-                        self.logger.info("{}/{} Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
+                        else:
+                            self.logger.info("{}/{} Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
                 else:
                     self.logger.info(f"{count}/{int(len(data)/3)} Bad phase pick: {stream3c[0].stats.event_time}")
 
@@ -250,11 +229,13 @@ class sks_measurements:
             if int(inpSKS.loc['error_plot_all','VALUES']) and count>0:
                 errorplot_all(measure_list,squashfast_list,squashlag_list,np.array(fast_dir_all),np.array(lag_time_all),figname=self.plot_measure_loc+f'errorplot_{plt_id}.png')
 
+
         f.close()
 
 
     ## plotting the measurement
     def plot_sks_map(self,sks_stations_infofile):
+        self.logger.info("##Plotting SKS map")
             
         all_sks_files = glob.glob(self.plot_measure_loc+f"*_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}")
         station_data_all = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
@@ -263,15 +244,19 @@ class sks_measurements:
         station_data_four = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_five = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         for i,sksfile in enumerate(all_sks_files):
-            sksfilesplit = sksfile.split("/")[-1].split(".")[0].split("-")[0:2]
-            net_sta = "_".join(sksfilesplit)
-            figure_name = self.plot_measure_loc+f"../{net_sta}_{str(inpSKS.loc['sks_measure_map','VALUES'])}.png"
+            # print(sksfile)
+            sksfilesplit = sksfile.split("/")[-1].split(".")[0].split("_")[0:2]
+            # net_sta = "_".join(sksfilesplit)
+            net_net = sksfilesplit[0]
+            sta_sta = sksfilesplit[1]
+            figure_name = self.plot_measure_loc+f"../{net_net}_{sta_sta}_{str(inpSKS.loc['sks_measure_map','VALUES'])}.png"
+            # print(net_net,sta_sta,figure_name)
             if not os.path.exists(figure_name):
                 if sum(1 for line in open(sksfile)) == 3:
                     stn_info = pd.read_csv(sksfile, nrows=1,delimiter='\s+')
                     # print('sksfile:',sksfile)
-                    net_net = sksfile.split("/")[-1].split("_")[0]
-                    sta_sta = sksfile.split("/")[-1].split("_")[1]
+                    # net_net = sksfile.split("/")[-1].split("_")[0]
+                    # sta_sta = sksfile.split("/")[-1].split("_")[1]
                     # print('sksfile:',net_net,sta_sta)
                     # print(f'',net_net,sta_sta, round(stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),'0.001','0.1','0')
                     station_data_all.loc[i] = [net_net,sta_sta, round(stn_info['Stlon'].values[0],4),round(stn_info['Stlat'].values[0],4),'0.001','0.0','0']
@@ -428,16 +413,29 @@ class sks_measurements:
                 # plt.tight_layout()
                 
                 #draw mapscale
-                msclon,msclat = ublon-4,lblat+1.0
+
+                # msclon,msclat = ublon,lblat
+                msclon,msclat =ublon - 0.20*np.abs(ublon-lblon),lblat+0.10*np.abs(ublat-lblat)
+                len_mapscale = 0.15*np.abs(ublon-lblon)*111.1
+                # if msclon<lblon:
+                #     msclon = lblon+1
+
+                # if msclat>ublon:
+                #     msclat = ublon-1
+
+                # avglons = np.mean(stlon0s+stlon1s+stlon4s+stlon5s)
+                # avglats = np.mean(stlat0s+stlat1s+stlat4s+stlat5s)
                 msclon0,msclat0 = station_data_all['lon'].mean(),station_data_all['lat'].mean()
-                map.drawmapscale(msclon,msclat,msclon0,msclat0, 250, barstyle='fancy', zorder=6)
+                # map.drawmapscale(msclon,msclat,avglons,avglats, len_mapscale, barstyle='fancy', zorder=6)
+                map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
 
                 leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement','1-3 measurements','4-14 measurements','15+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
                 leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
                 ax.add_artist(leg1)
 
                 plt.savefig(self.plot_measure_loc+'../SKS_Map.png',bbox_inches='tight',dpi=300)
-                self.logger.info(f"SKS measurement figure: {self.plot_measure_loc+'../SKS_Map.png'}")
+                plt.close('all')
+                self.logger.info(f"SKS measurement figure: SKS_Map.png")
 
         ######### Station map  ###############
                 # plot all stations    
@@ -478,9 +476,10 @@ class sks_measurements:
 
 
                 #draw mapscale
-                msclon,msclat = ublon-4,lblat+2.0
+                msclon,msclat =ublon - 0.20*np.abs(ublon-lblon),lblat+0.10*np.abs(ublat-lblat)
+                len_mapscale = 0.15*np.abs(ublon-lblon)*111.1
                 msclon0,msclat0 = station_data_all['lon'].mean(),station_data_all['lat'].mean()
-                map.drawmapscale(msclon,msclat,msclon0,msclat0, 250, barstyle='fancy', zorder=6)
+                map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
                 leg2 = plt.legend([legendarray[7],legendarray[8]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
                 ax.add_artist(leg2)
 
@@ -488,4 +487,4 @@ class sks_measurements:
                 ax.add_artist(leg2)
 
                 plt.savefig(figure_name,bbox_inches='tight',dpi=300)
-                self.logger.info(f"SKS measurement figure: {figure_name}")
+                self.logger.info(f"SKS measurement figure: {figure_name.split('/')[-1]}")
