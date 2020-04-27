@@ -7,6 +7,7 @@ locations|"","00"|List all locations, e.g "","00"
 ## Common setting
 plot_stations|1|plot the stations map of all available stations and all retrieved stations
 plot_events|1|plot the stations map of all retrieved events for each station
+plot_all_retrieved_events_stations|1
 ##
 ## Reciever Functions ##
 obtain_inventory_RF|1

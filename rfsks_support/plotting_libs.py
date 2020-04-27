@@ -5,6 +5,7 @@ import glob
 import pandas as pd
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
+import math
 
 DEG2KM = 111.2
 
@@ -160,8 +161,8 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     map.drawstates(color='gray',linewidth=0.05)
     map.drawrivers(color='blue',linewidth=0.05)
     map.drawmapboundary()
-    map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,5).tolist(),labels=[1,0,0,0],linewidth=0)
-    map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,5).tolist(),labels=[0,0,0,1],linewidth=0)
+    map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,5,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+    map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,5,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
     return map
 
 def station_map(map, stns_lon, stns_lat,stns_name,figname="", destination="./",figfrmt='png'):

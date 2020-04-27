@@ -8,6 +8,9 @@ events_map_suffix|RF-events_map|events map filename suffix {net}-{stn}-RF-events
 retr_station_prefix|RF_stations|retrieved stations prefix
 rf_compute_data_suffix|rf_profile_rfs|rf computation result file name: network-station-rf_profile_rfs.h5
 rfprofile_compute_result_prefix|rf_profile_profile|rf profile computation result file name: rf_profile_profile{azimuth}_*.h5
+h_kappa_res_file|h-kappa-values.txt
+plot_h|1
+plot_kappa|1
 ##Other Parameters||
 num_profile_divs_lat|2
 num_profile_divs_lon|3

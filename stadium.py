@@ -9,6 +9,10 @@ import rfsks_support.other_support as oss
 import rfsks_support.rf_support as rfs
 import rfsks_support.sks_support as skss
 from rfsks_support.download_large_data import downloadDataclass
+from rfsks_support.plot_events_map_all import plot_events_map_all
+from rfsks_support.plot_station_map_all import plot_station_map_all
+from rfsks_support.plotting_h_k import plot_h_kappa
+from rfsks_support.calculate_h_k import calc_h_kappa
 import warnings
 warnings.filterwarnings("ignore")
 import time
@@ -80,7 +84,7 @@ RFsta = str(dirs.loc['RFinfoloc','DIR_NAME']) + str(inpRF.loc['RFsta','VALUES'])
 invSKSfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+ str(inpSKS.loc['invSKSfile','VALUES'])
 SKSsta = str(dirs.loc['SKSinfoloc','DIR_NAME']) + str(inpSKS.loc['SKSsta','VALUES'])
 
-
+plot_all_retrieved = int(inp_step.loc['plot_all_retrieved_events_stations','VALUES']) 
 #############################################################
 #############################################################
 #####################                 #######################
@@ -178,6 +182,11 @@ if makeRF:
             oss.select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF')
 
     
+    if plot_all_retrieved:
+        logger.info("\n")
+        logger.info("## Plotting retrieved stations")
+        plot_events_map_all(all_stations_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRF.loc['retr_stations','VALUES']))
+        plot_station_map_all(retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRF.loc['retr_stations','VALUES']),all_stationsfile=str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRF.loc['RFsta','VALUES']))
 
     if compute_plot_RF:
         dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
@@ -207,6 +216,16 @@ if makeRF:
             rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
         # except Exception as e:
         #     logger.info(e)
+
+    ## H-kappa calculation
+    if int(inpRF.loc['plot_h','VALUES']) or int(inpRF.loc['plot_kappa','VALUES']):
+        logger.info("\n")
+        logger.info("## H-kappa implementation")
+        outloc=str(dirs.loc['RFinfoloc','DIR_NAME'])
+        outfile = str(inpRF.loc['h_kappa_res_file','VALUES'])
+        calc_h_kappa(outfile = outfile,data_dir_loc = str(dirs.loc['RFdatafileloc','DIR_NAME']), outloc=outloc)
+        if os.path.exists(outloc+outfile):
+            plot_h_kappa(h_k_file = outloc+outfile,all_stationsfile = str(inpRF.loc['retr_stations','VALUES']),plot_h = int(inpRF.loc['plot_h','VALUES']),plot_kappa = int(inpRF.loc['plot_kappa','VALUES']))
 
 
 
@@ -253,6 +272,11 @@ if makeSKS:
             ## The stations list can be edited
             oss.select_to_download_events(catalogloc,datafileloc,dest_map,SKSsta,sks_data,minmagnitudeSKS,maxmagnitudeSKS,plot_stations,plot_events,locations,method='SKS')
 
+    if plot_all_retrieved:
+        logger.info("\n")
+        logger.info("## Plotting retrieved stations")
+        plot_events_map_all(all_stations_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKS.loc['retr_stations','VALUES']))
+        plot_station_map_all(retr_stationsfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKS.loc['retr_stations','VALUES']),all_stationsfile=str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKS.loc['SKSsta','VALUES']))
 
     if picking_SKS:
         logger.info("\n")
@@ -271,6 +295,8 @@ if makeSKS:
         sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKS.loc['sks_picking_algo','VALUES']))
         
         sksMeasure.plot_sks_map(sks_stations_infofile=SKSsta)
+    
+
 
 
 

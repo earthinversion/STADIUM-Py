@@ -63,7 +63,7 @@ def rem_dir(direc):
         shutil.rmtree(direc)
 
 def read_directories(res_dir):
-    dirs = pd.read_csv("rfsks_support/directories_names.txt",sep="|",index_col ='DIR_VAR')
+    dirs = pd.read_csv("Settings/directories_names.txt",sep="|",index_col ='DIR_VAR')
     dirs['DIR_NAME'] = np.array([res_dir+val for val in dirs['DIR_NAME'].values])
     newdirname=[]
     for direc in dirs['DIR_NAME']:

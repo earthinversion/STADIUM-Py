@@ -201,23 +201,23 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
 
 
 
-    logger.info("Plotting the piercing point maps")
-
-    map = plot_merc(resolution='h', llcrnrlon=np.amin(stlons)-1, llcrnrlat=np.amin(stlats)-1,urcrnrlon=np.amax(stlons)+1, urcrnrlat=np.amax(stlats)+1,topo=True)
-    
-    for lat,lon in zip(stlats,stlons):
-        x,y = map(lon, lat)
-        map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
-    
-    xpp,ypp = map(pp_lon_lat["pplon"].values, pp_lon_lat["pplat"].values)
-    map.plot(xpp, ypp,'x', markersize=5,color='b',markeredgewidth=0.3, zorder=1)
-    plt.savefig(destination+'piercing_points_map.'+fig_frmt,dpi=200,bbox_inches='tight')
-
-    plot_bm_azimuth(map,stlon=stlon,stlat=stlat,distval_lat=width_lat,distval_lon=width_lon,ndivlat=ndivlat,ndivlon=ndivlon)
+    logger.info("Plotting the piercing points map")
     outimagename = destination+'piercing_points_map_new.'+fig_frmt
-    plt.savefig(outimagename,dpi=200,bbox_inches='tight')
-    logger.info(f"----> PP map: {outimagename}")
-    plt.close('all')
+    if not os.path.exists(outimagename):
+        map = plot_merc(resolution='h', llcrnrlon=np.amin(stlons)-1, llcrnrlat=np.amin(stlats)-1,urcrnrlon=np.amax(stlons)+1, urcrnrlat=np.amax(stlats)+1,topo=True)
+        
+        for lat,lon in zip(stlats,stlons):
+            x,y = map(lon, lat)
+            map.plot(x, y,'^', markersize=10,color='r',markeredgecolor='k',markeredgewidth=0.3, zorder=2)
+        
+        xpp,ypp = map(pp_lon_lat["pplon"].values, pp_lon_lat["pplat"].values)
+        map.plot(xpp, ypp,'x', markersize=5,color='b',markeredgewidth=0.3, zorder=1)
+        plt.savefig(destination+'piercing_points_map.'+fig_frmt,dpi=200,bbox_inches='tight')
+
+        plot_bm_azimuth(map,stlon=stlon,stlat=stlat,distval_lat=width_lat,distval_lon=width_lon,ndivlat=ndivlat,ndivlon=ndivlon)
+        plt.savefig(outimagename,dpi=200,bbox_inches='tight')
+        logger.info(f"----> PP map: {outimagename}")
+        plt.close('all')
 
 
 def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES']))):
@@ -226,7 +226,6 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['tr
     plt.style.use('classic')
     for azimuth in [0,90]:
         inpfiles = glob.glob(profilefileloc+ f"{str(inpRF.loc['rfprofile_compute_result_prefix','VALUES'])}{azimuth}_*.h5")
-
         for inpfile in inpfiles:
             logger.info(f"----> RF profile {inpfile}")
             pstream = read_rf(inpfile)
