@@ -403,8 +403,8 @@ def plot_SKS_measure(measure):
     plt.tight_layout()
 
 
-def filter_pick_snr(measure,inpSKS,snr):
-    if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and snr > float(inpSKS.loc['snratio','VALUES']):
+def filter_pick_snr(measure,inpSKSdict,snr):
+    if measure.dfast < int(inpSKSdict['sks_measurement_contrains']['fast_dir_settings']['maxdfast']) and measure.dlag < float(inpSKSdict['sks_measurement_contrains']['lag_settings']['maxdlag','VALUES']) and snr > float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['snr_ratio']):
         '''
         Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2. And signal to noise ratio of the trace
         '''
@@ -412,8 +412,8 @@ def filter_pick_snr(measure,inpSKS,snr):
     else:
         return False
 
-def filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag):
-    if measure.dfast < int(inpSKS.loc['maxdfast','VALUES']) and measure.dlag < float(inpSKS.loc['maxdlag','VALUES']) and mean_max_lam12_fast > float(inpSKS.loc['lam12fast_threh','VALUES']) and mean_max_lam12_lag > float(inpSKS.loc['lam12lag_threh','VALUES']):
+def filter_pick_lam12(measure,inpSKSdict,mean_max_lam12_fast,mean_max_lam12_lag):
+    if measure.dfast < int(inpSKSdict['sks_measurement_contrains']['fast_dir_settings']['maxdfast']) and measure.dlag < float(inpSKSdict['sks_measurement_contrains']['lag_settings']['maxdlag']) and mean_max_lam12_fast > float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12fast_threh']) and mean_max_lam12_lag > float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12lag_threh']):
         '''
         Uses the one sigma error in fast direction and lag time. Calculated by taking a quarter of the width of 95% confidence region (found using F-test) of lambda2. And ratio of the lambda1/lambda2 for fast direction and lag time. Empirically found as more robust than snr.
         '''

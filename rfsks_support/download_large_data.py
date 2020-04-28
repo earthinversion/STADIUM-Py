@@ -8,14 +8,18 @@ from rf import RFStream
 import numpy as np
 from rfsks_support.rfsks_extras import retrieve_waveform, multi_download
 from rfsks_support.plotting_map import plot_merc, station_map, events_map
-import logging
+import logging, yaml
 
-advinputRF = "Settings/advRFparam.txt"
-inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+# advinputRF = "Settings/advRFparam.txt"
+# inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+with open('Settings/advRFparam.yaml') as f:
+    inpRFdict = yaml.load(f, Loader=yaml.FullLoader)
 
 ## Fine tuning of SKS
-advinputSKS = "Settings/advSKSparam.txt"
-inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
+# advinputSKS = "Settings/advSKSparam.txt"
+# inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
+with open('Settings/advSKSparam.yaml') as f:
+    inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
 class downloadDataclass:
     
@@ -38,9 +42,10 @@ class downloadDataclass:
         self.method = method.upper()
         try:
             if self.method=='RF':
-                self.minradius,self.maxradius=int(inpRF.loc['minradiusRF','VALUES']),int(inpRF.loc['maxradiusRF','VALUES'])
+                self.minradius,self.maxradius=int(inpRFdict['rf_event_search_settings']['minradiusRF']),int(inpRFdict['rf_event_search_settings']['maxradiusRF'])
+                # self.minradius,self.maxradius=int(inpRF.loc['minradiusRF','VALUES']),int(inpRF.loc['maxradiusRF','VALUES'])
             elif self.method=='SKS':
-                self.minradius,self.maxradius=int(inpSKS.loc['minradiusSKS','VALUES']),int(inpSKS.loc['maxradiusSKS','VALUES'])
+                self.minradius,self.maxradius=int(inpSKSdict['sks_event_search_settings']['minradiusSKS']),int(inpSKSdict['sks_event_search_settings']['maxradiusSKS'])
         except Exception as exception:
             self.logger.error(f"Illegal method input {self.method}", exc_info=True)
             sys.exit()
@@ -197,7 +202,9 @@ class downloadDataclass:
             if self.method == 'RF':
                 print("\n")
                 self.logger.info(f"Searching and downloading data for {self.method}; {net}-{stn}")
-                rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5"
+                rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5"
+                # rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5"
+                # rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5"
                 if os.path.exists(catfile) and not os.path.exists(rfdatafile) and tot_evnt_stns > 0:
                     stream = RFStream()
 
@@ -228,11 +235,13 @@ class downloadDataclass:
                     fcat.close()
                 ### Event map plot
                 # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-rf.txt'
-                if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-{str(inpRF.loc['events_map_suffix','VALUES'])}.png"):
+                if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-{str(inpRFdict['filenames']['events_map_suffix'])}.png"):
+                # if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-{str(inpRF.loc['events_map_suffix','VALUES'])}.png"):
                     df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
                     if df.shape[0]:
                         evmg = [float(val.split()[0]) for val in df['evmg']]
-                        event_plot_name=f"{net}-{stn}-{str(inpRF.loc['events_map_suffix','VALUES'])}"
+                        event_plot_name=f"{net}-{stn}-{str(inpRFdict['filenames']['events_map_suffix'])}"
+                        # event_plot_name=f"{net}-{stn}-{str(inpRF.loc['events_map_suffix','VALUES'])}"
                         if not os.path.exists(dest_map+event_plot_name+f".{self.fig_frmt}"):
                             self.logger.info(f"Plotting events map "+event_plot_name+f".{self.fig_frmt}")
                             events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{event_plot_name}')
@@ -243,7 +252,7 @@ class downloadDataclass:
                 print("\n")
                 self.logger.info(f"Searching and downloading data for {self.method}; {net}-{stn}")
 
-                sksdatafile = datafileloc+f"{net}-{stn}-{str(inpSKS.loc['data_sks_suffix','VALUES'])}.h5"
+                sksdatafile = datafileloc+f"{net}-{stn}-{str(inpSKSdict['filenames']['data_sks_suffix'])}.h5"
                 if os.path.exists(catfile) and not os.path.exists(sksdatafile) and tot_evnt_stns > 0:
                     self.logger.info("Reading events catalog file")
                     stream = RFStream()
@@ -285,11 +294,11 @@ class downloadDataclass:
                     
                 ### Event map plot
                 # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-sks.txt'
-                if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-{str(inpSKS.loc['events_map_suffix','VALUES'])}.png"):
+                if os.path.exists(cattxtnew) and plot_events and not os.path.exists(f"{net}-{stn}-{str(inpSKSdict['filenames']['events_map_suffix'])}.png"):
                     df = pd.read_csv(cattxtnew,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
                     if df.shape[0]:
                         evmg = [float(val.split()[0]) for val in df['evmg']]
-                        event_plot_name=f"{net}-{stn}-{str(inpSKS.loc['events_map_suffix','VALUES'])}"
+                        event_plot_name=f"{net}-{stn}-{str(inpSKSdict['filenames']['events_map_suffix'])}"
                         if not os.path.exists(dest_map+event_plot_name+f".{self.fig_frmt}"):
                             self.logger.info(f"Plotting events map "+event_plot_name+f".{self.fig_frmt}")
                             events_map(evlons=df['evlon'], evlats=df['evlat'], evmgs=evmg, evdps=df['evdp'], stns_lon=slon, stns_lat=slat, destination=dest_map,figfrmt=self.fig_frmt, clon = slon , outname=f'{net}-{stn}-SKS')
@@ -299,16 +308,18 @@ class downloadDataclass:
             print("\n")
             self.logger.info("Plotting station map for RF")
             map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
-            station_map(map, stns_lon=rf_stalons, stns_lat=rf_stalats,stns_name= rf_staNetNames,figname=str(inpRF.loc['retr_station_prefix','VALUES']), destination=dest_map,figfrmt=self.fig_frmt)
+            station_map(map, stns_lon=rf_stalons, stns_lat=rf_stalats,stns_name= rf_staNetNames,figname=str(inpRFdict['filenames']['retr_station_prefix']), destination=dest_map,figfrmt=self.fig_frmt)
+            # station_map(map, stns_lon=rf_stalons, stns_lat=rf_stalats,stns_name= rf_staNetNames,figname=str(inpRF.loc['retr_station_prefix','VALUES']), destination=dest_map,figfrmt=self.fig_frmt)
 
 
         if plot_stations and self.method == 'SKS' and len(sks_stalons):
             print("\n")
             self.logger.info("Plotting station map for SKS")
             map = plot_merc(resolution='h',llcrnrlon=self.minlongitude-1, llcrnrlat=self.minlatitude-1,urcrnrlon=self.maxlongitude+1, urcrnrlat=self.maxlatitude+1,topo=True)
-            station_map(map, stns_lon=sks_stalons, stns_lat=sks_stalats,stns_name= sks_staNetNames,figname=str(inpSKS.loc['retr_station_prefix','VALUES']), destination=dest_map,figfrmt=self.fig_frmt)
+            station_map(map, stns_lon=sks_stalons, stns_lat=sks_stalats,stns_name= sks_staNetNames,figname=str(inpSKSdict['filenames']['retr_station_prefix']), destination=dest_map,figfrmt=self.fig_frmt)
         ## Write the retrieved station catalog
         if self.method == 'RF':
-            write_station_file(self.inventorytxtfile,rf_staNetNames,outfile=catalogtxtloc+str(inpRF.loc['retr_stations','VALUES']))
+            write_station_file(self.inventorytxtfile,rf_staNetNames,outfile=catalogtxtloc+str(inpRFdict['filenames']['retr_stations']))
+            # write_station_file(self.inventorytxtfile,rf_staNetNames,outfile=catalogtxtloc+str(inpRF.loc['retr_stations','VALUES']))
         elif self.method == 'SKS':
-            write_station_file(self.inventorytxtfile,sks_staNetNames,outfile=catalogtxtloc+str(inpSKS.loc['retr_stations','VALUES']))
+            write_station_file(self.inventorytxtfile,sks_staNetNames,outfile=catalogtxtloc+str(inpSKSdict['filenames']['retr_stations']))

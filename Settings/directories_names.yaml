@@ -1,0 +1,14 @@
+#DIR_VAR: DIR_NAME
+RFdatafileloc: dataRF/
+RFinfoloc: InfoRF/
+RFplotloc: ImagesRF/RFplots/
+RFstaevnloc: ImagesRF/STA_EV/
+RFprofilemaploc: ImagesRF/Profile/
+SKSinfoloc: InfoSKS/
+SKSstaevnloc: ImagesSKS/STA_EV/
+SKSdatafileloc: dataSKS/
+SKStracesloc_ENZ: ImagesSKS/Traces/ENZ/
+SKStracesloc_RTZ: ImagesSKS/Traces/RTZ/
+SKS_trigger_loc: ImagesSKS/Triggerplots/ENZ/
+SKSplot_measure_loc: ImagesSKS/SKSmeasure/
+tmpdir: tmp/

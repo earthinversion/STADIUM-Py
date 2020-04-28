@@ -10,21 +10,25 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.other_support import avg
 from rfsks_support.profile import profile
 # from rfsks_support.rfsks_extras import get_profile_boxes
-import logging
+import logging, yaml
 
 
 
-advinputRF = "Settings/advRFparam.txt"
-inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+# advinputRF = "Settings/advRFparam.txt"
+# inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+with open('Settings/advRFparam.yaml') as f:
+    inpRFdict = yaml.load(f, Loader=yaml.FullLoader)
 
 ### Compute RF
 def compute_rf(dataRFfileloc):
     logger = logging.getLogger(__name__)
-    all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5")
+    all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5")
+    # all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5")
     for jj,rfdatafile in enumerate(all_rfdatafile):
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
-        rffile = f"{network}-{station}-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5"
+        rffile = f"{network}-{station}-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5"
+        # rffile = f"{network}-{station}-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5"
         datatmp = read_rf(rfdatafile, 'H5')
         if not os.path.exists(rffile):
             logger.info(f"--> Computing RF for {rfdatafile}, {jj}/{len(all_rfdatafile)}")
@@ -42,7 +46,8 @@ def compute_rf(dataRFfileloc):
                         # print('Wrong trace length ', lentr,lengt)
                         continue
                 
-                stream3c.filter('bandpass', freqmin=float(inpRF.loc['minfreq','VALUES']), freqmax=float(inpRF.loc['maxfreq','VALUES']))
+                stream3c.filter('bandpass', freqmin=float(inpRFdict['rf_filter_settings']['minfreq']), freqmax=float(inpRFdict['rf_filter_settings']['maxfreq']))
+                # stream3c.filter('bandpass', freqmin=float(inpRF.loc['minfreq','VALUES']), freqmax=float(inpRF.loc['maxfreq','VALUES']))
 
                 try:
                     stream3c.rf()
@@ -58,12 +63,15 @@ def compute_rf(dataRFfileloc):
 def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the receiver functions")
-    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
+    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5")
+    # rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
     
-        kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
-        if str(inpRF.loc['rf_info','VALUES']) == "default":
+        kw = {'trim': (int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRFdict['rf_display_settings']['trace_height'])}
+        # kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
+        if str(inpRFdict['rf_display_settings']['rf_info']) == "default":
+        # if str(inpRF.loc['rf_info','VALUES']) == "default":
             kw['info'] = (('back_azimuth', u'baz (°)', 'C0'),('distance', u'dist (°)', 'C3'))
         else:
             kw['info'] = None
@@ -104,7 +112,7 @@ def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,wid
         logger.info(f"----> {outputfile} already exists!")
 
 
-def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=int(inpRF.loc['ppdepth','VALUES']),fig_frmt="png",ndivlat = 2, ndivlon=3):
+def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,destination="./",depth=int(inpRFdict['rf_profile_settings']['ppdepth']),fig_frmt="png",ndivlat = 2, ndivlon=3):
     logger = logging.getLogger(__name__)
     list_of_dfs = []
     list_of_streams = []
@@ -113,7 +121,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
 
     stlons,stlats=[],[]
         
-    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
+    rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5")
     if len(rffiles):
         stream = read_rf(rffiles[0], 'H5')
         # filter_traces_rf(stream,lenphase=100)
@@ -197,7 +205,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                 widthprof = int(np.abs(enddiv-initdiv)*degkmfac) #width of profile
                 # print(initdiv,enddiv,widthprof)
                 # print(initdiv,enddiv)
-                outputfile = profilefileloc+ f"{str(inpRF.loc['rfprofile_compute_result_prefix','VALUES'])}{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
+                outputfile = profilefileloc+ f"{str(inpRFdict['filenames']['rfprofile_compute_result_prefix'])}{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
                 write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin)
 
 
@@ -221,12 +229,12 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
             plt.close('all')
 
 
-def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES']))):
+def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max']))):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the RF profile")
     plt.style.use('classic')
     for azimuth in [0,90]:
-        inpfiles = glob.glob(profilefileloc+ f"{str(inpRF.loc['rfprofile_compute_result_prefix','VALUES'])}{azimuth}_*.h5")
+        inpfiles = glob.glob(profilefileloc+ f"{str(inpRFdict['filenames']['rfprofile_compute_result_prefix'])}{azimuth}_*.h5")
         if len(inpfiles):
             for inpfile in inpfiles:
                 logger.info(f"----> RF profile {inpfile}")

@@ -1,0 +1,13 @@
+# PARAMETERS: VALUES
+project_name: Simple_RF_test/
+
+fresh_start: 1
+
+makeRF: 1
+makeSKS: 0
+
+##  Define the geographical region
+mnlong: 6 #minimum longitude
+mxlong: 15 #maximum longitude
+mnlat: 47 #minimum latitude
+mxlat: 56 #maximum latitude

@@ -5,7 +5,7 @@ import pandas as pd
 plt.style.use('seaborn')
 import matplotlib.gridspec as gridspec
 import tqdm
-import os, glob
+import os, glob, yaml
 from rf import read_rf, IterMultipleComponents
 from obspy import UTCDateTime as UTC
 import warnings
@@ -22,8 +22,8 @@ from rfsks_support.plotting_libs import plot_topo, plot_merc, plot_point_on_base
 
 
 ## Fine tuning of SKS
-advinputSKS = "Settings/advSKSparam.txt"
-inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
+with open('Settings/advSKSparam.yaml') as f:
+    inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
 class sks_measurements:
 
@@ -37,7 +37,7 @@ class sks_measurements:
     def SKScalc(self, dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=None,method = 'None'):
         
         self.logger.info("Cut the traces around the SKS arrival")
-        sksfiles = glob.glob(dataSKSfileloc+f"*-{str(inpSKS.loc['data_sks_suffix','VALUES'])}.h5")
+        sksfiles = glob.glob(dataSKSfileloc+f"*-{str(inpSKSdict['filenames']['data_sks_suffix'])}.h5")
         # self.logger.info(sksfiles)
         meas_file = self.plot_measure_loc+'done_measurements.txt'
         if not os.path.exists(meas_file):
@@ -60,7 +60,7 @@ class sks_measurements:
             net_name = os.path.basename(sksfile).split("-")[0]
             stn_name = os.path.basename(sksfile).split("-")[1]
             # print("file name",net_name+stn_name)
-            sks_meas_file = open(self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}",'w')
+            sks_meas_file = open(self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKSdict['filenames']['sks_meas_indiv'])}",'w')
             sks_meas_file.write("Stlon Stlat Stbaz\n")
             sks_meas_file.write("{:.4f} {:.4f} {:.4f}\n".format(data[0].stats.station_longitude,data[0].stats.station_latitude,data[0].stats.back_azimuth))
             sks_meas_file.write("EventTime EvLong EvLat Evdp FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s)\n")
@@ -91,14 +91,14 @@ class sks_measurements:
                     continue
 
                 ## filter the trace
-                st = stream3c.filter('bandpass', freqmin=float(inpSKS.loc['minfreq','VALUES']), freqmax=float(inpSKS.loc['maxfreq','VALUES']))
+                st = stream3c.filter('bandpass', freqmin=float(inpSKSdict['sks_filter_settings']['minfreq']), freqmax=float(inpSKSdict['sks_filter_settings']['maxfreq']))
                 st.detrend('linear')
                 # st.taper(max_percentage=0.05, type="hann")
                 sps = st[0].stats.sampling_rate
                 t = st[0].stats.starttime
                 ## trim the trace
         
-                trace1 = st.trim(t+int(inpSKS.loc['trimstart','VALUES']), t+int(inpSKS.loc['trimend','VALUES']))
+                trace1 = st.trim(t+int(inpSKSdict['sks_picking']['trimstart']), t+int(inpSKSdict['sks_picking']['trimend']))
 
 
 
@@ -135,7 +135,7 @@ class sks_measurements:
                 if method=="recursive_sta_lta":
                     # self.logger.info(f"Method is {method}")
                     cft = recursive_sta_lta(trace1[1].data, int(1 * sps), int(5 * sps))
-                    threshold = (float(inpSKS.loc['sks_picking_algo_thr0','VALUES']), float(inpSKS.loc['sks_picking_algo_thr1','VALUES']))#(2.5,0.65)
+                    threshold = (float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1']))#(2.5,0.65)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                     
                     if trigger_loc and on_off.shape[0]==1:
@@ -145,19 +145,19 @@ class sks_measurements:
 
                 elif method=="classic_sta_lta":
                     cft = classic_sta_lta(trace1[1].data, int(5 * sps), int(10 * sps))
-                    threshold = (float(inpSKS.loc['sks_picking_algo_thr0','VALUES']), float(inpSKS.loc['sks_picking_algo_thr1','VALUES']))#(1.5, 0.5)
+                    threshold = (float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1']))#(1.5, 0.5)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                 elif method=="z_detect":
                     cft = z_detect(trace1[1].data, int(10 * sps))
-                    threshold = (float(inpSKS.loc['sks_picking_algo_thr0','VALUES']), float(inpSKS.loc['sks_picking_algo_thr1','VALUES']))#(-0.4, -0.3)
+                    threshold = (float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1']))#(-0.4, -0.3)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                 elif method=="carl_sta_trig":
                     cft = carl_sta_trig(trace1[1].data, int(5 * sps), int(10 * sps), 0.8, 0.8)
-                    threshold = (float(inpSKS.loc['sks_picking_algo_thr0','VALUES']), float(inpSKS.loc['sks_picking_algo_thr1','VALUES']))#(20.0, -20.0)
+                    threshold = (float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1']))#(20.0, -20.0)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                 elif method=="delayed_sta_lta":
                     cft = delayed_sta_lta(trace1[1].data, int(5 * sps), int(10 * sps))
-                    threshold = (float(inpSKS.loc['sks_picking_algo_thr0','VALUES']), float(inpSKS.loc['sks_picking_algo_thr1','VALUES']))#(5, 10)
+                    threshold = (float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1']))#(5, 10)
                     on_off = np.array(trigger_onset(cft, threshold[0], threshold[1]))
                 else:
                     self.logger.info("No valid method specified")
@@ -169,7 +169,7 @@ class sks_measurements:
                     # self.logger.info(f"Measure splitting for {plt_id}-{trace1[0].stats.event_time}: {trace2[1].stats.channel},{trace2[0].stats.channel}")
                     realdata = sw.Pair(trace2[1].data,trace2[0].data, delta=1/sps) #creates Pair from two traces, delta: sample interval
                     try:
-                        measure = sw.EigenM(realdata, lags=(float(inpSKS.loc['minlag','VALUES']), float(inpSKS.loc['maxlag','VALUES']), 40))
+                        measure = sw.EigenM(realdata, lags=(float(inpSKSdict['sks_measurement_contrains']['lag_settings']['minlag']), float(inpSKSdict['sks_measurement_contrains']['lag_settings']['maxlag']), 40))
                         
                     except Exception as e:
                         self.logger.error(e)
@@ -195,10 +195,10 @@ class sks_measurements:
                         sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth))
                         self.logger.info("{}/{} Null measurement {}".format(count,int(len(data)/3),trace1[0].stats.event_time))
                     else:
-                        if str(inpSKS.loc['sel_param','VALUES']) == "snr":
-                            filtres = filter_pick_snr(measure,inpSKS,snr)
-                        elif str(inpSKS.loc['sel_param','VALUES']) == "lam12":
-                            filtres = filter_pick_lam12(measure,inpSKS,mean_max_lam12_fast,mean_max_lam12_lag)
+                        if str(inpSKSdict['sks_measurement_contrains']['sel_param']) == "snr":
+                            filtres = filter_pick_snr(measure,inpSKSdict,snr)
+                        elif str(inpSKSdict['sks_measurement_contrains']['sel_param']) == "lam12":
+                            filtres = filter_pick_lam12(measure,inpSKSdict,mean_max_lam12_fast,mean_max_lam12_lag)
 
                         ## 
                         if filtres:
@@ -209,11 +209,11 @@ class sks_measurements:
                                 plt.close('all')  
                                 self.logger.info("{}/{} Good measurement: {}; fast = {:.2f}+-{:.2f}, lag = {:.2f}+-{:.2f}".format(count,int(len(data)/3),trace1[0].stats.event_time,measure.fast,measure.dfast,measure.lag,measure.dlag))
 
-                            if int(inpSKS.loc['error_plot_indiv','VALUES']):
+                            if int(inpSKSdict['error_plot_toggles']['error_plot_indiv']):
                                 errorplot(measure,squashfast,squashlag,figname=self.plot_measure_loc+f'errorplot_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                                 polar_error_surface(measure,figname=self.plot_measure_loc+f'errorplot_polar_{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
 
-                            if int(inpSKS.loc['error_plot_all','VALUES']):
+                            if int(inpSKSdict['error_plot_toggles']['error_plot_all']):
                                 measure_list.append(measure)
                                 squashfast_list.append(squashfast)
                                 squashlag_list.append(squashlag)
@@ -226,7 +226,7 @@ class sks_measurements:
 
             sks_meas_file.close()
             sks_meas_file_null.close()
-            if int(inpSKS.loc['error_plot_all','VALUES']) and count>0:
+            if int(inpSKSdict['error_plot_toggles']['error_plot_all']) and count>0:
                 errorplot_all(measure_list,squashfast_list,squashlag_list,np.array(fast_dir_all),np.array(lag_time_all),figname=self.plot_measure_loc+f'errorplot_{plt_id}.png')
 
 
@@ -237,7 +237,7 @@ class sks_measurements:
     def plot_sks_map(self,sks_stations_infofile):
         self.logger.info("##Plotting SKS map")
             
-        all_sks_files = glob.glob(self.plot_measure_loc+f"*_{str(inpSKS.loc['sks_meas_indiv','VALUES'])}")
+        all_sks_files = glob.glob(self.plot_measure_loc+f"*_{str(inpSKSdict['filenames']['sks_meas_indiv'])}")
         station_data_all = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_zero = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
         station_data_one = pd.DataFrame(columns=['NET','STA','lon','lat','AvgFastDir','AvgLagTime','NumMeasurements'])
@@ -249,7 +249,7 @@ class sks_measurements:
             # net_sta = "_".join(sksfilesplit)
             net_net = sksfilesplit[0]
             sta_sta = sksfilesplit[1]
-            figure_name = self.plot_measure_loc+f"../{net_net}_{sta_sta}_{str(inpSKS.loc['sks_measure_map','VALUES'])}.png"
+            figure_name = self.plot_measure_loc+f"../{net_net}_{sta_sta}_{str(inpSKSdict['filenames']['sks_measure_map'])}.png"
             # print(net_net,sta_sta,figure_name)
             if not os.path.exists(figure_name):
                 if sum(1 for line in open(sksfile)) == 3:
@@ -483,8 +483,8 @@ class sks_measurements:
                 leg2 = plt.legend([legendarray[7],legendarray[8]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
                 ax.add_artist(leg2)
 
-                leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
-                ax.add_artist(leg2)
+                # leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+                # ax.add_artist(leg2)
 
                 plt.savefig(figure_name,bbox_inches='tight',dpi=300)
                 self.logger.info(f"SKS measurement figure: {figure_name.split('/')[-1]}")

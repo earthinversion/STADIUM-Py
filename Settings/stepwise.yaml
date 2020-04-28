@@ -1,0 +1,28 @@
+data_settings:
+  client: IRIS #enter all the clients separated by commas
+  network: all
+  station: GRFO
+  locations: {"","00"} #List all locations, e.g "","00"
+
+plot_settings:
+  plot_stations: 1 #plot the stations map of all available stations and all retrieved stations
+  plot_events: 1 #plot the stations map of all retrieved events for each station
+  plot_all_retrieved_events_stations: 1
+
+rf_stepwise:
+  obtain_inventory_RF: 1
+  download_data_RF: 1
+  compute_plot_RF: 1
+  plot_ppoints: 1
+  plot_RF_profile: 1
+
+sks_stepwise:
+  obtain_inventory_SKS: 1
+  download_data_SKS: 1
+  plot_traces_ENZ: 1
+  plot_traces_RTZ: 1
+  plot_SKS_measure: 1
+  plot_SKS: 1
+  picking_SKS: 1
+  plot_traces: 1
+  plot_trigger: 1

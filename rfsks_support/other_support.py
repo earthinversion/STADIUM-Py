@@ -63,7 +63,11 @@ def rem_dir(direc):
         shutil.rmtree(direc)
 
 def read_directories(res_dir):
-    dirs = pd.read_csv("Settings/directories_names.txt",sep="|",index_col ='DIR_VAR')
+    with open('Settings/directories_names.yaml') as f:
+        direc_dict = yaml.load(f, Loader=yaml.FullLoader)
+    dirs = pd.DataFrame({'DIR_VAR':list(direc_dict.keys()),'DIR_NAME':list(direc_dict.values())})
+    dirs.set_index('DIR_VAR',inplace=True)
+
     dirs['DIR_NAME'] = np.array([res_dir+val for val in dirs['DIR_NAME'].values])
     newdirname=[]
     for direc in dirs['DIR_NAME']:

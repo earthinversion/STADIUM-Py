@@ -1,0 +1,44 @@
+filenames:
+  invSKSfile: sks_stations.xml #station xml
+  SKSsta: stations_SKS.txt #station text catalog
+  retr_stations: all_stations_sks_retrieved.txt #retrived stations list file
+  data_sks_suffix: sks_profile_data #sks data file name: {net}-{stn}-sks_profile_data.h5
+  events_map_suffix: SKS-events_map #events map filename suffix {net}-{stn}-SKS-events_map.png
+  retr_station_prefix: SKS_stations #retrieved stations prefix
+  sks_meas_indiv: sks_measurements.txt #sks measurements file suffix for individual stations
+  sks_measure_map: SKS_station_Map #filename of sks measurements map
+
+sks_event_search_settings:
+  minradiusSKS: 90  
+  maxradiusSKS: 120
+  minmagnitudeSKS: 6.5
+  maxmagnitudeSKS: 9.5
+
+sks_filter_settings:
+  minfreq: 0.01 #stream minfreq for bandpass
+  maxfreq: 0.6 #stream maxfreq for bandpass
+
+sks_picking:
+  trimstart: 30 #trim the traces for sks picking trace starttime+trimstart  to starttime+trimend
+  trimend: 110 #trim the traces for sks picking trace starttime+trimstart  to starttime+trimend
+  picking_algo:
+    sks_picking_algo: recursive_sta_lta #picking algorithm for sks phase...other options are classic_sta_lta, z_detect, carl_sta_trig, delayed_sta_lta
+    sks_picking_algo_thr0: 2.5 #starting threshold for sks picking algorithm
+    sks_picking_algo_thr1: 0.65 #end threshold for sks picking algorithm
+
+sks_measurement_contrains:
+  sel_param: lam12 #options: snr, lam12; selection parameter of the measurements: either use signal to noise ratio, snr or use the eigenvalue ratio (lambda1/lambda2), lam12
+  sel_param_settings:
+    snr_ratio: 2 #minimum signal to noise ratio of the traces for filtering good measurements
+    lam12fast_threh: 1.1 #threshold for the lambda1/lambda2 for fast direction pick
+    lam12lag_threh: 1.1 #threshold for the lambda1/lambda2 for lag time pick
+  lag_settings:
+    minlag: 0 #minimum allowed lag time in sks measurements
+    maxlag: 3 #maximum allowed lag time in sks measurements
+    maxdlag: 1.5 #maximum allowed error in the lag time
+  fast_dir_settings:
+    maxdfast: 7 #maximum allowed error in the fast direction
+
+error_plot_toggles:
+  error_plot_indiv: 0 #make 1 to plot the error profiles of fast direction and lag time for each measurements
+  error_plot_all: 1 #make 1 to plot the error profiles of fast direction and lag time for each measurements
