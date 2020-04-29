@@ -1,10 +1,10 @@
 # PARAMETERS: VALUES
-project_name: Simple_RF_test/
+project_name: Simple_SKS_test/
 
-fresh_start: 1
+fresh_start: 0
 
-makeRF: 1
-makeSKS: 0
+makeRF: 0
+makeSKS: 1
 
 ##  Define the geographical region
 mnlong: 6 #minimum longitude

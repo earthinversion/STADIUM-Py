@@ -8,6 +8,7 @@ from obspy import UTCDateTime as UTC
 from obspy.taup import TauPyModel
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 # plt.style.use('ggplot')
 plt.style.use('seaborn')
 import logging
@@ -513,3 +514,37 @@ def polar_error_surface(measure,figname):
     ax[2].contourf(rads,lags,lam1/lam2,50,cmap='viridis')
     ax[2].set_title('Lam1/Lam2')
     plt.savefig(figname,dpi=300,bbox_inches='tight')
+
+def splitting_intensity(d):
+    '''
+    Calculate splitting intensity.
+    - Utpal Kumar (modified after Walpole et al.)
+    #Chevrot (2000)
+    '''
+    rdiff = np.gradient(d.x)
+    trans = d.y
+    si = -2 * np.trapz(trans * rdiff) / np.trapz(rdiff**2)
+    return si
+
+## Fine tuning of SKS
+import yaml
+with open('Settings/advSKSparam.yaml') as f:
+    inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
+
+def segregate_measurements(sks_meas_all,toTextFile=False,outloc="./"):
+    plot_params_lev = inpSKSdict['sks_measurement_plot']['meas_seg_points']
+    lev1, lev2, lev3 = int(plot_params_lev['lev1']), int(plot_params_lev['lev2']), int(plot_params_lev['lev3'])
+    station_data_0 = sks_meas_all.loc[sks_meas_all['NumMeasurements']==lev1]
+    station_data_14 = sks_meas_all.loc[(sks_meas_all['NumMeasurements']>=lev1+1) & (sks_meas_all['NumMeasurements']<=lev2)]
+    station_data_4_11 = sks_meas_all.loc[(sks_meas_all['NumMeasurements']>=lev2+1) & (sks_meas_all['NumMeasurements']<=lev3-1)]
+    station_data_15 = sks_meas_all.loc[sks_meas_all['NumMeasurements']>=lev3]
+    if toTextFile:
+        station_data_0.to_csv(outloc+f"{lev1}_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+        station_data_14.to_csv(outloc+f"{lev2}_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+        station_data_4_11.to_csv(outloc+f"{lev2}_{lev3}_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+        station_data_15.to_csv(outloc+f"{lev3}_sks_measure.txt",index=None, header=True,sep=' ', float_format='%.4f')
+
+    return station_data_0, station_data_14, station_data_4_11, station_data_15
+
+
+    

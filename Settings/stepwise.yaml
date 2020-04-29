@@ -17,10 +17,10 @@ rf_stepwise:
   plot_RF_profile: 1
 
 sks_stepwise:
-  obtain_inventory_SKS: 1
-  download_data_SKS: 1
-  plot_traces_ENZ: 1
-  plot_traces_RTZ: 1
+  obtain_inventory_SKS: 0
+  download_data_SKS: 0
+  plot_traces_ENZ: 0
+  plot_traces_RTZ: 0
   plot_SKS_measure: 1
   plot_SKS: 1
   picking_SKS: 1

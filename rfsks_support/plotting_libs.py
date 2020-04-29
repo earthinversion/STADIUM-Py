@@ -202,3 +202,116 @@ from cmath import rect, phase
 from math import radians, degrees
 def mean_angle(deg):
     return degrees(phase(sum(rect(1, radians(d)) for d in deg)/len(deg)))
+
+
+## Fine tuning of SKS
+import yaml
+with open('Settings/advSKSparam.yaml') as f:
+    inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
+
+plot_params_lev = inpSKSdict['sks_measurement_plot']['meas_seg_points']
+lev1, lev2, lev3 = int(plot_params_lev['lev1']), int(plot_params_lev['lev2']), int(plot_params_lev['lev3'])
+from rfsks_support.rfsks_extras import segregate_measurements
+def plot_sks_station_map(sks_meas_all,figname):
+    if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
+        station_data_0, station_data_14, station_data_4_11, station_data_15 = segregate_measurements(sks_meas_all)
+                    
+    lonmin, lonmax = sks_meas_all['LON'].min()-1, sks_meas_all['LON'].max()+1
+    latmin, latmax = sks_meas_all['LAT'].min()-1, sks_meas_all['LAT'].max()+1
+    if np.abs(lonmax-lonmin)<10 or np.abs(latmax-latmin)<2:
+        lonmin, lonmax = lonmin - 2, lonmax + 2
+        latmin, latmax = latmin - 2, latmax + 2
+    else:
+        lonmin, lonmax = lonmin - 0.5, lonmax + 0.5
+        latmin, latmax = latmin - 0.5, latmax + 0.5
+
+    fig = plt.figure(figsize=(10,10))
+    ax = fig.add_subplot(111)
+    map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lonmin, llcrnrlat=latmin,urcrnrlon=lonmax, urcrnrlat=latmax)
+    
+    # plot_topo(map,cmap=plt.cm.rainbow)
+    map.etopo(scale=2.5, alpha=0.5, zorder=2)
+
+    map.drawcoastlines(color='k',linewidth=0.5)
+    map.drawcountries(color='k',linewidth=0.1)
+    map.drawstates(color='gray',linewidth=0.05)
+    map.drawrivers(color='blue',linewidth=0.05)
+    map.drawmapboundary()
+    parallelmin = int(latmin)
+    parallelmax = int(latmax)+1
+    if np.abs(parallelmax - parallelmin)<5:
+        parallelmax += 2
+        parallelmin -= 2
+
+    meridianmin = int(lonmin)
+    meridianmax = int(lonmax)+1
+    if np.abs(meridianmax - meridianmin)<5:
+        meridianmax += 2
+        meridianmin -= 2
+
+    map.drawparallels(np.arange(parallelmin, parallelmax,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+    map.drawmeridians(np.arange(meridianmin, meridianmax,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
+    map.drawmapboundary(color='k', linewidth=2, zorder=1)
+    legendarray = []
+    for a in [1, 2, 3]:
+        legendarray.append(map.scatter([], [], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k'))
+
+
+
+    if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
+        if bool(inpSKSdict['sks_measurement_plot']['show_no_measurement']):
+            stlon0s,stlat0s = map(station_data_0['LON'].values,station_data_0['LAT'].values)
+            map.scatter(stlon0s, stlat0s, c='red', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=2)
+            legendarray.append(map.scatter([], [], c='r', alpha=0.99, s=60, edgecolors='k'))
+        stlon1s,stlat1s = map(station_data_14['LON'].values,station_data_14['LAT'].values)
+        stlon4s,stlat4s = map(station_data_4_11['LON'].values,station_data_4_11['LAT'].values)
+        stlon5s,stlat5s = map(station_data_15['LON'].values,station_data_15['LAT'].values)
+        
+        map.scatter(stlon1s, stlat1s, c='cornflowerblue', marker='o', s=60*station_data_14['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon4s, stlat4s, c='navy', marker='o', s=60*station_data_4_11['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon5s, stlat5s, c='black', marker='o', s=60*station_data_15['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+
+
+        
+        legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='navy', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+
+        for jj in range(station_data_14.shape[0]):
+            plot_point_on_basemap(map, point=(station_data_14['LON'].values[jj],station_data_14['LAT'].values[jj]), angle = station_data_14['AvgFastDir'].values[jj], length = 1.5)
+
+        for jj in range(station_data_4_11.shape[0]):
+            plot_point_on_basemap(map, point=(station_data_4_11['LON'].values[jj],station_data_4_11['LAT'].values[jj]), angle = station_data_4_11['AvgFastDir'].values[jj], length = 1.5)
+
+        for jj in range(station_data_15.shape[0]):
+            plot_point_on_basemap(map, point=(station_data_15['LON'].values[jj],station_data_15['LAT'].values[jj]), angle = station_data_15['AvgFastDir'].values[jj], length = 1.5)
+    else:
+        stlon_all,stlat_all = map(sks_meas_all['LON'].values,sks_meas_all['LAT'].values)
+        map.scatter(stlon_all,stlat_all, c='black', marker='o', s=60*sks_meas_all['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+
+        legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+
+        for jj in range(sks_meas_all.shape[0]):
+            plot_point_on_basemap(map, point=(sks_meas_all['LON'].values[jj],sks_meas_all['LAT'].values[jj]), angle = sks_meas_all['AvgFastDir'].values[jj], length = 1.5)
+
+
+
+
+    #draw mapscale
+    msclon,msclat =lonmax - 0.10*np.abs(lonmax-lonmin),latmin+0.10*np.abs(latmax-latmin)
+    len_mapscale = 0.15*np.abs(lonmax-lonmin)*111.1
+    msclon0,msclat0 = sks_meas_all['LON'].mean(),sks_meas_all['LAT'].mean()
+    map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
+    if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
+        if bool(inpSKSdict['sks_measurement_plot']['show_no_measurement']):
+            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+        else:
+            leg1 = plt.legend([legendarray[4],legendarray[5],legendarray[6]],[f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+    else:
+        leg1 = plt.legend([legendarray[3]],['All measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+    leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+    ax.add_artist(leg1)
+
+    plt.savefig(figname,bbox_inches='tight',dpi=300)
+    plt.close('all')
+    

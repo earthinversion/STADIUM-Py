@@ -250,3 +250,22 @@ def organize_inventory(inventorytxtfile):
     new_inv_df=pd.DataFrame(all_dicts)
     new_inv_df.to_csv(out_inventorytxtfile, index=False,sep="|")
     return out_inventorytxtfile
+
+def measure_status(meas_file):
+    if not os.path.exists(meas_file):
+        f = open(meas_file, 'w')
+        finished_events = np.array([])
+        finished_file = np.array([])
+    elif os.path.exists(meas_file):
+        f = open(meas_file, 'a')
+        finished_measure_df = pd.read_csv(meas_file,header=None,names=['filename','event_name'])
+        finished_file = finished_measure_df['filename'].tolist()
+        finished_events = finished_measure_df['event_name'].tolist()
+    return f, finished_file, finished_events
+
+def sks_measure_file_start(sks_meas_file_name,stlon,stlat,header_sks_measure):
+    sks_meas_file = open(sks_meas_file_name,'w')
+    sks_meas_file.write("Stlon Stlat\n")
+    sks_meas_file.write("{:.4f} {:.4f}\n".format(stlon,stlat))
+    sks_meas_file.write(header_sks_measure)
+    return sks_meas_file

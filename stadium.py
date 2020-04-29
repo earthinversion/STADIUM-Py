@@ -302,7 +302,7 @@ def main():
             sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
             sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']))
             
-            sksMeasure.plot_sks_map(sks_stations_infofile=SKSsta)
+        sksMeasure.plot_sks_map()
         
 
 
