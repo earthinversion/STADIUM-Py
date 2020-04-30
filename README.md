@@ -327,10 +327,9 @@ We implemented several picking options from [ObsPy](https://github.com/obspy/obs
 
 
  * Plot the results.
+ <p align="left">
+<img src="wikiimage/SKSMap.png" width="150" alt="All stations results">
 
-<img src="wikiimage/SKSMap.png" width="200" alt="All stations results">
-
-
-<img src="wikiimage/SKSMap2.png" width="200" alt="All stations with data">
-
+<img src="wikiimage/SKSMap2.png" width="150" alt="All stations with data">
+ </p>
 
