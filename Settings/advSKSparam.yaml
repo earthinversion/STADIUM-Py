@@ -40,9 +40,12 @@ sks_measurement_contrains:
     maxdfast: 7 #maximum allowed error in the fast direction
 
 sks_measurement_plot:
-  show_no_measurement: 1 #1 if wish to plot stations with no measurement
-  segregate_measurements: 0 #1 if wish to segregate measurements
-  meas_seg_points: {lev1: 0, lev2: 8, lev3: 15} #segregate data to plot sks measurements in different color (3 levels)
+  segregate_measurements: 1 #1 if wish to segregate measurements
+  segregate_measurements_options:
+    show_no_measurement: 1 #1 if wish to plot stations with no measurement
+    show_null_measurements: 1 #1 to plot the stations with only null measurements on the map
+    segregate_measurements_tofile: 0 #1 to outout the segregated measurements to text file
+    meas_seg_points: {lev1: 0, lev2: 8, lev3: 15} #segregate data to plot sks measurements in different color (3 levels)
 
 error_plot_toggles:
   error_plot_indiv: 0 #make 1 to plot the error profiles of fast direction and lag time for each measurements

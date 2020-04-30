@@ -209,7 +209,7 @@ import yaml
 with open('Settings/advSKSparam.yaml') as f:
     inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
-plot_params_lev = inpSKSdict['sks_measurement_plot']['meas_seg_points']
+plot_params_lev = inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['meas_seg_points']
 lev1, lev2, lev3 = int(plot_params_lev['lev1']), int(plot_params_lev['lev2']), int(plot_params_lev['lev3'])
 from rfsks_support.rfsks_extras import segregate_measurements
 def plot_sks_station_map(sks_meas_all,figname):
@@ -259,10 +259,18 @@ def plot_sks_station_map(sks_meas_all,figname):
 
 
     if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
-        if bool(inpSKSdict['sks_measurement_plot']['show_no_measurement']):
+        ## no measurements
+        if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']):
             stlon0s,stlat0s = map(station_data_0['LON'].values,station_data_0['LAT'].values)
             map.scatter(stlon0s, stlat0s, c='red', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=2)
             legendarray.append(map.scatter([], [], c='r', alpha=0.99, s=60, edgecolors='k'))
+        ## plot null measurements
+        if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
+            station_data_null = sks_meas_all.loc[(sks_meas_all['NumNull']>0) & (sks_meas_all['NumMeasurements']==0)]
+            stlonnull,stlatnull = map(station_data_null['LON'].values,station_data_null['LAT'].values)
+            map.scatter(stlonnull, stlatnull, c='white', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=2)
+            legendarray.append(map.scatter([], [], c='white', alpha=0.99, s=60, edgecolors='k'))
+
         stlon1s,stlat1s = map(station_data_14['LON'].values,station_data_14['LAT'].values)
         stlon4s,stlat4s = map(station_data_4_11['LON'].values,station_data_4_11['LAT'].values)
         stlon5s,stlat5s = map(station_data_15['LON'].values,station_data_15['LAT'].values)
@@ -276,6 +284,8 @@ def plot_sks_station_map(sks_meas_all,figname):
         legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
         legendarray.append(map.scatter([], [], c='navy', alpha=0.99, s=60, edgecolors='k'))
         legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+
+
 
         for jj in range(station_data_14.shape[0]):
             plot_point_on_basemap(map, point=(station_data_14['LON'].values[jj],station_data_14['LAT'].values[jj]), angle = station_data_14['AvgFastDir'].values[jj], length = 1.5)
@@ -303,8 +313,12 @@ def plot_sks_station_map(sks_meas_all,figname):
     msclon0,msclat0 = sks_meas_all['LON'].mean(),sks_meas_all['LAT'].mean()
     map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
     if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
-        if bool(inpSKSdict['sks_measurement_plot']['show_no_measurement']):
+        if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
+            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6],legendarray[7]],['No measurement','Null measurements',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+        elif bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and not bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
             leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+        elif not bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
+            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['Null measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
         else:
             leg1 = plt.legend([legendarray[4],legendarray[5],legendarray[6]],[f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
     else:

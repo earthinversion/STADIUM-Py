@@ -246,7 +246,8 @@ class sks_measurements:
             
 
             ## Segregate data based on num of measurements
-            # station_data_0, station_data_14, station_data_4_11, station_data_15 = segregate_measurements(sks_meas_all,toTextFile=False,outloc=self.plot_measure_loc+"../")
+            if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['segregate_measurements_tofile']):
+                segregate_measurements(sks_meas_all,toTextFile=True,outloc=self.plot_measure_loc+"../")
 
             plot_sks_station_map(sks_meas_all,figname)
             self.logger.info(f"SKS measurement figure: SKS_station_Map.png")

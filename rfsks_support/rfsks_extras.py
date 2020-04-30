@@ -532,7 +532,7 @@ with open('Settings/advSKSparam.yaml') as f:
     inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
 def segregate_measurements(sks_meas_all,toTextFile=False,outloc="./"):
-    plot_params_lev = inpSKSdict['sks_measurement_plot']['meas_seg_points']
+    plot_params_lev = inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['meas_seg_points']
     lev1, lev2, lev3 = int(plot_params_lev['lev1']), int(plot_params_lev['lev2']), int(plot_params_lev['lev3'])
     station_data_0 = sks_meas_all.loc[sks_meas_all['NumMeasurements']==lev1]
     station_data_14 = sks_meas_all.loc[(sks_meas_all['NumMeasurements']>=lev1+1) & (sks_meas_all['NumMeasurements']<=lev2)]
