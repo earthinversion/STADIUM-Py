@@ -303,6 +303,9 @@ def main():
             sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']))
             
         sksMeasure.plot_sks_map()
+        if os.path.exists(SKSsta):
+            if bool(inp_step['sks_stepwise']['plot_data_nodata_map']):
+                sksMeasure.plot_data_nodata_map(sks_stations_infofile=SKSsta)
         
 
 

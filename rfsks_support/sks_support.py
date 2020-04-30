@@ -19,7 +19,7 @@ import splitwavepy as sw
 import logging
 import math
 from mpl_toolkits.basemap import Basemap
-from rfsks_support.plotting_libs import plot_topo, plot_merc, plot_point_on_basemap, mean_angle, plot_sks_station_map
+from rfsks_support.plotting_libs import plot_topo, plot_merc, plot_point_on_basemap, mean_angle, plot_sks_station_map, plot_sks_data_nodata_map
 
 
 ## Fine tuning of SKS
@@ -242,12 +242,21 @@ class sks_measurements:
         self.logger.info("##Plotting SKS map")
         figname = self.plot_measure_loc+'../SKS_station_Map.png'
         if not os.path.exists(figname):
-            
             sks_meas_all = pd.read_csv(self.plot_measure_loc+"../"+"sks_measurements_all.txt",delimiter="\s+")
+            
 
             ## Segregate data based on num of measurements
             # station_data_0, station_data_14, station_data_4_11, station_data_15 = segregate_measurements(sks_meas_all,toTextFile=False,outloc=self.plot_measure_loc+"../")
 
             plot_sks_station_map(sks_meas_all,figname)
             self.logger.info(f"SKS measurement figure: SKS_station_Map.png")
+    
+    def plot_data_nodata_map(self,sks_stations_infofile):
+        self.logger.info("##Plotting data-nodata map")
+        figname = self.plot_measure_loc+'../data_nodata_map.png'
+        all_data_df = pd.read_csv(sks_stations_infofile,delimiter='|')
+        if not os.path.exists(figname):
+            sks_meas_all = pd.read_csv(self.plot_measure_loc+"../"+"sks_measurements_all.txt",delimiter="\s+")
+            plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname)
+        
             

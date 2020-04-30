@@ -26,3 +26,4 @@ sks_stepwise:
   picking_SKS: 1
   plot_traces: 1
   plot_trigger: 1
+  plot_data_nodata_map: 1

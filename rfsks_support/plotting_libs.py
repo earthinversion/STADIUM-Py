@@ -315,3 +315,68 @@ def plot_sks_station_map(sks_meas_all,figname):
     plt.savefig(figname,bbox_inches='tight',dpi=300)
     plt.close('all')
     
+def plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname):
+
+    stations = all_data_df['Station'].values
+    laat = all_data_df['Latitude'].values
+    loon = all_data_df['Longitude'].values
+                    
+    lonmin, lonmax = loon.min()-1, loon.max()+1
+    latmin, latmax = laat.min()-1, laat.max()+1
+    if np.abs(lonmax-lonmin)<10 or np.abs(latmax-latmin)<2:
+        lonmin, lonmax = lonmin - 2, lonmax + 2
+        latmin, latmax = latmin - 2, latmax + 2
+    else:
+        lonmin, lonmax = lonmin - 0.5, lonmax + 0.5
+        latmin, latmax = latmin - 0.5, latmax + 0.5
+
+    fig = plt.figure(figsize=(10,10))
+    ax = fig.add_subplot(111)
+    map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lonmin, llcrnrlat=latmin,urcrnrlon=lonmax, urcrnrlat=latmax)
+    
+    # plot_topo(map,cmap=plt.cm.rainbow)
+    map.etopo(scale=2.5, alpha=0.5, zorder=2)
+
+    map.drawcoastlines(color='k',linewidth=0.5)
+    map.drawcountries(color='k',linewidth=0.1)
+    map.drawstates(color='gray',linewidth=0.05)
+    map.drawrivers(color='blue',linewidth=0.05)
+    map.drawmapboundary()
+    parallelmin = int(latmin)
+    parallelmax = int(latmax)+1
+    if np.abs(parallelmax - parallelmin)<5:
+        parallelmax += 2
+        parallelmin -= 2
+
+    meridianmin = int(lonmin)
+    meridianmax = int(lonmax)+1
+    if np.abs(meridianmax - meridianmin)<5:
+        meridianmax += 2
+        meridianmin -= 2
+
+    map.drawparallels(np.arange(parallelmin, parallelmax,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+    map.drawmeridians(np.arange(meridianmin, meridianmax,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
+    map.drawmapboundary(color='k', linewidth=2, zorder=1)
+    
+    
+    allstlons,allstlats = map(loon,laat)
+    map.scatter(allstlons,allstlats, c='gold', marker='^', s=60, facecolors='none', edgecolors='b',linewidths=0.3, zorder=2)
+        
+    stlons,stlats = map(sks_meas_all['LON'].values,sks_meas_all['LAT'].values)
+    map.scatter(stlons, stlats, c='red', marker='^', s=60, edgecolors='k',linewidths=0.3, zorder=2)
+
+    #draw mapscale
+    msclon,msclat =lonmax - 0.10*np.abs(lonmax-lonmin),latmin+0.10*np.abs(latmax-latmin)
+    len_mapscale = 0.15*np.abs(lonmax-lonmin)*111.1
+    msclon0,msclat0 = np.mean(loon),np.mean(laat)
+    map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
+
+    legendarray = []
+    for col in ['gold','red']:
+        legendarray.append(map.scatter([], [], c=col, marker='^', alpha=0.99, s=60, edgecolors='k'))
+
+    leg2 = plt.legend([legendarray[0],legendarray[1]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+    ax.add_artist(leg2)
+
+    plt.savefig(figname,bbox_inches='tight',dpi=300)
+    plt.close('all')
