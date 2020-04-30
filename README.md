@@ -242,110 +242,95 @@ These parameters should be modified with caution by the users.
 
 ### Station Map
 
-<p align="center">
-  <img src="wikiimage/STU_map.png" width="150" alt="Station Map">
-</p>
+
+<img src="wikiimage/STU_map.png" width="200" alt="Station Map">
+
 
 ### Events Map
 
 #### For RF:
 
-<p align="center">
-  <img src="wikiimage/STU_EventsRF.png" width="300" alt="Events Map for RF">
-</p>
+
+<img src="wikiimage/STU_EventsRF.png" width="300" alt="Events Map for RF">
+
 
 #### For SKS:
-<p align="center">
-  <img src="wikiimage/STU_EventsSKS.png" width="300" alt="Events Map for SKS">
-</p>
+<img src="wikiimage/STU_EventsSKS.png" width="300" alt="Events Map for SKS">
+
 
 #### Reciever Functions
 
  * Single event RF
 
-<p align="center">
-  <img src="wikiimage/STU_RF.png" width="300" alt="RF - single event">
-</p>
+<img src="wikiimage/STU_RF.png" width="300" alt="RF - single event">
+
 
  * Piercing points
 
-<p align="center">
-  <img src="wikiimage/STU_pp.png" width="150" alt="RF - piercing points">
-</p>
+<img src="wikiimage/STU_pp.png" width="200" alt="RF - piercing points">
+
 
 
  * Single station profile
 
-<p align="center">
-  <img src="wikiimage/STU_Q.png" width="300" alt="profile - Q">
-</p>
+<img src="wikiimage/STU_Q.png" width="300" alt="profile - Q">
 
-<p align="center">
-  <img src="wikiimage/STU_L.png" width="300" alt="profile - L">
-</p>
+
+<img src="wikiimage/STU_L.png" width="300" alt="profile - L">
+
 
 #### Reciever Functions - Multiple station profile
 
-<p align="center">
-  <img src="wikiimage/STU_Q_profile.png" width="300" alt="N090E profile">
-</p>
+<img src="wikiimage/STU_Q_profile.png" width="300" alt="N090E profile">
+
 
 #### Reciever Functions - H - K measurements on individual RF
 
-<p align="center">
-  <img src="wikiimage/RFHK.png" width="300" alt="N090E profile">
-</p>
+<img src="wikiimage/RFHK.png" width="300" alt="N090E profile">
+
 
 #### Reciever Functions - H - K maps
 
-<p align="center">
-  <img src="wikiimage/HK.png" width="300" alt="N090E profile">
-</p>
+<img src="wikiimage/HK.png" width="300" alt="N090E profile">
+
 
 
 ### SKS
  * Read the station HDF5 file containing all the seismic traces recovered for this station.
 
-<p align="center">
-  <img src="wikiimage/STU_dataSKS-ZNE.png" width="150" alt="ZNE data">
-</p>
+<img src="wikiimage/STU_dataSKS-ZNE.png" width="200" alt="ZNE data">
+
 
  * Filter and rotate the trace into the radial / tangential referencial.
             ```trace1.rotate('NE->RT')```
 
-<p align="center">
-  <img src="wikiimage/STU_dataSKS-ZRT.png" width="150" alt="ZRT data">
-</p>
+<img src="wikiimage/STU_dataSKS-ZRT.png" width="200" alt="ZRT data">
+
 
  * Minimize the energy on the transverse components.
 
  * Automatically pick the SKS phase.
 We implemented several picking options from [ObsPy](https://github.com/obspy/obspy/wiki) to attempt to pick the SKS phase.
 
-<p align="center">
-  <img src="wikiimage/STU_pick.png" width="150" alt="Automatic picking">
-</p>
+<img src="wikiimage/STU_pick.png" width="200" alt="Automatic picking">
+
 
  * Invert for phase and delay time.
                 ```measure = sw.EigenM(data)```
 
-<p align="center">
-  <img src="wikiimage/SKS_gridsearch.png" width="300" alt="Grid search">
-</p>
+<img src="wikiimage/SKS_gridsearch.png" width="300" alt="Grid search">
+
 
  * Get all the potential SKS measurements for each station
 
-<p align="center">
-  <img src="wikiimage/SKSSummary.png" width="300" alt="individual station">
-</p>
+<img src="wikiimage/SKSSummary.png" width="300" alt="individual station">
+
 
  * Plot the results.
 
-<p align="center">
-  <img src="wikiimage/SKSMap.png" width="150" alt="All stations results">
-</p>
+<img src="wikiimage/SKSMap.png" width="200" alt="All stations results">
 
-<p align="center">
-  <img src="wikiimage/SKSMap2.png" width="150" alt="All stations with data">
-</p>
+
+<img src="wikiimage/SKSMap2.png" width="200" alt="All stations with data">
+
 
