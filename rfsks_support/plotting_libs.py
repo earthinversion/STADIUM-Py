@@ -262,22 +262,22 @@ def plot_sks_station_map(sks_meas_all,figname):
         ## no measurements
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']):
             stlon0s,stlat0s = map(station_data_0['LON'].values,station_data_0['LAT'].values)
-            map.scatter(stlon0s, stlat0s, c='red', marker='o', alpha=0.99, s=60, edgecolors='k',linewidths=0.3, zorder=2)
+            map.scatter(stlon0s, stlat0s, c='red', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=4)
             legendarray.append(map.scatter([], [], c='r', alpha=0.99, s=60, edgecolors='k'))
         ## plot null measurements
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
             station_data_null = sks_meas_all.loc[(sks_meas_all['NumNull']>0) & (sks_meas_all['NumMeasurements']==0)]
             stlonnull,stlatnull = map(station_data_null['LON'].values,station_data_null['LAT'].values)
-            map.scatter(stlonnull, stlatnull, c='white', marker='o', alpha=0.99, s=60, edgecolors='k',linewidths=0.3, zorder=2)
+            map.scatter(stlonnull, stlatnull, c='white', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=4)
             legendarray.append(map.scatter([], [], c='white', alpha=0.99, s=60, edgecolors='k'))
 
         stlon1s,stlat1s = map(station_data_14['LON'].values,station_data_14['LAT'].values)
         stlon4s,stlat4s = map(station_data_4_11['LON'].values,station_data_4_11['LAT'].values)
         stlon5s,stlat5s = map(station_data_15['LON'].values,station_data_15['LAT'].values)
         
-        map.scatter(stlon1s, stlat1s, c='cornflowerblue', marker='o', alpha=0.99, s=60*station_data_14['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
-        map.scatter(stlon4s, stlat4s, c='navy', marker='o', alpha=0.99, s=60*station_data_4_11['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
-        map.scatter(stlon5s, stlat5s, c='black', marker='o', alpha=0.99, s=60*station_data_15['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon1s, stlat1s, c='cornflowerblue', marker='o', s=60*station_data_14['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon4s, stlat4s, c='navy', marker='o', s=60*station_data_4_11['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
+        map.scatter(stlon5s, stlat5s, c='black', marker='o', s=60*station_data_15['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
 
 
         
@@ -374,10 +374,10 @@ def plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname):
     
     
     allstlons,allstlats = map(loon,laat)
-    map.scatter(allstlons,allstlats, c='gold', marker='^', s=60, facecolors='none', edgecolors='b',linewidths=0.3, zorder=2)
+    map.scatter(allstlons,allstlats, c='gold', marker='^', s=60, facecolors='none', edgecolors='b',linewidths=0.3, zorder=4)
         
     stlons,stlats = map(sks_meas_all['LON'].values,sks_meas_all['LAT'].values)
-    map.scatter(stlons, stlats, c='red', marker='^', s=60, edgecolors='k',linewidths=0.3, zorder=2)
+    map.scatter(stlons, stlats, c='red', marker='^', s=60, edgecolors='k',linewidths=0.3, zorder=4)
 
     #draw mapscale
     msclon,msclat =lonmax - 0.10*np.abs(lonmax-lonmin),latmin+0.10*np.abs(latmax-latmin)
