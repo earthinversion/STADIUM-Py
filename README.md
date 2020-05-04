@@ -273,10 +273,8 @@ These parameters should be modified with caution by the users.
 
  * Single station profile
 
-<img src="wikiimage/STU_Q.png" width="300" alt="profile - Q">
-
-
-<img src="wikiimage/STU_L.png" width="300" alt="profile - L">
+<img src="wikiimage/STU_Q.png" width="150" alt="profile - Q">
+<img src="wikiimage/STU_L.png" width="150" alt="profile - L">
 
 
 #### Reciever Functions - Multiple station profile
@@ -284,12 +282,12 @@ These parameters should be modified with caution by the users.
 <img src="wikiimage/STU_Q_profile.png" width="300" alt="N090E profile">
 
 
-#### Reciever Functions - H - K measurements on individual RF
+#### Reciever Functions - H - Kappa measurements on individual RF
 
 <img src="wikiimage/RFHK.png" width="300" alt="N090E profile">
 
 
-#### Reciever Functions - H - K maps
+#### Reciever Functions - H - Kappa maps
 
 <img src="wikiimage/HK.png" width="300" alt="N090E profile">
 
