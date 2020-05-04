@@ -71,6 +71,14 @@ class sks_measurements:
             num_measurements, num_null = 0, 0
             for stream3c in IterMultipleComponents(data, 'onset', 3):
                 count+=1
+                ## check if the length of all three traces are equal
+                for tr in stream3c:
+                    lentr=tr.stats.npts
+                    lengt= tr.stats.sampling_rate * 100
+                    if lentr != lengt:
+                        # print('Wrong trace length ', lentr,lengt)
+                        continue
+                    
                 if sksfile in finished_file and str(stream3c[0].stats.event_time) in finished_events:
                     continue
                 else:
