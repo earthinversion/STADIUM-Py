@@ -40,6 +40,8 @@ sks_measurement_contrains:
     maxdfast: 7 #maximum allowed error in the fast direction
 
 sks_measurement_plot:
+  measurement_snapshot: 0 #save the splitting measurement snapshot for each event of each station
+  plot_SI: 1 #1 to plot splitting intensity figure for each station
   segregate_measurements: 1 #1 if wish to segregate measurements
   segregate_measurements_options:
     show_no_measurement: 1 #1 if wish to plot stations with no measurement

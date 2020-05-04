@@ -546,5 +546,29 @@ def segregate_measurements(sks_meas_all,toTextFile=False,outloc="./"):
 
     return station_data_0, station_data_14, station_data_4_11, station_data_15
 
+from scipy import optimize
+def sine_func(x, a, b):
+    return a * np.sin(2*b * x)
 
+def plot_baz_si_map(sks_meas_file, outfig):
+    df_sks = pd.read_csv(sks_meas_file,skiprows=2,delimiter='\s+')
+    df_sks = df_sks.dropna()
+    baz = df_sks['Baz'].values #backazimuth
+    si = df_sks['SI'].values #splitting intensity
+    params, params_covariance = optimize.curve_fit(sine_func, baz, si, p0=[2, 2])
     
+    ## plot
+    fig, ax = plt.subplots(1,1,figsize=(6,4))
+    ax.scatter(baz, si, c='b', marker='o', s=10, edgecolors='k',linewidths=0.3, label='Splitting Intensity')
+    if len(si) > 10:
+        sin_out = sine_func(np.linspace(0,360,len(baz)), params[0], params[1])
+        ax.plot(np.linspace(0,360,len(baz)), sin_out,color='r',lw=1)
+
+    ax.set_xlabel('Backazimuth (degree)')
+    ax.set_ylabel('Amplitude')
+    ax.set_ylim([-1.1,1.1])
+    plt.legend(loc='best')
+    plt.savefig(outfig,dpi=200,bbox_inches='tight')
+    plt.close('all')
+
+

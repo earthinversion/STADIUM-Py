@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 from obspy.core import read
 from obspy.taup import TauPyModel
 from rfsks_support.other_support import measure_status, sks_measure_file_start
-from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure, filter_pick_snr, filter_pick_lam12, errorplot, errorplot_all, auto_null_measure, polar_error_surface, splitting_intensity, segregate_measurements
+from rfsks_support.rfsks_extras import plot_trigger, plot_trace, plot_SKS_measure, filter_pick_snr, filter_pick_lam12, errorplot, errorplot_all, auto_null_measure, polar_error_surface, splitting_intensity, segregate_measurements, plot_baz_si_map
 from obspy.signal.trigger import recursive_sta_lta,classic_sta_lta,z_detect,carl_sta_trig,delayed_sta_lta, trigger_onset
 import splitwavepy as sw
 import logging
@@ -54,11 +54,16 @@ class sks_measurements:
             self.logger.info(f"Calculating SKS arrival times for {sksfile}\n")
             net_name = os.path.basename(sksfile).split("-")[0]
             stn_name = os.path.basename(sksfile).split("-")[1]
-            
-            sks_meas_file = sks_measure_file_start(self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKSdict['filenames']['sks_meas_indiv'])}",data[0].stats.station_longitude,data[0].stats.station_latitude,"EventTime EvLong EvLat Evdp Baz FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s) SI\n")
-            
 
-            sks_meas_file_null = sks_measure_file_start(self.plot_measure_loc+f"{net_name}_{stn_name}_null_measurements.txt",data[0].stats.station_longitude,data[0].stats.station_latitude,"EventTime EvLong EvLat Evdp Baz\n")
+            stn_meas_close = False
+            # if stn_meas_start:
+            sks_measurements_stn = self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKSdict['filenames']['sks_meas_indiv'])}"
+            null_measurements_stn = self.plot_measure_loc+f"{net_name}_{stn_name}_null_measurements.txt"
+            if not os.path.exists(sks_measurements_stn):
+                sks_meas_file = sks_measure_file_start(sks_measurements_stn,data[0].stats.station_longitude,data[0].stats.station_latitude,"EventTime EvLong EvLat Evdp Baz FastDirection(degs) deltaFastDir(degs) LagTime(s) deltaLagTime(s) SI\n")
+                
+                sks_meas_file_null = sks_measure_file_start(null_measurements_stn,data[0].stats.station_longitude,data[0].stats.station_latitude,"EventTime EvLong EvLat Evdp Baz\n")
+                stn_meas_close = True
 
             plt_id=f"{net_name}-{stn_name}"
             measure_list,squashfast_list,squashlag_list=[],[],[]
@@ -162,6 +167,8 @@ class sks_measurements:
                         continue
                     d = measure.srcpoldata_corr().chop()
                     snr = sw.core.snrRH(d.x,d.y) #Restivo and Helffrich (1999) signal to noise ratio
+                    # print(d.x,d.y)
+                    # print("splitting intensity",splitting_intensity(d))
 
                     ##sum the error surfaces along each of the axes, to "squash" the surface into two profiles, one for fast and one for lag
                     ## the result is best defined for the lam1/lam2 surface than the lam1 surface, or the lam2 surface
@@ -178,7 +185,8 @@ class sks_measurements:
                     diff_mult = auto_null_measure(measure,squashfast,squashlag,plot_null=False)
                     null_thresh = 0.05 #below this value, the measurement is classified as null
                     if diff_mult<null_thresh:
-                        sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,trace1[0].stats.back_azimuth))
+                        if stn_meas_close:
+                            sks_meas_file_null.write("{} {:8.4f} {:8.4f} {:4.1f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,trace1[0].stats.back_azimuth))
                         self.logger.info("{}/{} Null measurement {}".format(count,int(len(data)/3),trace1[0].stats.event_time))
                         num_null+=1
                     else:
@@ -190,8 +198,10 @@ class sks_measurements:
                         ## 
                         if filtres:
                             num_measurements+=1
-                            sks_meas_file.write("{} {:8.4f} {:8.4f} {:4.1f} {:6.1f} {:6.1f} {:.1f} {:.1f} {:.2f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,trace1[0].stats.back_azimuth,measure.fast,measure.dfast,measure.lag,measure.dlag,splitting_intensity(d)))
-                            if self.plot_measure_loc:
+                            if stn_meas_close:
+                                sks_meas_file.write("{} {:8.4f} {:8.4f} {:4.1f} {:6.1f} {:6.1f} {:.1f} {:.1f} {:.2f} {:.2f}\n".format(trace1[0].stats.event_time,trace1[0].stats.event_longitude,trace1[0].stats.event_latitude,trace1[0].stats.event_depth,trace1[0].stats.back_azimuth,measure.fast,measure.dfast,measure.lag,measure.dlag,splitting_intensity(d)))
+
+                            if self.plot_measure_loc and bool(inpSKSdict['sks_measurement_plot']['measurement_snapshot']):
                                 plot_SKS_measure(measure)
                                 plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                                 plt.close('all')  
@@ -221,11 +231,19 @@ class sks_measurements:
                             self.logger.info("{}/{} Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
                 else:
                     self.logger.info(f"{count}/{int(len(data)/3)} Bad phase pick: {stream3c[0].stats.event_time}")
+            if stn_meas_close:
+                sks_meas_file.close()
+                sks_meas_file_null.close()
 
-            sks_meas_file.close()
-            sks_meas_file_null.close()
-            if int(inpSKSdict['error_plot_toggles']['error_plot_all']) and count>0:
+            if bool(inpSKSdict['error_plot_toggles']['error_plot_all']) and count>0:
                 errorplot_all(measure_list,squashfast_list,squashlag_list,np.array(fast_dir_all),np.array(lag_time_all),figname=self.plot_measure_loc+f'errorplot_{plt_id}.png')
+
+            ## Splitting intensity vs backazimuth
+            if bool(inpSKSdict['sks_measurement_plot']['plot_SI']):
+                sks_meas_file = self.plot_measure_loc+f"{net_name}_{stn_name}_{str(inpSKSdict['filenames']['sks_meas_indiv'])}"
+                outfig = self.plot_measure_loc+f"{net_name}_{stn_name}_BAZ_SI.png"
+                if os.path.exists(sks_meas_file) and not os.path.exists(outfig):
+                    plot_baz_si_map(sks_meas_file = sks_meas_file, outfig = outfig)
             
             if all_meas_close:
                 mean_fast_dir_all = mean_angle(fast_dir_all) if len(fast_dir_all) else 0
@@ -239,9 +257,9 @@ class sks_measurements:
 
     ## plotting the measurement
     def plot_sks_map(self):
-        self.logger.info("##Plotting SKS map")
         figname = self.plot_measure_loc+'../SKS_station_Map.png'
         if not os.path.exists(figname):
+            self.logger.info("##Plotting SKS map")
             sks_meas_all = pd.read_csv(self.plot_measure_loc+"../"+"sks_measurements_all.txt",delimiter="\s+")
             
 
@@ -253,10 +271,10 @@ class sks_measurements:
             self.logger.info(f"SKS measurement figure: SKS_station_Map.png")
     
     def plot_data_nodata_map(self,sks_stations_infofile):
-        self.logger.info("##Plotting data-nodata map")
         figname = self.plot_measure_loc+'../data_nodata_map.png'
         all_data_df = pd.read_csv(sks_stations_infofile,delimiter='|')
         if not os.path.exists(figname):
+            self.logger.info("##Plotting data-nodata map")
             sks_meas_all = pd.read_csv(self.plot_measure_loc+"../"+"sks_measurements_all.txt",delimiter="\s+")
             plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname)
         

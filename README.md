@@ -4,7 +4,7 @@
 - Based on SKS analyses by: Jack Walpole (@JackWalpole); https://github.com/JackWalpole/splitwavepy
 - Based on ObsPy: https://github.com/obspy/
 
-
+The User's manual for STADIUM-Py can be downloaded from [here](wikiimage/User_Manual_STADIUM-py.pdf).
 
 
 ## Installation
