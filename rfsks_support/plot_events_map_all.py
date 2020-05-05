@@ -37,10 +37,12 @@ def plot_events_map_all(all_stations_file = "results/InfoRF/all_stations_rf_retr
             # stalon = -90
             print(f'Plotting events map for {net}-{sta}')
             event_catalog = info_loc + f"{net}-{sta}-events-info-{method}.txt"
-            df_all = pd.read_csv(event_catalog,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
-            evmg_all = [float(val.split()[0]) for val in df_all['evmg']]
+            df_all = pd.read_csv(event_catalog)
+            evmg_all = df_all['evmg'].values
+            # evmg_all = [float(val.split()[0]) for val in df_all['evmg']]
 
             df = pd.read_csv(info_loc + f"{net}-{sta}-events-info-available-{method}.txt",delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','client'],header=None,engine="python")
+            # evmg = df['evmg'].values
             evmg = [float(val.split()[0]) for val in df['evmg']]
 
             warnings.filterwarnings("ignore",category=matplotlib.cbook.mplDeprecation)

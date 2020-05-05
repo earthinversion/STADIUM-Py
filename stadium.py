@@ -7,6 +7,7 @@ from obspy import read_inventory, read_events, UTCDateTime as UTC
 import rfsks_support.other_support as oss
 import rfsks_support.rf_support as rfs
 import rfsks_support.sks_support as skss
+import rfsks_support.summary_support as sumsup
 from rfsks_support.download_large_data import downloadDataclass
 from rfsks_support.plot_events_map_all import plot_events_map_all
 from rfsks_support.plot_station_map_all import plot_station_map_all
@@ -38,21 +39,26 @@ def main():
         inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
 
+
     ## Input parameters  ## General
     fresh_start=int(inp['fresh_start'])       #0/1
     mnlong,mxlong=float(inp['mnlong']),float(inp['mxlong'])   #min and max longitude 
     mnlat,mxlat=float(inp['mnlat']),float(inp['mxlat'])   #min and max latitude 
     client=inp_step['data_settings']['client'].split(",")   #client name to retrieve the data
-    if inp_step['data_settings']['network'] == 'all':
-        network="*"
-    else:
-        network=str(inp_step['data_settings']['network'])
+    network=str(inp_step['data_settings']['network'])
+
     station=str(inp_step['data_settings']['station'])
+    
+    channel=str(inp_step['data_settings']['channel'])
+    
+
+
     fig_frmt="png"
 
     ## Input parameters  ## User's choice
     makeRF=int(inp['makeRF'])                ######   0/1
     makeSKS=int(inp['makeSKS'])               ######   0/1
+
 
     ## Input parameters  ## Plotting
     plot_stations=int(inp_step['plot_settings']['plot_stations'])
@@ -64,7 +70,7 @@ def main():
     plot_ppoints=int(inp_step['rf_stepwise']['plot_ppoints'])
     plot_RF_profile = int(inp_step['rf_stepwise']['plot_RF_profile'])
 
-    plot_SKS = int(inp_step['sks_stepwise']['plot_SKS']) #Plotting the receiver functions
+    # # plot_SKS = int(inp_step['sks_stepwise']['plot_SKS']) #Plotting the receiver functions
     picking_SKS=int(inp_step['sks_stepwise']['picking_SKS'])
 
 
@@ -131,6 +137,18 @@ def main():
     if not len(locations):
         locations=[""]
 
+    ##################
+    ## Initializing Summary file
+    ## Summary File
+    sum_file = res_dir+str(inp['summary_file'])
+    sum_sup_class = sumsup.sum_support(sum_file,res_dir)
+    sum_sup_class.write_initial_summary(mnlong,mxlong,mnlat,mxlat,client,network,station,channel)
+    sum_sup_class.makeSKSRF(makeRF,makeSKS)
+
+
+    
+
+    
 
     #######################
     ## Logging
@@ -158,8 +176,9 @@ def main():
     if makeRF:
         logger.info("WORKING ON RF")
         logger.info("# Initializing the downloadDataclass")
+        sum_sup_class.write_strings("--> RECEIVER FUNCTIONS PART:")
 
-        rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF')
+        rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF',channel=channel)
         catalogxmlloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
         ## Obtain inventory and events info
         if int(inp_step['rf_stepwise']['obtain_inventory_RF']):
@@ -190,11 +209,14 @@ def main():
                 oss.select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF')
 
         
-        if plot_all_retrieved:
+        if plot_all_retrieved and os.path.exists(str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations'])):
             logger.info("\n")
             logger.info("## Plotting retrieved stations")
+            RFsta_path = "/".join(RFsta.split("/")[0:-1])
+            RFsta_prex = RFsta.split("/")[-1].split(".")[0]
+            full_RFsta_path = f"{RFsta_path}/{RFsta_prex}_combined.txt"
             plot_events_map_all(all_stations_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations']))
-            plot_station_map_all(retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations']),all_stationsfile=str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['RFsta']))
+            plot_station_map_all(retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations']),all_stationsfile=full_RFsta_path)
 
         if compute_plot_RF:
             dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
@@ -248,9 +270,11 @@ def main():
     
         logger.info("\nWORKING ON SKS")
         logger.info("\n# Initializing the downloadDataclass")
-        sks_data=downloadDataclass(inventoryfile=invSKSfile,inventorytxtfile=SKSsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='SKS')
-        catalogxmlloc=str(dirs.loc['SKSinfoloc','DIR_NAME'])
+        sum_sup_class.write_strings("--> SHEAR-WAVE SPLITTING PART:")
 
+        sks_data=downloadDataclass(inventoryfile=invSKSfile,inventorytxtfile=SKSsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='SKS',channel=channel)
+
+        catalogxmlloc=str(dirs.loc['SKSinfoloc','DIR_NAME'])
 
 
         ## Obtain inventory and events info
@@ -259,56 +283,61 @@ def main():
             logger.info("Obtaining Inventory")
             oss.obtain_inventory_events(sks_data,invSKSfile,catalogxmlloc,network,station,dirs,minmagnitudeSKS,maxmagnitudeSKS)
             logger.info(f"Catalog xml/txt files saved at {catalogxmlloc}")
+            sum_sup_class.write_data_summary(SKSsta)
+
     
-            
-        
 
         ## Download waveforms
+        datafileloc=str(dirs.loc['SKSdatafileloc','DIR_NAME'])
         if download_data_SKS:
             logger.info("Downloading the SKS data")
             if not os.path.exists(SKSsta):
                 logger.info(f"{SKSsta} does not exist...obtaining")
                 oss.obtain_inventory_events(sks_data,invSKSfile,catalogxmlloc,network,station,dirs,minmagnitudeSKS,maxmagnitudeSKS)
-        
+                sum_sup_class.write_data_summary(SKSsta)
 
             retrived_stn_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations'])
             if not os.path.exists(retrived_stn_file):
                 logger.info(f"{retrived_stn_file} does not exist...obtaining inventory!")
                 catalogloc = str(dirs.loc['SKSinfoloc','DIR_NAME'])
-                datafileloc=str(dirs.loc['SKSdatafileloc','DIR_NAME'])
                 dest_map=str(dirs.loc['SKSstaevnloc','DIR_NAME'])
                 ## The stations list can be edited
                 oss.select_to_download_events(catalogloc,datafileloc,dest_map,SKSsta,sks_data,minmagnitudeSKS,maxmagnitudeSKS,plot_stations,plot_events,locations,method='SKS')
+            sum_sup_class.write_data_download_summary(datafileloc,retrived_stn_file)
 
-        if plot_all_retrieved:
+        if plot_all_retrieved and os.path.exists(str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations'])):
             logger.info("\n")
             logger.info("## Plotting retrieved stations")
+            SKSsta_path = "/".join(SKSsta.split("/")[0:-1])
+            SKSsta_prex = SKSsta.split("/")[-1].split(".")[0]
+            full_SKSsta_path = f"{SKSsta_path}/{SKSsta_prex}_combined.txt"
+            # all_station_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['SKSsta'])
             plot_events_map_all(all_stations_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations']))
-            plot_station_map_all(retr_stationsfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations']),all_stationsfile=str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['SKSsta']))
+            plot_station_map_all(retr_stationsfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations']),all_stationsfile=full_SKSsta_path)
+        if len(glob.glob(datafileloc+"*.h5"))>0:
+            if picking_SKS:
+                logger.info("\n")
+                logger.info("## Pre-processing")
+                plot_traces_ENZ=int(inp_step['sks_stepwise']['plot_traces_ENZ'])
+                plot_traces_RTZ=int(inp_step['sks_stepwise']['plot_traces_RTZ'])
+                plot_trigger=int(inp_step['sks_stepwise']['plot_trigger'])
+                plot_SKS_measure=int(inp_step['sks_stepwise']['plot_SKS_measure'])
 
-        if picking_SKS:
-            logger.info("\n")
-            logger.info("## Pre-processing")
-            plot_traces_ENZ=int(inp_step['sks_stepwise']['plot_traces_ENZ'])
-            plot_traces_RTZ=int(inp_step['sks_stepwise']['plot_traces_RTZ'])
-            plot_trigger=int(inp_step['sks_stepwise']['plot_trigger'])
-            plot_SKS_measure=int(inp_step['sks_stepwise']['plot_SKS_measure'])
+                trace_loc_ENZ = str(dirs.loc['SKStracesloc_ENZ','DIR_NAME']) if plot_traces_ENZ else None
+                trace_loc_RTZ = str(dirs.loc['SKStracesloc_RTZ','DIR_NAME']) if plot_traces_RTZ else None
+                trigger_loc = str(dirs.loc['SKS_trigger_loc','DIR_NAME']) if plot_trigger else None
 
-            trace_loc_ENZ = str(dirs.loc['SKStracesloc_ENZ','DIR_NAME']) if plot_traces_ENZ else None
-            trace_loc_RTZ = str(dirs.loc['SKStracesloc_RTZ','DIR_NAME']) if plot_traces_RTZ else None
-            trigger_loc = str(dirs.loc['SKS_trigger_loc','DIR_NAME']) if plot_trigger else None
-
-            plot_measure_loc = str(dirs.loc['SKSplot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
-            sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
-            sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']))
-            
-        sksMeasure.plot_sks_map()
-        if os.path.exists(SKSsta):
-            if bool(inp_step['sks_stepwise']['plot_data_nodata_map']):
-                sksMeasure.plot_data_nodata_map(sks_stations_infofile=SKSsta)
+                plot_measure_loc = str(dirs.loc['SKSplot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
+                sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
+                sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']))
+                
+            # sksMeasure.plot_sks_map()
+            sks_measurement_file = plot_measure_loc+"../"+"sks_measurements_all.txt"
+            if os.path.exists(SKSsta) and os.path.exists(sks_measurement_file):
+                if bool(inp_step['sks_stepwise']['plot_data_nodata_map']):
+                    sksMeasure.plot_data_nodata_map(sks_stations_infofile=SKSsta)
         
-
-
+    sum_sup_class.close_sumfile()
 if __name__ == '__main__':
     main()
 

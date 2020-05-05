@@ -10,20 +10,17 @@ from rfsks_support.rfsks_extras import retrieve_waveform, multi_download
 from rfsks_support.plotting_map import plot_merc, station_map, events_map
 import logging, yaml
 
-# advinputRF = "Settings/advRFparam.txt"
-# inpRF = pd.read_csv(advinputRF,sep="|",index_col ='PARAMETERS')
+
 with open('Settings/advRFparam.yaml') as f:
     inpRFdict = yaml.load(f, Loader=yaml.FullLoader)
 
 ## Fine tuning of SKS
-# advinputSKS = "Settings/advSKSparam.txt"
-# inpSKS = pd.read_csv(advinputSKS,sep="|",index_col ='PARAMETERS')
 with open('Settings/advSKSparam.yaml') as f:
     inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 
 class downloadDataclass:
     
-    def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile,fig_frmt="png",method='RF'):
+    def __init__(self,inventoryfile,client, minlongitude,maxlongitude,minlatitude,maxlatitude,inventorytxtfile,fig_frmt="png",method='RF',channel = "BHZ,BHE,BHN"):
         self.logger = logging.getLogger(__name__)
         self.inventoryfile = inventoryfile
         self.inventorytxtfile = inventorytxtfile
@@ -38,6 +35,7 @@ class downloadDataclass:
         self.maxlatitude = maxlatitude
         self.clon = avg(self.minlongitude,self.maxlongitude)
         self.clat = avg(self.minlatitude,self.maxlatitude)
+        self.channel = channel
         self.fig_frmt = fig_frmt
         self.method = method.upper()
         try:
@@ -51,7 +49,7 @@ class downloadDataclass:
             sys.exit()
 
     ## Defining get_stnxml
-    def get_stnxml(self,network='*', station="*"):
+    def get_stnxml(self,network='*', station="*",channel = "BHZ,BHE,BHN"):
         print("\n")
         self.logger.info('Retrieving station information')
         ninvt=0
@@ -63,7 +61,7 @@ class downloadDataclass:
                 sys.exit()
             self.logger.info(f'from {self.client[ninvt]}')
             try:
-                invt = client.get_stations(network=network, station=station, channel="BHZ,BHE,BHN", level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
+                invt = client.get_stations(network=network, station=station, channel=self.channel, level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
                 inventory = invt
                 break
             except Exception as exception:
@@ -75,7 +73,7 @@ class downloadDataclass:
                 self.logger.info(f'from {cl}')
                 try:
                     client = Client(cl)
-                    invt = client.get_stations(network=network, station=station, channel="BHZ,BHE,BHN", level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
+                    invt = client.get_stations(network=network, station=station, channel=self.channel, level='channel',minlongitude=self.minlongitude, maxlongitude=self.maxlongitude,minlatitude=self.minlatitude, maxlatitude=self.maxlatitude)
                     inventory +=invt
                 except Exception as exception:
                     self.logger.warning(f"FDSNNoDataException for {cl}")
@@ -84,11 +82,25 @@ class downloadDataclass:
         inventory.write(self.inventoryfile, 'STATIONXML')
         self.inv = inventory
         inventory.write(self.inventorytxtfile, 'STATIONTXT',level='station')
-        self.inventorytxtfile = organize_inventory(self.inventorytxtfile)
+        organize_inventory(self.inventorytxtfile)
+        # self.inventorytxtfile = organize_inventory(self.inventorytxtfile)
         
 
     ## inventory_catalog
     def obtain_events(self, catalogxmlloc,catalogtxtloc,minmagnitude=5.5,maxmagnitude=9.5):
+
+        ## Check for the station information
+        if os.path.exists(self.inventorytxtfile):
+            invent_df = pd.read_csv(self.inventorytxtfile,sep="|",keep_default_na=False, na_values=[""])
+            total_stations = invent_df.shape[0]
+            if invent_df.shape[0]==0:
+                self.logger.error("No data available, exiting...")
+                sys.exit()
+        else:
+            self.logger.error("No data available, exiting...")
+            sys.exit()
+
+
         tot_evnt_stns = 0
         if not self.inv:
             self.logger.info("Reading station inventory to obtain events catalog")
@@ -100,13 +112,14 @@ class downloadDataclass:
                 sys.exit()
         # list all the events during the station active time
         self.staNamesNet,staLats,staLons=[],[],[]
-
+        count = 1
         for net in self.inv:
             for sta in net:
                 network = net.code #network name
                 station = sta.code #station name
                 print("\n")
-                self.logger.info(f"Retrieving event info for {network}-{station}")
+                self.logger.info(f"{count}/{total_stations} Retrieving event info for {network}-{station}")
+                count+=1
                 self.staNamesNet.append(f"{network}_{station}")
 
                 sta_lat = sta.latitude #station latitude
@@ -125,7 +138,7 @@ class downloadDataclass:
                 stime, etime = date2time(sta_sdate,sta_edate) #station start and end time in UTC
 
 
-                catalogxml = catalogxmlloc+f'{network}-{station}-{sta_sdate.year}-{sta_edate.year}-{self.method}-rf_events.xml' #xml catalog
+                catalogxml = catalogxmlloc+f'{network}-{station}-{sta_sdate.year}-{sta_edate.year}-{self.method}-{self.method}_events.xml' #xml catalog
                 # self.allcatalogxml.append(catalogxml)
                 catalogtxt = catalogtxtloc+f'{network}-{station}-{sta_sdate.year}-{sta_edate.year}-events-info-{self.method}.txt' #txt catalog
                 if not os.path.exists(catalogxml) and not os.path.exists(catalogtxt):
@@ -150,6 +163,7 @@ class downloadDataclass:
                     self.logger.info("Writing the event data into a text file")
 
                     with open(catalogtxt, 'w') as f:
+                        f.write('evtime,evlat,evlon,evdp,evmg\n')
                         for cat in catalog:
                             try:
                                 try:
@@ -162,7 +176,7 @@ class downloadDataclass:
                                 evdps.append(float(evdp))
                                 evmgs.append(float(evmg))
                                 evmgtps.append(str(evmgtp))
-                                f.write('{} | {:9.4f}, {:9.4f} | {:5.1f} | {:5.1f} {:4s}\n'.format(evtime,evlat,evlon,evdp,evmg,evmgtp)) #writing txt catalog
+                                f.write('{},{:.4f},{:.4f},{:.1f},{:.1f}\n'.format(evtime,evlat,evlon,evdp,evmg)) #writing txt catalog
                                 
                             except Exception as exception:
                                 self.logger.error(f"Unable to write for {evtime}")
@@ -207,10 +221,12 @@ class downloadDataclass:
                 # rfdatafile = datafileloc+f"{net}-{stn}-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5"
                 if os.path.exists(catfile) and not os.path.exists(rfdatafile) and tot_evnt_stns > 0:
                     stream = RFStream()
-
-                    df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
-                    evmg = [float(val.split()[0]) for val in df['evmg']]
-                    evmgtp = [str(val.split()[1]) for val in df['evmg']]
+                    df = pd.read_csv(catfile,sep=",")
+                    # df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
+                    evmg = df['evmg'].values
+                    evmgtp = ["Mww" for val in df['evmg']]
+                    # evmg = [float(val.split()[0]) for val in df['evmg']]
+                    # evmgtp = [str(val.split()[1]) for val in df['evmg']]
                     
                     fcat = open(cattxtnew,'w')
                     for evtime,evdp,elat,elon,em,emt in zip(df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):
@@ -257,9 +273,12 @@ class downloadDataclass:
                     self.logger.info("Reading events catalog file")
                     stream = RFStream()
 
-                    df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
-                    evmg = [float(val.split()[0]) for val in df['evmg']]
-                    evmgtp = [str(val.split()[1]) for val in df['evmg']]
+                    df = pd.read_csv(catfile,sep=",")
+                    # df = pd.read_csv(catfile,delimiter="\||,", names=['evtime','evlat','evlon','evdp','evmg','evmgtp'],header=None,engine="python")
+                    evmg = df['evmg'].values
+                    evmgtp = ["Mww" for val in df['evmg']]
+                    # evmg = [float(val.split()[0]) for val in df['evmg']]
+                    # evmgtp = [str(val.split()[1]) for val in df['evmg']]
                     # cattxtnew = catalogtxtloc+f'{net}-{stn}-events-info-sks.txt'
                     fcat = open(cattxtnew,'w')
                     for i,evtime,evdp,elat,elon,em,emt in zip(range(len(df['evtime'])),df['evtime'],df['evdp'],df['evlat'],df['evlon'],evmg,evmgtp):

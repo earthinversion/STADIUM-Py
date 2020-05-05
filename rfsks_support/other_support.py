@@ -127,6 +127,7 @@ def obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs
                 logger.error("Timeout while requesting...Please try again after some time", exc_info=True)
                 # sys.exit()
     if obtain_events:
+        logger.info("\n")
         logger.info("Obtaining events catalog")
         rf_data.obtain_events(catalogxmlloc=catalogxmlloc,catalogtxtloc=catalogxmlloc,minmagnitude=minmagnitudeRF,maxmagnitude=maxmagnitudeRF)
 
@@ -226,12 +227,11 @@ def organize_inventory(inventorytxtfile):
     '''
     create inventory text file containing information of stations with it's start and end time
     '''
-    out_inventorytxtfile = inventorytxtfile.split(".")[0]+'_new'+'.txt'
+    out_inventorytxtfile = inventorytxtfile.split(".")[0]+'_combined'+'.txt'
     inv_df = pd.read_csv(inventorytxtfile,sep="|",keep_default_na=False, na_values=[""])
-    cols = inv_df.columns.values
-    # print(cols)
+ 
     inv_df['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
-    net_sta_set = set(inv_df['#Network']+'_'+inv_df['Station'])
+    net_sta_set = set(inv_df['#Network']+'_'+inv_df['Station']) #get rid of repeated stations by joining rows info
 
 
     inv_df['StartTimeNum'] = inv_df['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
@@ -248,7 +248,9 @@ def organize_inventory(inventorytxtfile):
         dict_row = {'#Network':net,'Station':sta,'Latitude':row.loc[0,'Latitude'],'Longitude':row.loc[0,'Longitude'],'Elevation':row.loc[0,'Elevation'],'SiteName':row.loc[0,'SiteName'],'StartTime':rowtimemin['StartTime'],'EndTime':rowtimemax['EndTime']}
         all_dicts.append(dict_row)
     new_inv_df=pd.DataFrame(all_dicts)
+    # os.remove(inventorytxtfile)
     new_inv_df.to_csv(out_inventorytxtfile, index=False,sep="|")
+
     return out_inventorytxtfile
 
 def measure_status(meas_file):

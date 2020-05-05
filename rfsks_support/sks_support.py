@@ -269,7 +269,7 @@ class sks_measurements:
     ## plotting the measurement
     def plot_sks_map(self):
         figname = self.plot_measure_loc+'../SKS_station_Map.png'
-        if not os.path.exists(figname):
+        if not os.path.exists(figname) and os.path.exists(self.plot_measure_loc+"../"+"sks_measurements_all.txt"):
             self.logger.info("##Plotting SKS map")
             sks_meas_all = pd.read_csv(self.plot_measure_loc+"../"+"sks_measurements_all.txt",delimiter="\s+")
             

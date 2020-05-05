@@ -1,7 +1,9 @@
 # PARAMETERS: VALUES
-project_name: Simple_SKS_test/
+project_name: Simple_RFSKS_test/
 
-fresh_start: 0
+fresh_start: 0 #1 to delete the previous computations
+
+summary_file: summary_file.txt
 
 makeRF: 0
 makeSKS: 1
