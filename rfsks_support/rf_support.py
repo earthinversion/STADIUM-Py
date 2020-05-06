@@ -23,12 +23,10 @@ with open('Settings/advRFparam.yaml') as f:
 def compute_rf(dataRFfileloc):
     logger = logging.getLogger(__name__)
     all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5")
-    # all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['data_rf_suffix','VALUES'])}.h5")
     for jj,rfdatafile in enumerate(all_rfdatafile):
         network = rfdatafile.split("-")[0]
         station = rfdatafile.split("-")[1]
         rffile = f"{network}-{station}-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5"
-        # rffile = f"{network}-{station}-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5"
         datatmp = read_rf(rfdatafile, 'H5')
         if not os.path.exists(rffile):
             logger.info(f"--> Computing RF for {rfdatafile}, {jj+1}/{len(all_rfdatafile)}")
@@ -47,7 +45,6 @@ def compute_rf(dataRFfileloc):
                         continue
                 
                 stream3c.filter('bandpass', freqmin=float(inpRFdict['rf_filter_settings']['minfreq']), freqmax=float(inpRFdict['rf_filter_settings']['maxfreq']))
-                # stream3c.filter('bandpass', freqmin=float(inpRF.loc['minfreq','VALUES']), freqmax=float(inpRF.loc['maxfreq','VALUES']))
 
                 try:
                     stream3c.rf()
@@ -126,10 +123,8 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
     rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5")
     if len(rffiles):
         stream = read_rf(rffiles[0], 'H5')
-        # filter_traces_rf(stream,lenphase=100)
 
         if not os.path.exists(profilefileloc+"ppoints_df.pkl"):
-            # print(f"{profilefileloc+'ppoints_df.pkl'} does not exist")
             ppoints_tmp = stream.ppoints(depth)
             ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
             list_of_dfs.append(ppdf_tmp)
@@ -140,7 +135,6 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                 logger.info(f"----> reading profile {rffile}, {ii+1}/{len(rffiles[1:])}")
                 try:
                     st_tmp = read_rf(rffile, 'H5')
-                    # filter_traces_rf(st_tmp,lenphase=100)
                     list_of_streams.append(st_tmp)
                     ppoints_tmp = st_tmp.ppoints(depth)
                     ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
@@ -149,6 +143,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                     stlats.append(st_tmp[0].stats.station_latitude)
                 except:
                     logger.error("Error", exc_info=True)
+
             logger.info("Calculating profile")
             ppoints_df = pd.DataFrame({"list_of_dfs":list_of_dfs,"stlons": stlons, "stlats": stlats})
             ppoints_lst_df = pd.DataFrame({ "list_of_streams":list_of_streams})
@@ -181,10 +176,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         abs_lonvals = np.absolute(pp_lon_lat["pplon"].values)
         degkmfac = 111.2
         width_lat = (np.amax(abs_latvals)-np.amin(abs_latvals)) * degkmfac
-        # width_lat +=0.2*width_lat
         width_lon = (np.amax(abs_lonvals)-np.amin(abs_lonvals)) * degkmfac
-        # width_lon +=0.2*width_lon
-        # print(width_lat,width_lon)
             
         ndivlat += 1
         ndivlon += 1

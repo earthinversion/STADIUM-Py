@@ -6,6 +6,10 @@ import yaml
 
 with open('Settings/advSKSparam.yaml') as f:
     inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
+
+with open('Settings/advRFparam.yaml') as f:
+    inpRFdict = yaml.load(f, Loader=yaml.FullLoader)
+
 class sum_support:
     def __init__(self,sum_file,res_dir):
         if not os.path.exists(sum_file):
@@ -16,6 +20,8 @@ class sum_support:
                 mode = 'write'
         else:
             sum_file_id = open(sum_file,'a')
+            for i in range(10):
+                sum_file_id.write("\n")
             sum_file_id.write(f"\n########## APPENDING ({datetime.now()}) ##########\n")
             mode = 'append'
 
@@ -110,11 +116,15 @@ class sum_support:
         self.write_strings("Min mag: {}, Max mag: {}".format(minmg,maxmg))
         self.write_strings("Min depth: {} km, Max depth: {} km".format(mindp, maxdp))
     
-    def write_data_download_summary(self,datafileloc,retrived_stn_file):
+    def write_data_download_summary(self,datafileloc,retrived_stn_file,method='SKS'):
         ## Download info
         self.newline()
         self.write_strings("------> Download Information:")
-        total_data_files = len(glob.glob(datafileloc+"*.h5"))
+        if method == 'SKS':
+            total_data_files = len(glob.glob(datafileloc+"*.h5"))
+        elif method == 'RF':
+            total_data_files = len(glob.glob(datafileloc+f"*-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5"))
+
 
         self.write_strings("Total downloaded data files: {}".format(total_data_files))
         self.write_strings("Stations for which the data has been retrieved successfully: {}".format(retrived_stn_file))
@@ -218,6 +228,47 @@ class sum_support:
 
         self.newline()
         self.write_strings("Map for stations with and without data stored at: {}".format(measure_loc_all+'/data_nodata_map.png'))
+
+    ######## Receiver functions summary ###########
+    def write_rf_comp_summary(self,datafileloc,destImg):
+        self.newline()
+        self.write_strings("----> RF computation summary:")
+        total_computed_files = len(glob.glob(datafileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5"))
+        
+        self.write_strings("Total number of RF computations: {}".format(total_computed_files))
+        self.write_strings("RF computations stored as: {}".format(datafileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5"))
+
+        self.newline()
+        self.write_strings("Bandpass filtered between {:.1f} and {:.1f} for RF computation".format(float(inpRFdict['rf_filter_settings']['minfreq']),float(inpRFdict['rf_filter_settings']['maxfreq'])))
+
+        self.newline()
+        self.write_strings("RF plots for L and Q components stored at: {}".format(destImg))
+
+    def write_rf_pp_summary(self,datafileloc,destImg):
+        self.newline()
+        outimagename = destImg+'piercing_points_map.png'
+        outimagename_new = destImg+'piercing_points_map_new.png'
+        outputfile = datafileloc+ f"{str(inpRFdict['filenames']['rfprofile_compute_result_prefix'])}AZM_INITDIV_ENDDIV_WIDTH-PROFILE_NUM.h5"
+        self.write_strings("RF piercing points calculation for computing RF profile stored as: {}".format(outputfile))
+        self.write_strings("RF piercing points map stored at: {}".format(outimagename))
+        self.write_strings("RF piercing points map with guides stored at: {}".format(outimagename_new))
+
+        self.newline()
+        rf_profile = destImg+"COMP_AZM_NUM_profile.png"
+        self.write_strings("RF profile stored at: {}".format(rf_profile))
+        self.write_strings("RF profile calculated for the trim range: {:.1f}, {:.1f}".format(int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max'])))
+
+    def h_kappa_summary(self,figloc,h_k_calc_file):
+        self.newline()
+        self.write_strings("H-Kappa calculation results: {}".format(figloc+h_k_calc_file))
+
+        outfig_h = figloc+'all_stations_thickness_map.png'
+        outfig_k = figloc+'all_stations_kappa_map.png'
+
+        if inpRFdict['filenames']['h_kappa_settings']['plot_h']:
+            self.write_strings("Crustal plot: {}".format(outfig_h))
+        if inpRFdict['filenames']['h_kappa_settings']['plot_kappa']:
+            self.write_strings("Crustal plot: {}".format(outfig_k))
 
 
 

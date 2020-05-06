@@ -177,7 +177,9 @@ def main():
         logger.info("\n")
         logger.info("WORKING ON RF")
         logger.info("#Initializing the downloadDataclass")
+        sum_sup_class.write_strings("####")
         sum_sup_class.write_strings("--> RECEIVER FUNCTIONS PART:")
+        sum_sup_class.write_strings("####")
 
         rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF',channel=channel)
         catalogxmlloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
@@ -186,14 +188,17 @@ def main():
             logger.info("Obtaining Inventory")
             oss.obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF)
             logger.info(f"Catalog xml/txt files saved at {dirs.loc['RFinfoloc','DIR_NAME']}")
+            sum_sup_class.write_data_summary(RFsta)
 
         ## Download waveforms
+        datafileloc=str(dirs.loc['RFdatafileloc','DIR_NAME'])
         if download_data_RF:
             logger.info("Downloading the RF data")
             try:
                 if not os.path.exists(RFsta):
                     logger.info(f"{RFsta.split('/')[-1]} does not exist...obtaining")
                     oss.obtain_inventory_events(rf_data,invRFfile,catalogxmlloc,network,station,dirs,minmagnitudeRF,maxmagnitudeRF)
+                    sum_sup_class.write_data_summary(RFsta)
                 else:
                     logger.info(f"{RFsta.split('/')[-1]} exists!")
             except:
@@ -204,10 +209,11 @@ def main():
             if not os.path.exists(retrived_stn_file):
                 logger.info(f"{retrived_stn_file} does not exist...obtaining events catalog..")
                 catalogloc = str(dirs.loc['RFinfoloc','DIR_NAME'])
-                datafileloc=str(dirs.loc['RFdatafileloc','DIR_NAME'])
                 dest_map=str(dirs.loc['RFstaevnloc','DIR_NAME'])
                 ## The stations list can be edited
                 oss.select_to_download_events(catalogloc,datafileloc,dest_map,RFsta,rf_data,minmagnitudeRF,maxmagnitudeRF,plot_stations,plot_events,locations,method='RF')
+
+            sum_sup_class.write_data_download_summary(datafileloc,retrived_stn_file,method='RF')
 
         
         if plot_all_retrieved and os.path.exists(str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations'])):
@@ -218,48 +224,53 @@ def main():
             full_RFsta_path = f"{RFsta_path}/{RFsta_prex}_combined.txt"
             plot_events_map_all(all_stations_file = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations']))
             plot_station_map_all(retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations']),all_stationsfile=full_RFsta_path)
+        
+        if len(glob.glob(datafileloc+"*.h5"))>0:
+            if compute_plot_RF:
+                dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
+                all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5")
+                if len(all_rfdatafile)>=1:
+                    try:
+                        logger.info("\n")
+                        logger.info("## Computing RF")
+                        rfs.compute_rf(dataRFfileloc)
+                        logger.info("\n")
+                        logger.info("## Operating plot_RF method")
+                        rfs.plot_RF(dataRFfileloc,destImg=str(dirs.loc['RFplotloc','DIR_NAME']))
+                        sum_sup_class.write_rf_comp_summary(datafileloc,destImg=str(dirs.loc['RFplotloc','DIR_NAME']))
+                    except Exception as e:
+                        logger.info(e)
+                else:
+                    logger.error("No RF data files present...download the data")
+                    sys.exit()
 
-        if compute_plot_RF:
-            dataRFfileloc = str(dirs.loc['RFdatafileloc','DIR_NAME'])
-            all_rfdatafile = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['data_rf_suffix'])}.h5")
-            if len(all_rfdatafile)>=1:
-                try:
-                    logger.info("\n## Computing RF")
-                    rfs.compute_rf(dataRFfileloc)
-                    logger.info("\n")
-                    logger.info("## Operating plot_RF method")
-                    rfs.plot_RF(dataRFfileloc,destImg=str(dirs.loc['RFplotloc','DIR_NAME']))
-                except Exception as e:
-                    logger.info(e)
-            else:
-                logger.error("No RF data files present...download the data")
-                sys.exit()
-
-        if plot_ppoints:
-            # try:
-            logger.info("\n")
-            logger.info("## Operating plot_priercingpoints_RF method")
-            rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inpRFdict['rf_profile_settings']['num_profile_divs_lat']), ndivlon=int(inpRFdict['rf_profile_settings']['num_profile_divs_lon']))
-
-            if plot_RF_profile:
+            if plot_ppoints:
                 logger.info("\n")
-                logger.info("## Operating plot_RF_profile method")
-                rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
-            # except Exception as e:
-            #     logger.info(e)
+                logger.info("## Operating plot_priercingpoints_RF method")
+                rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inpRFdict['rf_profile_settings']['num_profile_divs_lat']), ndivlon=int(inpRFdict['rf_profile_settings']['num_profile_divs_lon']))
 
-        ## H-kappa calculation
-        if int(inpRFdict['filenames']['h_kappa_settings']['plot_h']) or int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']):
-            logger.info("\n")
-            logger.info("## H-kappa implementation")
-            outloc=str(dirs.loc['RFinfoloc','DIR_NAME'])
-            outfile = str(inpRFdict['filenames']['h_kappa_settings']['h_kappa_res_file'])
-            if not os.path.exists(outloc+outfile):
-                calc_h_kappa(outfile = outfile,data_dir_loc = str(dirs.loc['RFdatafileloc','DIR_NAME']), outloc=outloc)
+                if plot_RF_profile:
+                    logger.info("\n")
+                    logger.info("## Operating plot_RF_profile method")
+                    rfs.plot_RF_profile(str(dirs.loc['RFdatafileloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
+                
+                sum_sup_class.write_rf_pp_summary(datafileloc,destImg=str(dirs.loc['RFprofilemaploc','DIR_NAME']))
 
-            if os.path.exists(outloc+outfile):
+
+            ## H-kappa calculation
+            if int(inpRFdict['filenames']['h_kappa_settings']['plot_h']) or int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']):
+                logger.info("\n")
+                logger.info("## H-kappa implementation")
+                outloc=str(dirs.loc['RFinfoloc','DIR_NAME'])
+                outfile = str(inpRFdict['filenames']['h_kappa_settings']['h_kappa_res_file'])
+                if not os.path.exists(outloc+outfile):
+                    calc_h_kappa(outfile = outfile,data_dir_loc = str(dirs.loc['RFdatafileloc','DIR_NAME']), outloc=outloc)
+
                 retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations'])
-                plot_h_kappa(h_k_file = outloc+outfile,all_stationsfile = retr_stationsfile,plot_h = int(inpRFdict['filenames']['h_kappa_settings']['plot_h']),plot_kappa = int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']))
+                if os.path.exists(outloc+outfile):
+                    plot_h_kappa(h_k_file = outloc+outfile,all_stationsfile = retr_stationsfile,plot_h = int(inpRFdict['filenames']['h_kappa_settings']['plot_h']),plot_kappa = int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']))
+                
+                sum_sup_class.h_kappa_summary(figloc=outloc,h_k_calc_file=outfile)
 
 
 
@@ -275,7 +286,9 @@ def main():
         logger.info("\n")
         logger.info("WORKING ON SKS")
         logger.info("# Initializing the downloadDataclass")
+        sum_sup_class.write_strings("####")
         sum_sup_class.write_strings("--> SHEAR-WAVE SPLITTING PART:")
+        sum_sup_class.write_strings("####")
 
         sks_data=downloadDataclass(inventoryfile=invSKSfile,inventorytxtfile=SKSsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='SKS',channel=channel)
 
@@ -319,6 +332,7 @@ def main():
             # all_station_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['SKSsta'])
             plot_events_map_all(all_stations_file = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations']))
             plot_station_map_all(retr_stationsfile = str(dirs.loc['SKSinfoloc','DIR_NAME'])+str(inpSKSdict['filenames']['retr_stations']),all_stationsfile=full_SKSsta_path)
+
         if len(glob.glob(datafileloc+"*.h5"))>0:
             if picking_SKS:
                 logger.info("\n")

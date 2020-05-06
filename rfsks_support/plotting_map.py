@@ -210,24 +210,33 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     # map.fillcontinents()
     map.drawcountries(color='k',linewidth=0.1)
     map.drawmapboundary()
-    ## to fix overlapping of ticks
-    numlatdiv = np.abs(int(urcrnrlat - llcrnrlat))
-    numlondiv = np.abs(int(urcrnrlon - llcrnrlon))
-    if numlatdiv>5:
-        numlatdiv=5
-    elif numlatdiv<2:
-        numlatdiv=3
+    # ## to fix overlapping of ticks
+    # numlatdiv = np.abs(int(urcrnrlat - llcrnrlat))
+    # numlondiv = np.abs(int(urcrnrlon - llcrnrlon))
+    # if numlatdiv>5:
+    #     numlatdiv=5
+    # elif numlatdiv<2:
+    #     numlatdiv=3
 
-    if numlondiv>5:
-        numlondiv=5
-    elif numlondiv<2:
-        numlondiv=3
+    # if numlondiv>5:
+    #     numlondiv=5
+    # elif numlondiv<2:
+    #     numlondiv=3
+    # latlon_grid(map, numlondiv, numlatdiv, labels='lb',linewidth=0, size=6)
+    parallelmin = int(llcrnrlat)
+    parallelmax = int(urcrnrlat)+1
+    if np.abs(parallelmax - parallelmin)<5:
+        parallelmax += 2
+        parallelmin -= 2
 
-    # # x and y offsets
-    # xos, yos = 2, 2
-    # map.drawparallels(np.linspace(llcrnrlat,urcrnrlat,numlatdiv,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0, fontsize=6, xoffset=xos, yoffset=yos)
-    # map.drawmeridians(np.linspace(llcrnrlon,urcrnrlon,numlondiv,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0, fontsize=6, xoffset=xos, yoffset=yos)
-    latlon_grid(map, numlondiv, numlatdiv, labels='lb',linewidth=0, size=6)
+    meridianmin = int(llcrnrlon)
+    meridianmax = int(urcrnrlon)+1
+    if np.abs(meridianmax - meridianmin)<5:
+        meridianmax += 2
+        meridianmin -= 2
+
+    map.drawparallels(np.arange(parallelmin, parallelmax,dtype='int16').tolist(),labels=[1,0,0,0],linewidth=0)
+    map.drawmeridians(np.arange(meridianmin, meridianmax,dtype='int16').tolist(),labels=[0,0,0,1],linewidth=0)
     return map
 
         
