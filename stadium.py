@@ -174,8 +174,9 @@ def main():
     #############################################################
     #############################################################
     if makeRF:
+        logger.info("\n")
         logger.info("WORKING ON RF")
-        logger.info("# Initializing the downloadDataclass")
+        logger.info("#Initializing the downloadDataclass")
         sum_sup_class.write_strings("--> RECEIVER FUNCTIONS PART:")
 
         rf_data=downloadDataclass(inventoryfile=invRFfile,inventorytxtfile=RFsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='RF',channel=channel)
@@ -253,9 +254,12 @@ def main():
             logger.info("## H-kappa implementation")
             outloc=str(dirs.loc['RFinfoloc','DIR_NAME'])
             outfile = str(inpRFdict['filenames']['h_kappa_settings']['h_kappa_res_file'])
-            calc_h_kappa(outfile = outfile,data_dir_loc = str(dirs.loc['RFdatafileloc','DIR_NAME']), outloc=outloc)
+            if not os.path.exists(outloc+outfile):
+                calc_h_kappa(outfile = outfile,data_dir_loc = str(dirs.loc['RFdatafileloc','DIR_NAME']), outloc=outloc)
+
             if os.path.exists(outloc+outfile):
-                plot_h_kappa(h_k_file = outloc+outfile,all_stationsfile = str(inpRFdict['filenames']['retr_stations']),plot_h = int(inpRFdict['filenames']['h_kappa_settings']['plot_h']),plot_kappa = int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']))
+                retr_stationsfile = str(dirs.loc['RFinfoloc','DIR_NAME'])+str(inpRFdict['filenames']['retr_stations'])
+                plot_h_kappa(h_k_file = outloc+outfile,all_stationsfile = retr_stationsfile,plot_h = int(inpRFdict['filenames']['h_kappa_settings']['plot_h']),plot_kappa = int(inpRFdict['filenames']['h_kappa_settings']['plot_kappa']))
 
 
 
@@ -268,8 +272,9 @@ def main():
     #############################################################
     if makeSKS:
     
-        logger.info("\nWORKING ON SKS")
-        logger.info("\n# Initializing the downloadDataclass")
+        logger.info("\n")
+        logger.info("WORKING ON SKS")
+        logger.info("# Initializing the downloadDataclass")
         sum_sup_class.write_strings("--> SHEAR-WAVE SPLITTING PART:")
 
         sks_data=downloadDataclass(inventoryfile=invSKSfile,inventorytxtfile=SKSsta,client=client,minlongitude=mnlong,maxlongitude=mxlong,minlatitude=mnlat,maxlatitude=mxlat,fig_frmt=fig_frmt,method='SKS',channel=channel)

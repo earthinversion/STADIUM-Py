@@ -100,7 +100,7 @@ def plot_topo(map,cmap=plt.cm.jet):
     # shift data so lons go from -180 to 180 instead of 20 to 380.
     etopo,lons = shiftgrid(180.,etopo,lons,start=False)
     lons, lats = np.meshgrid(lons, lats)
-    # cs = map.contourf(lons,lats,etopo,30,cmap=plt.cm.jet,shading='interp')
+    # lons, lats = map(*np.meshgrid(lons,lats))
     cs = map.pcolormesh(lons,lats,etopo,cmap=cmap,latlon=True,shading='gouraud')
 
 
@@ -230,7 +230,8 @@ def plot_sks_station_map(sks_meas_all,figname):
     map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lonmin, llcrnrlat=latmin,urcrnrlon=lonmax, urcrnrlat=latmax)
     
     # plot_topo(map,cmap=plt.cm.rainbow)
-    map.etopo(scale=2.5, alpha=0.5, zorder=2)
+    map.etopo(zorder=2)
+    # map.etopo(scale=2.5, alpha=0.5, zorder=2)
 
     map.drawcoastlines(color='k',linewidth=0.5)
     map.drawcountries(color='k',linewidth=0.1)

@@ -179,7 +179,7 @@ class downloadDataclass:
                                 f.write('{},{:.4f},{:.4f},{:.1f},{:.1f}\n'.format(evtime,evlat,evlon,evdp,evmg)) #writing txt catalog
                                 
                             except Exception as exception:
-                                self.logger.error(f"Unable to write for {evtime}")
+                                self.logger.warning(f"Unable to write for {evtime}")
                     self.logger.info("Finished writing the event data into a text and xml file")
                 else:
                     self.logger.info(f"{catalogxml.split('/')[-1]} and {catalogtxt.split('/')[-1]} already exists!")

@@ -31,7 +31,7 @@ def compute_rf(dataRFfileloc):
         # rffile = f"{network}-{station}-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5"
         datatmp = read_rf(rfdatafile, 'H5')
         if not os.path.exists(rffile):
-            logger.info(f"--> Computing RF for {rfdatafile}, {jj}/{len(all_rfdatafile)}")
+            logger.info(f"--> Computing RF for {rfdatafile}, {jj+1}/{len(all_rfdatafile)}")
             data = read_rf(rfdatafile, 'H5')
             stream = RFStream()
             for stream3c in tqdm.tqdm(IterMultipleComponents(data, 'onset', 3)):
@@ -58,41 +58,41 @@ def compute_rf(dataRFfileloc):
             stream.write(rffile, 'H5')
         else:
             # logger.info(f"--> {rffile} already exists!, {jj}/{len(all_rfdatafile)}")
-            logger.info(f"--> Verifying RF computation {jj}/{len(all_rfdatafile)}")
+            logger.info(f"--> Verifying RF computation {jj+1}/{len(all_rfdatafile)}")
 
 def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the receiver functions")
     rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRFdict['filenames']['rf_compute_data_suffix'])}.h5")
-    # rffiles = glob.glob(dataRFfileloc+f"*-{str(inpRF.loc['rf_compute_data_suffix','VALUES'])}.h5")
     for i,rffile in enumerate(rffiles):
         stream = read_rf(rffile, 'H5')
-    
-        kw = {'trim': (int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRFdict['rf_display_settings']['trace_height'])}
-        # kw = {'trim': (int(inpRF.loc['trim_min','VALUES']), int(inpRF.loc['trim_max','VALUES'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRF.loc['trace_height','VALUES'])}
-        if str(inpRFdict['rf_display_settings']['rf_info']) == "default":
-        # if str(inpRF.loc['rf_info','VALUES']) == "default":
-            kw['info'] = (('back_azimuth', u'baz (°)', 'C0'),('distance', u'dist (°)', 'C3'))
-        else:
-            kw['info'] = None
+        outfigname1 = destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt
+        outfigname2 = destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt
 
-        num_trace=len(stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']))
-        if num_trace > 0:
-            try:
-                stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
-                plt.savefig(destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt)
-                stream.select(component='Q', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
-                plt.savefig(destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt)
-                logger.info("----> Plotting RF {}/{}, {}-{} Traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
-            except Exception as e:
-                logger.error("Unexpected error", exc_info=True)
-        else:
-            logger.info("----> {} traces for {}-{}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
+        if not os.path.exists(outfigname1) and not os.path.exists(outfigname2):
+            kw = {'trim': (int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max'])), 'fillcolors': ('black', 'gray'), 'trace_height': float(inpRFdict['rf_display_settings']['trace_height'])}
+            if str(inpRFdict['rf_display_settings']['rf_info']) == "default":
+                kw['info'] = (('back_azimuth', u'baz (°)', 'C0'),('distance', u'dist (°)', 'C3'))
+            else:
+                kw['info'] = None
 
-def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin):
+            num_trace=len(stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']))
+            if num_trace > 0:
+                try:
+                    stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
+                    plt.savefig(destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt)
+                    stream.select(component='Q', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
+                    plt.savefig(destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt)
+                    logger.info("----> Plotting RF {}/{}, {}-{} Traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
+                except Exception as e:
+                    logger.error("Unexpected error", exc_info=True)
+            else:
+                logger.info("----> {} traces for {}-{}".format(num_trace,stream[0].stats.network, stream[0].stats.station))
+
+def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin,dbff,done_box_list):
     logger = logging.getLogger(__name__)
-
-    if not os.path.exists(outputfile):
+    
+    if not os.path.exists(outputfile) and outputfile not in done_box_list:
         logger.info("Calculating the boxes")
         if azimuth == 90:
             logger.info('For az: {} startlat: {:.4f}, startlon: {:.4f}, endlon: {:.4f}, length: {}'.format(azimuth,stlat,initdiv,enddiv,widthprof))
@@ -106,8 +106,10 @@ def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,wid
         if len(pstream):
             logger.info("------> Calculated profile for azimuth {}: {}; Number of traces in the box: {}\n".format(azimuth,outputfile,len(pstream)))
             pstream.write(outputfile, 'H5')
+            dbff.write("{}\n".format(outputfile))
         else:
             logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
+            dbff.write("{}\n".format(outputfile))
     else:
         logger.info(f"----> {outputfile} already exists!")
 
@@ -127,7 +129,7 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
         # filter_traces_rf(stream,lenphase=100)
 
         if not os.path.exists(profilefileloc+"ppoints_df.pkl"):
-            print(f"{profilefileloc+'ppoints_df.pkl'} does not exist")
+            # print(f"{profilefileloc+'ppoints_df.pkl'} does not exist")
             ppoints_tmp = stream.ppoints(depth)
             ppdf_tmp = pd.DataFrame({"pplon":ppoints_tmp[:,1],"pplat":ppoints_tmp[:,0]})
             list_of_dfs.append(ppdf_tmp)
@@ -148,7 +150,6 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                 except:
                     logger.error("Error", exc_info=True)
             logger.info("Calculating profile")
-            # print(len(list_of_dfs),len(list_of_streams),len(stlons))
             ppoints_df = pd.DataFrame({"list_of_dfs":list_of_dfs,"stlons": stlons, "stlats": stlats})
             ppoints_lst_df = pd.DataFrame({ "list_of_streams":list_of_streams})
             ppoints_df.to_pickle(profilefileloc+"ppoints_df.pkl")
@@ -198,15 +199,26 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
                 mxbin = width_lon
                 ndiv=ndivlon
                 divisions = np.linspace(stlat,stlat+mxbin/degkmfac,ndivlat)
+            
+            ## storing done boxing info
+            done_boxing = profilefileloc+'done_boxing.txt'
+            if not os.path.exists(done_boxing):
+                dbff = open(done_boxing,'w')
+                dbff.write("outputfile\n")
+                done_box_list = []
+            else:
+                dbff = open(done_boxing,'a')
+                done_box_array_df = pd.read_csv(done_boxing)
+                done_box_array_slice = done_box_array_df.iloc[:,0]
+                done_box_list = done_box_array_slice.values.tolist()
 
             for n in range(len(divisions)-1):
                 initdiv = divisions[n]
                 enddiv = divisions[n+1] #length of profile
                 widthprof = int(np.abs(enddiv-initdiv)*degkmfac) #width of profile
-                # print(initdiv,enddiv,widthprof)
-                # print(initdiv,enddiv)
+                
                 outputfile = profilefileloc+ f"{str(inpRFdict['filenames']['rfprofile_compute_result_prefix'])}{azimuth}_{int(initdiv)}_{int(enddiv)}_{widthprof}_{n}.h5"
-                write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin)
+                write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,widthprof,mxbin,dbff,done_box_list)
 
 
 

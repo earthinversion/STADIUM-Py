@@ -6,18 +6,12 @@ import pandas as pd
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
 from rfsks_support.plotting_libs import shoot, equi, plot_topo, plot_events_loc, plot_merc
+import os
 
-
-plot_h = 1
-plot_kappa = 1
+# plot_h = 1
+# plot_kappa = 1
 
 def plot_h_kappa(h_k_file = "rfsks_support/h-kappa-values.txt",all_stationsfile = "results/InfoRF/all_stations_rf_retrieved.txt",plot_h = 1,plot_kappa = 1):
-    # ## all retrieved stations
-    # h_k_file = "rfsks_support/h-kappa-values.txt"
-
-    # ## all stations retrieved or not
-    # # all_stationsfile = "results/InfoRF/all_stations_RF.txt"
-    # all_stationsfile = "results/InfoRF/all_stations_rf_retrieved.txt"
     fig_loc = all_stationsfile.split("/")[:-1]
     fig_loc_str = "/".join(fig_loc)
 
@@ -26,8 +20,9 @@ def plot_h_kappa(h_k_file = "rfsks_support/h-kappa-values.txt",all_stationsfile 
     h_kappa_df = pd.read_csv(h_k_file,sep=",",header=None,names=['network','station', 'latitude', 'longitude','thickness','kappa'])
     if h_kappa_df.shape[0]:
         all_stations_df = pd.read_csv(all_stationsfile,sep="|")
-
-        if plot_h:
+        outfig_h = fig_loc_str+"/"+'all_stations_thickness_map.png'
+        outfig_k = fig_loc_str+"/"+'all_stations_kappa_map.png'
+        if plot_h and not os.path.exists(outfig_h):
             fig = plt.figure(figsize=(20,12))
             map = plot_merc(resolution='h',llcrnrlon=int(all_stations_df['Longitude'].min())-1, llcrnrlat=int(all_stations_df['Latitude'].min())-1,urcrnrlon=math.ceil(all_stations_df['Longitude'].max())+1, urcrnrlat=math.ceil(all_stations_df['Latitude'].max())+1,topo=False)
 
@@ -45,10 +40,10 @@ def plot_h_kappa(h_k_file = "rfsks_support/h-kappa-values.txt",all_stationsfile 
 
                 
             # plt.legend(loc=4,fontsize=8)
-            plt.savefig(fig_loc_str+"/"+'all_stations_thickness_map.png',dpi=300,bbox_inches='tight')
+            plt.savefig(outfig_h,dpi=300,bbox_inches='tight')
             plt.close('all')
 
-        if plot_kappa:
+        if plot_kappa and not os.path.exists(outfig_k):
             fig = plt.figure(figsize=(20,16))
             map = plot_merc(resolution='h',llcrnrlon=int(all_stations_df['Longitude'].min())-1, llcrnrlat=int(all_stations_df['Latitude'].min())-1,urcrnrlon=math.ceil(all_stations_df['Longitude'].max())+1, urcrnrlat=math.ceil(all_stations_df['Latitude'].max())+1,topo=False)
 
@@ -67,7 +62,7 @@ def plot_h_kappa(h_k_file = "rfsks_support/h-kappa-values.txt",all_stationsfile 
 
                 
             # plt.legend(loc=4,fontsize=8)
-            plt.savefig(fig_loc_str+"/"+'all_stations_kappa_map.png',dpi=300,bbox_inches='tight')
+            plt.savefig(outfig_k,dpi=300,bbox_inches='tight')
             plt.close('all')
 if __name__=="__main__":
     plot_h_kappa()

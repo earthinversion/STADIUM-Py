@@ -41,17 +41,19 @@ class sum_support:
             self.sum_file_id.write("\n")
 
     def makeSKSRF(self,makeRF,makeSKS):
-        if self.mode == 'write':
-            if makeRF and not makeSKS:
-                self.sum_file_id.write("Requested Receiver Functions Computations only\n")
-            elif not makeRF and makeSKS:
-                self.sum_file_id.write("Requested Shear-wave Splitting Computations only\n")
-            elif makeRF and makeSKS:
-                self.sum_file_id.write("Requested Receiver Functions & Shear-wave Splitting Computations\n")
-            self.sum_file_id.write("\n")
+        if makeRF and not makeSKS:
+            self.sum_file_id.write("Requested Receiver Functions Computations only\n")
+        elif not makeRF and makeSKS:
+            self.sum_file_id.write("Requested Shear-wave Splitting Computations only\n")
+        elif makeRF and makeSKS:
+            self.sum_file_id.write("Requested Receiver Functions & Shear-wave Splitting Computations\n")
+        self.sum_file_id.write("\n")
 
     def write_strings(self,string):
         self.sum_file_id.write(string+"\n")
+
+    def newline(self):
+        self.write_strings("")
 
     def write_data_summary(self,SKSsta):
         self.write_strings("----> Data summary")
@@ -67,7 +69,7 @@ class sum_support:
         self.write_strings("See files: {} [uncombined] and {} [combined events for same station] for details".format(full_SKSsta_path_unfor, full_SKSsta_path))
 
         ## Corresponding events info
-        self.write_strings("")
+        self.newline()
         all_events_file_list = glob.glob(f"{self.SKSsta_path}/*-*-*-*-events-info-*.txt")
         
         total_events = 0
@@ -110,7 +112,7 @@ class sum_support:
     
     def write_data_download_summary(self,datafileloc,retrived_stn_file):
         ## Download info
-        self.write_strings("")
+        self.newline()
         self.write_strings("------> Download Information:")
         total_data_files = len(glob.glob(datafileloc+"*.h5"))
 
@@ -130,13 +132,13 @@ class sum_support:
         endmax_row = df_retr.loc[df_retr['EndTimeNum'].idxmax()]
         maxdur_row = df_retr.loc[df_retr['startend_dur'].idxmax()]
 
-        self.write_strings("")
+        self.newline()
         self.write_strings("Minimum starttime for the retrieved stations {} ({}-{})".format(startmin_row['StartTime'],startmin_row['#Network'],startmin_row['Station']))
         self.write_strings("Maximum endtime for the retrieved stations {} ({}-{})".format(endmax_row['EndTime'],endmax_row['#Network'],endmax_row['Station']))
         self.write_strings("Longest operating station: {}-{}".format(maxdur_row['#Network'],maxdur_row['Station']))
 
     def write_sks_meas_sum(self,measure_loc,trace_loc_ENZ,trace_loc_RTZ,trigger_loc):
-        self.write_strings("")
+        self.newline()
         self.write_strings("----> SKS measurement summary:")
         measure_loc_all = "/".join(measure_loc.split("/")[:-2])
         measure_loc_null = "/".join(measure_loc.split("/")[:-1])
@@ -148,7 +150,7 @@ class sum_support:
         self.write_strings("Summary of null measurements for individual stations stored in: {}".format(measure_loc_null+"/net_sta_null_measurements.txt"))
 
         #read measurement summary file
-        self.write_strings("")
+        self.newline()
         df_meas_sum = pd.read_csv(all_measurements_file,sep='\s+')
 
         max_num_meas = df_meas_sum.loc[df_meas_sum['NumMeasurements'].idxmax()]
@@ -160,21 +162,21 @@ class sum_support:
 
         ## plot traces summary
         if trace_loc_ENZ:
-            self.write_strings("")
+            self.newline()
             self.write_strings("ENZ plot for traces stored at {}".format(trace_loc_ENZ))
 
         if trace_loc_RTZ:
-            self.write_strings("")
+            self.newline()
             self.write_strings("RTZ plot for traces stored at {}".format(trace_loc_RTZ))
 
         ## Picking
-        self.write_strings("")
+        self.newline()
         self.write_strings("SKS picking algorithm: {} (thresholds: {:.2f},{:.2f})".format(str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']),float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1'])))
         if trigger_loc:
             self.write_strings("SKS phase picking plot stored as: {}".format(trigger_loc+'*-eventtime-trigger.png'))
 
         ## Measurement constrains used
-        self.write_strings("")
+        self.newline()
         self.write_strings("------> Measurement contrains:")
         if str(inpSKSdict['sks_measurement_contrains']['sel_param']) == "lam12":
             self.write_strings("Eigenvalue ratio (lambda1/lambda2), threholds:: fast direction: {:.1f} lag time: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12fast_threh']),float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12lag_threh'])))
@@ -188,22 +190,22 @@ class sum_support:
 
         ## Measurement snapshot
         if bool(inpSKSdict['sks_measurement_plot']['measurement_snapshot']):
-            self.write_strings("")
+            self.newline()
             self.write_strings("Measurement snapshot saved as: {}".format(measure_loc_null+'*-evyear_evmonth_evday_evhour_evminute.png'))
 
         if int(inpSKSdict['error_plot_toggles']['error_plot_indiv']):
-            self.write_strings("")
+            self.newline()
             self.write_strings("Individual error plots saved as: {}".format(measure_loc_null+'errorplot_*-evyear_evmonth_evday_evhour_evminute.png'))
 
         if bool(inpSKSdict['error_plot_toggles']['error_plot_all']):
-            self.write_strings("")
+            self.newline()
             self.write_strings("Summary error plot for all measurements saved as: {}".format(measure_loc_null+'errorplot_*.png'))
 
         if bool(inpSKSdict['sks_measurement_plot']['plot_SI']):
-            self.write_strings("")
+            self.newline()
             self.write_strings("Splitting intensity plot w.r.t backazimuth stored at: {}".format(measure_loc_null+'net_sta_BAZ_SI.png'))
 
-        self.write_strings("")
+        self.newline()
         self.write_strings("SKS measurements map: {}".format(measure_loc_all+'/SKS_station_Map.png'))
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
             plot_params_lev = inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['meas_seg_points']
@@ -214,14 +216,8 @@ class sum_support:
             if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
                 self.write_strings("Null measurement shown")
 
-        self.write_strings("")
-        self.write_strings("Map for stations with data and without data stored at: {}".format(measure_loc_all+'/data_nodata_map.png'))
-
-
-
-
-
-
+        self.newline()
+        self.write_strings("Map for stations with and without data stored at: {}".format(measure_loc_all+'/data_nodata_map.png'))
 
 
 

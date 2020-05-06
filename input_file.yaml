@@ -5,7 +5,7 @@ fresh_start: 0 #1 to delete the previous computations
 
 summary_file: summary_file.txt
 
-makeRF: 0
+makeRF: 1
 makeSKS: 1
 
 ##  Define the geographical region

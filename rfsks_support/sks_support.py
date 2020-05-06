@@ -97,7 +97,7 @@ class sks_measurements:
                 for tr in stream3c:
                     len_tr_list.append(len(tr))
                 if len(set(len_tr_list))!=1:
-                    self.logger.warning(f"{count}/{int(len(data)/3)} Bad trace: {stream3c[0].stats.event_time}")
+                    self.logger.warning(f"{count}/{int(len(data)/3)}[{i}/{len(sksfiles)}] Bad trace: {stream3c[0].stats.event_time}")
                     continue
 
                 ## filter the trace
@@ -216,7 +216,7 @@ class sks_measurements:
                                 plot_SKS_measure(measure)
                                 plt.savefig(self.plot_measure_loc+f'{plt_id}-{evyear}_{evmonth}_{evday}_{evhour}_{evminute}.png')
                                 plt.close('all')  
-                                self.logger.info("{}/{} Good measurement: {}; fast = {:.2f}+-{:.2f}, lag = {:.2f}+-{:.2f}".format(count,int(len(data)/3),trace1[0].stats.event_time,measure.fast,measure.dfast,measure.lag,measure.dlag))
+                                self.logger.info("{}/{} [{}/{}] Good measurement: {}; fast = {:.2f}+-{:.2f}, lag = {:.2f}+-{:.2f}".format(count,int(len(data)/3),i,len(sksfiles),trace1[0].stats.event_time,measure.fast,measure.dfast,measure.lag,measure.dlag))
                                 
 
                             if int(inpSKSdict['error_plot_toggles']['error_plot_indiv']):
@@ -239,9 +239,9 @@ class sks_measurements:
                             fast_dir_all.append(fast_dir)
                             lag_time_all.append(measure.lags[np.argmax(squashlag),0])
                         else:
-                            self.logger.info("{}/{} Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
+                            self.logger.info("{}/{} [{}/{}] Bad measurement: {}! dfast = {:.1f}, dlag = {:.1f}, snr: {:.1f}".format(count,int(len(data)/3),i,len(sksfiles),stream3c[0].stats.event_time,measure.dfast,measure.dlag,snr))#; Consider changing the trim window
                 else:
-                    self.logger.info(f"{count}/{int(len(data)/3)} Bad phase pick: {stream3c[0].stats.event_time}")
+                    self.logger.info(f"{count}/{int(len(data)/3)} [{i}/{len(sksfiles)}] Bad phase pick: {stream3c[0].stats.event_time}")
             if stn_meas_close:
                 sks_meas_file.close()
                 sks_meas_file_null.close()
