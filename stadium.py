@@ -317,7 +317,6 @@ def main():
         if len(glob.glob(datafileloc+"*.h5"))>0:
             if picking_SKS:
                 logger.info("\n")
-                logger.info("## Pre-processing")
                 plot_traces_ENZ=int(inp_step['sks_stepwise']['plot_traces_ENZ'])
                 plot_traces_RTZ=int(inp_step['sks_stepwise']['plot_traces_RTZ'])
                 plot_trigger=int(inp_step['sks_stepwise']['plot_trigger'])
@@ -326,14 +325,18 @@ def main():
                 trace_loc_ENZ = str(dirs.loc['SKStracesloc_ENZ','DIR_NAME']) if plot_traces_ENZ else None
                 trace_loc_RTZ = str(dirs.loc['SKStracesloc_RTZ','DIR_NAME']) if plot_traces_RTZ else None
                 trigger_loc = str(dirs.loc['SKS_trigger_loc','DIR_NAME']) if plot_trigger else None
-
+                logger.info("## SKS-measurements")
                 plot_measure_loc = str(dirs.loc['SKSplot_measure_loc','DIR_NAME']) if plot_SKS_measure else None
                 sksMeasure = skss.sks_measurements(plot_measure_loc=plot_measure_loc)
                 sksMeasure.SKScalc(str(dirs.loc['SKSdatafileloc','DIR_NAME']),trace_loc_ENZ,trace_loc_RTZ,trigger_loc,method = str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']))
                 
+                sum_sup_class.write_sks_meas_sum(measure_loc = plot_measure_loc,trace_loc_ENZ=trace_loc_ENZ,trace_loc_RTZ=trace_loc_RTZ,trigger_loc=trigger_loc)
+                
             # sksMeasure.plot_sks_map()
             sks_measurement_file = plot_measure_loc+"../"+"sks_measurements_all.txt"
             if os.path.exists(SKSsta) and os.path.exists(sks_measurement_file):
+                logger.info("## Plotting measurements")
+                sksMeasure.plot_sks_map()
                 if bool(inp_step['sks_stepwise']['plot_data_nodata_map']):
                     sksMeasure.plot_data_nodata_map(sks_stations_infofile=SKSsta)
         

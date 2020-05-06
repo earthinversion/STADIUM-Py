@@ -240,6 +240,7 @@ def organize_inventory(inventorytxtfile):
     for net_sta in net_sta_set:
         net = net_sta.split("_")[0]
         sta = net_sta.split("_")[1]
+        # finding all rows with same net and sta
         row = inv_df[(inv_df['#Network']==net) & (inv_df['Station']==sta)]
         row=row.reset_index()
         rowtimemax = row.loc[row['EndTimeNum'].idxmax()]

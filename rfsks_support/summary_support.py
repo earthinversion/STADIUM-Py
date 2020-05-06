@@ -2,7 +2,10 @@ import os, glob
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import yaml
 
+with open('Settings/advSKSparam.yaml') as f:
+    inpSKSdict = yaml.load(f, Loader=yaml.FullLoader)
 class sum_support:
     def __init__(self,sum_file,res_dir):
         if not os.path.exists(sum_file):
@@ -115,6 +118,110 @@ class sum_support:
         self.write_strings("Stations for which the data has been retrieved successfully: {}".format(retrived_stn_file))
         self.write_strings("Downloaded station map: {}".format(self.SKSsta_path+"/all_stations_map.png"))
         self.write_strings("Downloaded events map (one for each retrieved station): {}".format(self.SKSsta_path+'/net-sta-all_events-method.png'))
+
+        ## finding min and max time of operation of stations
+        df_retr = pd.read_csv(retrived_stn_file,sep="|",keep_default_na=False, na_values=[""])
+        df_retr['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
+        df_retr['StartTimeNum'] = df_retr['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+        df_retr['EndTimeNum'] = df_retr['EndTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+        df_retr['startend_dur'] = df_retr['EndTimeNum'].values-df_retr['StartTimeNum'].values
+
+        startmin_row = df_retr.loc[df_retr['StartTimeNum'].idxmin()]
+        endmax_row = df_retr.loc[df_retr['EndTimeNum'].idxmax()]
+        maxdur_row = df_retr.loc[df_retr['startend_dur'].idxmax()]
+
+        self.write_strings("")
+        self.write_strings("Minimum starttime for the retrieved stations {} ({}-{})".format(startmin_row['StartTime'],startmin_row['#Network'],startmin_row['Station']))
+        self.write_strings("Maximum endtime for the retrieved stations {} ({}-{})".format(endmax_row['EndTime'],endmax_row['#Network'],endmax_row['Station']))
+        self.write_strings("Longest operating station: {}-{}".format(maxdur_row['#Network'],maxdur_row['Station']))
+
+    def write_sks_meas_sum(self,measure_loc,trace_loc_ENZ,trace_loc_RTZ,trigger_loc):
+        self.write_strings("")
+        self.write_strings("----> SKS measurement summary:")
+        measure_loc_all = "/".join(measure_loc.split("/")[:-2])
+        measure_loc_null = "/".join(measure_loc.split("/")[:-1])
+
+        all_measurements_file = measure_loc_all+"/sks_measurements_all.txt"
+        self.write_strings("Summary of SKS measurements for all stations stored in: {}".format(all_measurements_file))
+
+        self.write_strings("Summary of SKS measurements for individual stations stored in: {}".format(measure_loc_null+"/net_sta_sks_measurements.txt"))
+        self.write_strings("Summary of null measurements for individual stations stored in: {}".format(measure_loc_null+"/net_sta_null_measurements.txt"))
+
+        #read measurement summary file
+        self.write_strings("")
+        df_meas_sum = pd.read_csv(all_measurements_file,sep='\s+')
+
+        max_num_meas = df_meas_sum.loc[df_meas_sum['NumMeasurements'].idxmax()]
+        max_null_meas = df_meas_sum.loc[df_meas_sum['NumNull'].idxmax()]
+
+        self.write_strings("Successful measurements for {} stations".format(df_meas_sum.shape[0]))
+        self.write_strings("Max number of measurements for station: {}-{} ({:.4f},{:.4f})".format(max_num_meas['NET'],max_num_meas['STA'],max_num_meas['LAT'],max_num_meas['LON']))
+        self.write_strings("Max number of null measurements for station: {}-{} ({:.4f},{:.4f})".format(max_null_meas['NET'],max_null_meas['STA'],max_null_meas['LAT'],max_null_meas['LON']))
+
+        ## plot traces summary
+        if trace_loc_ENZ:
+            self.write_strings("")
+            self.write_strings("ENZ plot for traces stored at {}".format(trace_loc_ENZ))
+
+        if trace_loc_RTZ:
+            self.write_strings("")
+            self.write_strings("RTZ plot for traces stored at {}".format(trace_loc_RTZ))
+
+        ## Picking
+        self.write_strings("")
+        self.write_strings("SKS picking algorithm: {} (thresholds: {:.2f},{:.2f})".format(str(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo']),float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr0']), float(inpSKSdict['sks_picking']['picking_algo']['sks_picking_algo_thr1'])))
+        if trigger_loc:
+            self.write_strings("SKS phase picking plot stored as: {}".format(trigger_loc+'*-eventtime-trigger.png'))
+
+        ## Measurement constrains used
+        self.write_strings("")
+        self.write_strings("------> Measurement contrains:")
+        if str(inpSKSdict['sks_measurement_contrains']['sel_param']) == "lam12":
+            self.write_strings("Eigenvalue ratio (lambda1/lambda2), threholds:: fast direction: {:.1f} lag time: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12fast_threh']),float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['lam12lag_threh'])))
+        elif str(inpSKSdict['sks_measurement_contrains']['sel_param']) == "snr":
+            self.write_strings("signal to noise ratio, threholds:: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['sel_param_settings']['snr_ratio'])))
+
+        self.write_strings("Min allowed lag: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['lag_settings']['minlag'])))
+        self.write_strings("Max allowed lag: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['lag_settings']['maxlag'])))
+        self.write_strings("Max allowed lag error: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['lag_settings']['maxdlag'])))
+        self.write_strings("Max allowed fast direction error: {:.1f}".format(float(inpSKSdict['sks_measurement_contrains']['fast_dir_settings']['maxdfast'])))
+
+        ## Measurement snapshot
+        if bool(inpSKSdict['sks_measurement_plot']['measurement_snapshot']):
+            self.write_strings("")
+            self.write_strings("Measurement snapshot saved as: {}".format(measure_loc_null+'*-evyear_evmonth_evday_evhour_evminute.png'))
+
+        if int(inpSKSdict['error_plot_toggles']['error_plot_indiv']):
+            self.write_strings("")
+            self.write_strings("Individual error plots saved as: {}".format(measure_loc_null+'errorplot_*-evyear_evmonth_evday_evhour_evminute.png'))
+
+        if bool(inpSKSdict['error_plot_toggles']['error_plot_all']):
+            self.write_strings("")
+            self.write_strings("Summary error plot for all measurements saved as: {}".format(measure_loc_null+'errorplot_*.png'))
+
+        if bool(inpSKSdict['sks_measurement_plot']['plot_SI']):
+            self.write_strings("")
+            self.write_strings("Splitting intensity plot w.r.t backazimuth stored at: {}".format(measure_loc_null+'net_sta_BAZ_SI.png'))
+
+        self.write_strings("")
+        self.write_strings("SKS measurements map: {}".format(measure_loc_all+'/SKS_station_Map.png'))
+        if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
+            plot_params_lev = inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['meas_seg_points']
+            lev1, lev2, lev3 = int(plot_params_lev['lev1']), int(plot_params_lev['lev2']), int(plot_params_lev['lev3'])
+            self.write_strings("Measurement segregated: {},{},{}".format(f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'))
+            if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']):
+                self.write_strings("No measurement shown")
+            if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
+                self.write_strings("Null measurement shown")
+
+        self.write_strings("")
+        self.write_strings("Map for stations with data and without data stored at: {}".format(measure_loc_all+'/data_nodata_map.png'))
+
+
+
+
+
+
 
 
 

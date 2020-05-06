@@ -37,7 +37,7 @@ class sks_measurements:
     ## Pre-processing
     def SKScalc(self, dataSKSfileloc,trace_loc_ENZ=None,trace_loc_RTZ=None,trigger_loc=None,method = 'None'):
         
-        self.logger.info("Cut the traces around the SKS arrival")
+        # self.logger.info("Cut the traces around the SKS arrival")
         sksfiles = glob.glob(dataSKSfileloc+f"*-{str(inpSKSdict['filenames']['data_sks_suffix'])}.h5")
         # self.logger.info(sksfiles)
         
@@ -51,7 +51,7 @@ class sks_measurements:
         for i,sksfile in enumerate(sksfiles):
             count=0
             data = read_rf(sksfile, 'H5')
-            self.logger.info(f"Calculating SKS arrival times for {sksfile}\n")
+            self.logger.info(f"SKS measurements for {sksfile}\n")
             net_name = os.path.basename(sksfile).split("-")[0]
             stn_name = os.path.basename(sksfile).split("-")[1]
 
