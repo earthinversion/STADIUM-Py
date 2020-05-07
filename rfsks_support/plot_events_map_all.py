@@ -5,8 +5,8 @@ import glob,os
 import pandas as pd
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
-from rfsks_support.plotting_libs import shoot, equi, plot_topo, plot_events_loc
-
+from rfsks_support.plotting_libs import equi, plot_events_loc
+from rfsks_support.plotting_map import plot_topo_simple
 DEG2KM = 111.2
 
 def plot_events_map_all(all_stations_file = "results/InfoRF/all_stations_rf_retrieved.txt"):
@@ -56,7 +56,7 @@ def plot_events_map_all(all_stations_file = "results/InfoRF/all_stations_rf_retr
             eq_map.drawmapboundary()
             eq_map.drawparallels(np.arange(-90, 91,30), color = 'k', linewidth=0.1,labels=[1,1,0,0])
             eq_map.drawmeridians(np.arange(-180,180,30), color = 'k', linewidth=0.1,labels=[0,0,1,1])
-            plot_topo(eq_map,cmap=plt.cm.rainbow)
+            plot_topo_simple(eq_map,cmap=plt.cm.rainbow)
 
             plot_events_loc(eq_map,df_all['evlon'].values,df_all['evlat'].values, evmg_all, df_all['evdp'].values,background=1)
             plot_events_loc(eq_map,df['evlon'].values,df['evlat'].values, evmg, df['evdp'].values,background=0)

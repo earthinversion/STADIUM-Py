@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
+from rfsks_support.plotting_libs import plot_topo
 
 
-
-def plot_topo(map,cmap=plt.cm.jet):
+def plot_topo_simple(map,cmap=plt.cm.jet):
     #20 minute bathymetry/topography data
     etopo = np.loadtxt('topo/etopo20data.gz')
     lons  = np.loadtxt('topo/etopo20lons.gz')
@@ -204,7 +204,8 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     map = Basemap(projection='merc',resolution = resolution, area_thresh = 1000., llcrnrlon=llcrnrlon, llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon, urcrnrlat=urcrnrlat)
     
     if topo:
-        plot_topo(map,cmap=plt.cm.rainbow)
+        # plot_topo(map,cmap=plt.cm.rainbow)
+        plot_topo(map,lonextent=(llcrnrlon,urcrnrlon),latextent=(llcrnrlat,urcrnrlat))
 
     map.drawcoastlines(color='k',linewidth=0.5)
     # map.fillcontinents()
@@ -269,7 +270,8 @@ def events_map(evlons, evlats, evmgs, evdps, stns_lon, stns_lat, destination, ou
     eq_map.drawparallels(np.arange(-90, 91,30), color = 'k', linewidth=0.1,labels=[1,1,0,0])
     eq_map.drawmeridians(np.arange(-180,180,30), color = 'k', linewidth=0.1,labels=[0,0,1,1])
     if topo:
-        plot_topo(eq_map,cmap=plt.cm.rainbow)
+        plot_topo_simple(eq_map,cmap=plt.cm.rainbow)
+        
 
     ## Plotting the earthquake map
     # print("------> Plotting the event location map")

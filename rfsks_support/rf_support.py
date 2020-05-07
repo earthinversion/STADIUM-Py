@@ -78,8 +78,10 @@ def plot_RF(dataRFfileloc,destImg,fig_frmt="png"):
                 try:
                     stream.select(component='L', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
                     plt.savefig(destImg + f"{stream[0].stats.station}"+'_L.'+fig_frmt)
+                    plt.close('all')
                     stream.select(component='Q', station=stream[0].stats.station).sort(['back_azimuth']).plot_rf(**kw)
                     plt.savefig(destImg + f"{stream[0].stats.station}"+'_Q.'+fig_frmt)
+                    plt.close('all')
                     logger.info("----> Plotting RF {}/{}, {}-{} Traces: {}".format(i+1,len(rffiles),stream[0].stats.network, stream[0].stats.station, num_trace))
                 except Exception as e:
                     logger.error("Unexpected error", exc_info=True)
@@ -231,12 +233,12 @@ def plot_pp_profile_map(dataRFfileloc,profilefileloc,catalogtxtloc,topo=True,des
             plt.savefig(outimagename,dpi=200,bbox_inches='tight')
             logger.info(f"----> PP map: {outimagename}")
             plt.close('all')
-
+    
 
 def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRFdict['rf_display_settings']['trim_min']), int(inpRFdict['rf_display_settings']['trim_max']))):
     logger = logging.getLogger(__name__)
     logger.info("--> Plotting the RF profile")
-    plt.style.use('classic')
+    # plt.style.use('classic')
     for azimuth in [0,90]:
         inpfiles = glob.glob(profilefileloc+ f"{str(inpRFdict['filenames']['rfprofile_compute_result_prefix'])}{azimuth}_*.h5")
         if len(inpfiles):
@@ -245,16 +247,16 @@ def plot_RF_profile(profilefileloc,destination="./",trimrange=(int(inpRFdict['rf
                 pstream = read_rf(inpfile)
                 divparam = inpfile.split("_")[-4:-1]
                 divsuffix = inpfile.split("_")[-1].split(".")[0]
-                # print(divparam, divsuffix)
-                # logger.info(pstream)
+                
                 pstream.trim2(trimrange[0], trimrange[1], 'onset')
                 for chn in ['L','Q']:
-                    plt.figure()
-                    pstream.select(channel='??'+chn).normalize().plot_profile(scale=1.5, top='hist', fillcolors=('r', 'b'))
-                    plt.gcf().set_size_inches(15, 10)
-                    plt.title(f'Channel: {chn} Azimuth {azimuth}')
                     outputimage = destination+f"{chn}_{azimuth}_{divsuffix}_profile.png"
-                    plt.savefig(outputimage,dpi=200,bbox_inches='tight')
-                    logger.info(f"------> Output image: {outputimage}")
-
+                    if not os.path.exists(outputimage):
+                        plt.figure()
+                        pstream.select(channel='??'+chn).normalize().plot_profile(scale=1.5, top='hist', fillcolors=('r', 'b'))
+                        plt.gcf().set_size_inches(15, 10)
+                        plt.title(f'Channel: {chn} Azimuth {azimuth}')
+                        plt.savefig(outputimage,dpi=200,bbox_inches='tight')
+                        logger.info(f"------> Output image: {outputimage}")
+    plt.close('all')
 

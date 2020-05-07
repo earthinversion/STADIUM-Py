@@ -6,7 +6,7 @@ import pandas as pd
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
 import math
-
+from scipy.interpolate import griddata
 DEG2KM = 111.2
 
 def shoot(lon, lat, azimuth, maxdist=None):
@@ -92,16 +92,34 @@ def equi(m, centerlon, centerlat, radius, *args, **kwargs):
     X,Y = m(X,Y)
     plt.plot(X,Y,**kwargs)
 
-def plot_topo(map,cmap=plt.cm.jet):
+
+# options:'jet','YlGn','viridis',"Greys"
+def plot_topo(map,cmap='terrain',zorder=0,lonextent=(0,20),latextent=(35,60),plotstyle='pmesh'):
+    minlon,maxlon = lonextent
+    minlat,maxlat = latextent
+    minlon,maxlon = minlon-1,maxlon+1
+    minlat,maxlat = minlat-1,maxlat+1
     #20 minute bathymetry/topography data
     etopo = np.loadtxt('topo/etopo20data.gz')
     lons  = np.loadtxt('topo/etopo20lons.gz')
     lats  = np.loadtxt('topo/etopo20lats.gz')
     # shift data so lons go from -180 to 180 instead of 20 to 380.
     etopo,lons = shiftgrid(180.,etopo,lons,start=False)
-    lons, lats = np.meshgrid(lons, lats)
-    # lons, lats = map(*np.meshgrid(lons,lats))
-    cs = map.pcolormesh(lons,lats,etopo,cmap=cmap,latlon=True,shading='gouraud')
+    lons_col_index = np.where((lons>minlon) & (lons<maxlon))[0]
+    lats_col_index = np.where((lats>minlat) & (lats<maxlat))[0]
+ 
+    etopo_sl = etopo[lats_col_index[0]:lats_col_index[-1]+1,lons_col_index[0]:lons_col_index[-1]+1]
+    lons_sl = lons[lons_col_index[0]:lons_col_index[-1]+1]
+    lats_sl = lats[lats_col_index[0]:lats_col_index[-1]+1]
+    lons_sl, lats_sl = np.meshgrid(lons_sl, lats_sl)
+    
+    if plotstyle=='pmesh':
+        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.5,lw=0,ls=None, extend="both")
+        limits = cs.get_clim()
+        cs = map.pcolormesh(lons_sl,lats_sl,etopo_sl,cmap=cmap,latlon=True,shading='gouraud',zorder=zorder,alpha=0.4,antialiased=1,vmin=limits[0],vmax=limits[1],linewidth=0)
+    elif plotstyle=='contf':
+        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.5,lw=0,ls=None, extend="both")
+    return cs
 
 
 
@@ -153,7 +171,9 @@ def plot_merc(resolution,llcrnrlon,llcrnrlat,urcrnrlon,urcrnrlat,topo=True):
     map = Basemap(projection='merc',resolution = resolution, area_thresh = 1000., llcrnrlon=llcrnrlon, llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon, urcrnrlat=urcrnrlat)
     
     if topo:
-        plot_topo(map,cmap=plt.cm.rainbow)
+        # plot_topo(map,cmap=plt.cm.rainbow)
+        plot_topo(map,lonextent=(llcrnrlon,urcrnrlon),latextent=(llcrnrlat,urcrnrlat))
+        
 
     map.drawcoastlines(color='k',linewidth=0.5)
     # map.fillcontinents()
@@ -229,8 +249,10 @@ def plot_sks_station_map(sks_meas_all,figname):
     ax = fig.add_subplot(111)
     map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lonmin, llcrnrlat=latmin,urcrnrlon=lonmax, urcrnrlat=latmax)
     
-    # plot_topo(map,cmap=plt.cm.rainbow)
-    map.etopo(zorder=2)
+    # plot_topo(map,cmap=plt.cm.rainbow, zorder=2)
+    plot_topo(map,lonextent=(lonmin,lonmax),latextent=(latmin,latmax), zorder=2)
+    
+    # map.etopo(alpha=0.5,zorder=2)
     # map.etopo(scale=2.5, alpha=0.5, zorder=2)
 
     map.drawcoastlines(color='k',linewidth=0.5)
@@ -255,7 +277,7 @@ def plot_sks_station_map(sks_meas_all,figname):
     map.drawmapboundary(color='k', linewidth=2, zorder=1)
     legendarray = []
     for a in [1, 2, 3]:
-        legendarray.append(map.scatter([], [], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k'))
+        legendarray.append(map.scatter([np.nan], [np.nan], c='b', alpha=0.6, s=60*a,label=f"{a}s",edgecolors='k'))
 
 
 
@@ -264,13 +286,13 @@ def plot_sks_station_map(sks_meas_all,figname):
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']):
             stlon0s,stlat0s = map(station_data_0['LON'].values,station_data_0['LAT'].values)
             map.scatter(stlon0s, stlat0s, c='red', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=4)
-            legendarray.append(map.scatter([], [], c='r', alpha=0.99, s=60, edgecolors='k'))
+            legendarray.append(map.scatter([np.nan], [np.nan], c='r', alpha=0.99, s=60, edgecolors='k'))
         ## plot null measurements
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
             station_data_null = sks_meas_all.loc[(sks_meas_all['NumNull']>0) & (sks_meas_all['NumMeasurements']==0)]
             stlonnull,stlatnull = map(station_data_null['LON'].values,station_data_null['LAT'].values)
             map.scatter(stlonnull, stlatnull, c='white', marker='o', s=60, edgecolors='k',linewidths=0.3, zorder=4)
-            legendarray.append(map.scatter([], [], c='white', alpha=0.99, s=60, edgecolors='k'))
+            legendarray.append(map.scatter([np.nan], [np.nan], c='white', alpha=0.99, s=60, edgecolors='k'))
 
         stlon1s,stlat1s = map(station_data_14['LON'].values,station_data_14['LAT'].values)
         stlon4s,stlat4s = map(station_data_4_11['LON'].values,station_data_4_11['LAT'].values)
@@ -282,9 +304,9 @@ def plot_sks_station_map(sks_meas_all,figname):
 
 
         
-        legendarray.append(map.scatter([], [], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
-        legendarray.append(map.scatter([], [], c='navy', alpha=0.99, s=60, edgecolors='k'))
-        legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([np.nan], [np.nan], c='cornflowerblue', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([np.nan], [np.nan], c='navy', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([np.nan], [np.nan], c='black', alpha=0.99, s=60, edgecolors='k'))
 
 
 
@@ -300,7 +322,7 @@ def plot_sks_station_map(sks_meas_all,figname):
         stlon_all,stlat_all = map(sks_meas_all['LON'].values,sks_meas_all['LAT'].values)
         map.scatter(stlon_all,stlat_all, c='black', marker='o', s=60*sks_meas_all['AvgLagTime'],edgecolors='k',linewidths=0.1, zorder=4)
 
-        legendarray.append(map.scatter([], [], c='black', alpha=0.99, s=60, edgecolors='k'))
+        legendarray.append(map.scatter([np.nan], [np.nan], c='black', alpha=0.99, s=60, edgecolors='k'))
 
         for jj in range(sks_meas_all.shape[0]):
             plot_point_on_basemap(map, point=(sks_meas_all['LON'].values[jj],sks_meas_all['LAT'].values[jj]), angle = sks_meas_all['AvgFastDir'].values[jj], length = 1.5)
@@ -315,17 +337,17 @@ def plot_sks_station_map(sks_meas_all,figname):
     map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
     if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements']):
         if bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
-            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6],legendarray[7]],['No measurement','Null measurements',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+            plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6],legendarray[7]],['No measurement','Null measurements',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
         elif bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and not bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
-            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+            plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['No measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
         elif not bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_no_measurement']) and bool(inpSKSdict['sks_measurement_plot']['segregate_measurements_options']['show_null_measurements']):
-            leg1 = plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['Null measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+            plt.legend([legendarray[3],legendarray[4],legendarray[5],legendarray[6]],['Null measurement',f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
         else:
-            leg1 = plt.legend([legendarray[4],legendarray[5],legendarray[6]],[f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+            plt.legend([legendarray[4],legendarray[5],legendarray[6]],[f'{lev1+1}-{lev2-1} measurements',f'{lev2}-{lev3-1} measurements',f'{lev3}+ measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
     else:
-        leg1 = plt.legend([legendarray[3]],['All measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
-    leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
-    ax.add_artist(leg1)
+        plt.legend([legendarray[3]],['All measurements'],frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1)
+    # leg2 = plt.legend(frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+    # ax.add_artist(leg1)
 
     plt.savefig(figname,bbox_inches='tight',dpi=300)
     plt.close('all')
@@ -345,12 +367,14 @@ def plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname):
         lonmin, lonmax = lonmin - 0.5, lonmax + 0.5
         latmin, latmax = latmin - 0.5, latmax + 0.5
 
-    fig = plt.figure(figsize=(10,10))
-    ax = fig.add_subplot(111)
+    fig, ax = plt.subplots(1,1,figsize=(10,10))
+    # ax = fig.add_subplot(111)
     map = Basemap(projection='merc',resolution = 'h', area_thresh = 1000., llcrnrlon=lonmin, llcrnrlat=latmin,urcrnrlon=lonmax, urcrnrlat=latmax)
     
-    # plot_topo(map,cmap=plt.cm.rainbow)
-    map.etopo(scale=2.5, alpha=0.5, zorder=2)
+    cs = plot_topo(map,lonextent=(lonmin,lonmax),latextent=(latmin,latmax), zorder=2)
+    # fig.colorbar(cs, ax=ax, shrink=0.9)
+    # plot_topo(map,cmap=plt.cm.rainbow, zorder=2)
+    # map.etopo(scale=1, alpha=0.5, zorder=2)
 
     map.drawcoastlines(color='k',linewidth=0.5)
     map.drawcountries(color='k',linewidth=0.1)
@@ -386,12 +410,14 @@ def plot_sks_data_nodata_map(sks_meas_all,all_data_df,figname):
     msclon0,msclat0 = np.mean(loon),np.mean(laat)
     map.drawmapscale(msclon,msclat,msclon0,msclat0, len_mapscale, barstyle='fancy', zorder=6)
 
-    legendarray = []
-    for col in ['gold','red']:
-        legendarray.append(map.scatter([], [], c=col, marker='^', alpha=0.99, s=60, edgecolors='k'))
+    # legendarray = []
+    for col,lab in zip(['gold','red'],['No data','With data']):
+        map.scatter([np.nan], [np.nan], c=col, marker='^', alpha=0.99, s=60, edgecolors='k',label = lab)
+        # legendarray.append(map.scatter([], [], c=col, marker='^', alpha=0.99, s=60, edgecolors='k'))
 
-    leg2 = plt.legend([legendarray[0],legendarray[1]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
-    ax.add_artist(leg2)
+    # leg2 = plt.legend([legendarray[0],legendarray[1]],['No data','With data'],frameon=False, loc='upper right',labelspacing=1,handletextpad=0.1)
+    leg2 = plt.legend(frameon=False, loc='upper left',labelspacing=1,handletextpad=0.1,numpoints=1)
+    # ax.add_artist(leg2)
 
     plt.savefig(figname,bbox_inches='tight',dpi=300)
     plt.close('all')

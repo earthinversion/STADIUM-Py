@@ -5,7 +5,8 @@ import glob, os
 import pandas as pd
 import warnings, matplotlib.cbook
 warnings.filterwarnings("ignore", category=FutureWarning)
-from rfsks_support.plotting_libs import shoot, equi, plot_topo, plot_events_loc, plot_merc
+from rfsks_support.plotting_libs import shoot, equi, plot_events_loc, plot_merc
+from rfsks_support.plotting_map import plot_topo_simple
 
 
 def rem_duplicate_stations(retr_stations_df):

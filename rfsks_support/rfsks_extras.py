@@ -551,6 +551,7 @@ def sine_func(x, a, b):
     return a * np.sin(2*b * x)
 
 def plot_baz_si_map(sks_meas_file, outfig):
+    plt.close('all')
     df_sks = pd.read_csv(sks_meas_file,skiprows=2,delimiter='\s+')
     df_sks = df_sks.dropna()
     baz = df_sks['Baz'].values #backazimuth

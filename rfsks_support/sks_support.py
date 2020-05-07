@@ -19,7 +19,7 @@ import splitwavepy as sw
 import logging
 import math
 from mpl_toolkits.basemap import Basemap
-from rfsks_support.plotting_libs import plot_topo, plot_merc, plot_point_on_basemap, mean_angle, plot_sks_station_map, plot_sks_data_nodata_map
+from rfsks_support.plotting_libs import mean_angle, plot_sks_station_map, plot_sks_data_nodata_map
 
 
 ## Fine tuning of SKS

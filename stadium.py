@@ -18,6 +18,7 @@ warnings.filterwarnings("ignore")
 import time
 
 
+
 def main():
     with open('input_file.yaml') as f:
         inp = yaml.load(f, Loader=yaml.FullLoader)
@@ -248,6 +249,7 @@ def main():
                 logger.info("\n")
                 logger.info("## Operating plot_priercingpoints_RF method")
                 rfs.plot_pp_profile_map(str(dirs.loc['RFdatafileloc','DIR_NAME']),str(dirs.loc['RFdatafileloc','DIR_NAME']),catalogtxtloc=str(dirs.loc['RFinfoloc','DIR_NAME']),destination=str(dirs.loc['RFprofilemaploc','DIR_NAME']), ndivlat = int(inpRFdict['rf_profile_settings']['num_profile_divs_lat']), ndivlon=int(inpRFdict['rf_profile_settings']['num_profile_divs_lon']))
+                # print(dir())
 
                 if plot_RF_profile:
                     logger.info("\n")
@@ -282,7 +284,7 @@ def main():
     #############################################################
     #############################################################
     if makeSKS:
-    
+
         logger.info("\n")
         logger.info("WORKING ON SKS")
         logger.info("# Initializing the downloadDataclass")
