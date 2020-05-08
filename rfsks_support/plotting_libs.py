@@ -107,10 +107,10 @@ def plot_topo(map,cmap='terrain',zorder=0,lonextent=(0,20),latextent=(35,60),plo
     etopo,lons = shiftgrid(180.,etopo,lons,start=False)
     lons_col_index = np.where((lons>minlon) & (lons<maxlon))[0]
     lats_col_index = np.where((lats>minlat) & (lats<maxlat))[0]
- 
     etopo_sl = etopo[lats_col_index[0]:lats_col_index[-1]+1,lons_col_index[0]:lons_col_index[-1]+1]
     lons_sl = lons[lons_col_index[0]:lons_col_index[-1]+1]
     lats_sl = lats[lats_col_index[0]:lats_col_index[-1]+1]
+    lons_sl, lats_sl = np.meshgrid(lons_sl,lats_sl)
     
     if plotstyle=='pmesh':
         cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.1, extend="both")
