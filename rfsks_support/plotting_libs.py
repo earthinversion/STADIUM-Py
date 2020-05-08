@@ -111,14 +111,13 @@ def plot_topo(map,cmap='terrain',zorder=0,lonextent=(0,20),latextent=(35,60),plo
     etopo_sl = etopo[lats_col_index[0]:lats_col_index[-1]+1,lons_col_index[0]:lons_col_index[-1]+1]
     lons_sl = lons[lons_col_index[0]:lons_col_index[-1]+1]
     lats_sl = lats[lats_col_index[0]:lats_col_index[-1]+1]
-    lons_sl, lats_sl = np.meshgrid(lons_sl, lats_sl)
     
     if plotstyle=='pmesh':
-        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.5,lw=0,ls=None, extend="both")
+        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.1, extend="both")
         limits = cs.get_clim()
-        cs = map.pcolormesh(lons_sl,lats_sl,etopo_sl,cmap=cmap,latlon=True,shading='gouraud',zorder=zorder,alpha=0.4,antialiased=1,vmin=limits[0],vmax=limits[1],linewidth=0)
+        cs = map.pcolormesh(lons_sl,lats_sl,etopo_sl,cmap=cmap,latlon=True,shading='gouraud',zorder=zorder,alpha=0.1,antialiased=1,vmin=limits[0],vmax=limits[1],linewidth=0)
     elif plotstyle=='contf':
-        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.5,lw=0,ls=None, extend="both")
+        cs = map.contourf(lons_sl, lats_sl, etopo_sl, 3*len(etopo_sl),latlon=True,zorder=zorder, cmap=cmap,alpha=0.1, extend="both")
     return cs
 
 

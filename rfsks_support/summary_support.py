@@ -9,6 +9,10 @@ with open('Settings/advSKSparam.yaml') as f:
 
 with open('Settings/advRFparam.yaml') as f:
     inpRFdict = yaml.load(f, Loader=yaml.FullLoader)
+def is_file_empty(file_path):
+    """ Check if file is empty by confirming if its size is 0 bytes"""
+    # Check if file exist and it is empty
+    return os.path.exists(file_path) and os.stat(file_path).st_size == 0
 
 class sum_support:
     def __init__(self,sum_file,res_dir):
@@ -133,21 +137,22 @@ class sum_support:
         self.write_strings("Downloaded events map (one for each retrieved station): {}".format(self.SKSsta_path+'/net-sta-all_events-method.png'))
 
         ## finding min and max time of operation of stations
-        df_retr = pd.read_csv(retrived_stn_file,sep="|",keep_default_na=False, na_values=[""])
-        if df_retr.shape[0]>0:
-            df_retr['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
-            df_retr['StartTimeNum'] = df_retr['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
-            df_retr['EndTimeNum'] = df_retr['EndTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
-            df_retr['startend_dur'] = df_retr['EndTimeNum'].values-df_retr['StartTimeNum'].values
+        if not is_file_empty(retrived_stn_file):
+            df_retr = pd.read_csv(retrived_stn_file,sep="|",keep_default_na=False, na_values=[""])
+            if df_retr.shape[0]>0:
+                df_retr['EndTime'].fillna('2599-12-31T23:59:59',inplace=True)
+                df_retr['StartTimeNum'] = df_retr['StartTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+                df_retr['EndTimeNum'] = df_retr['EndTime'].apply(lambda x: int(x.split("-")[0]+x.split("-")[1]+x.split("-")[2][0:2]))
+                df_retr['startend_dur'] = df_retr['EndTimeNum'].values-df_retr['StartTimeNum'].values
 
-            startmin_row = df_retr.loc[df_retr['StartTimeNum'].idxmin()]
-            endmax_row = df_retr.loc[df_retr['EndTimeNum'].idxmax()]
-            maxdur_row = df_retr.loc[df_retr['startend_dur'].idxmax()]
+                startmin_row = df_retr.loc[df_retr['StartTimeNum'].idxmin()]
+                endmax_row = df_retr.loc[df_retr['EndTimeNum'].idxmax()]
+                maxdur_row = df_retr.loc[df_retr['startend_dur'].idxmax()]
 
-            self.newline()
-            self.write_strings("Minimum starttime for the retrieved stations {} ({}-{})".format(startmin_row['StartTime'],startmin_row['#Network'],startmin_row['Station']))
-            self.write_strings("Maximum endtime for the retrieved stations {} ({}-{})".format(endmax_row['EndTime'],endmax_row['#Network'],endmax_row['Station']))
-            self.write_strings("Longest operating station: {}-{}".format(maxdur_row['#Network'],maxdur_row['Station']))
+                self.newline()
+                self.write_strings("Minimum starttime for the retrieved stations {} ({}-{})".format(startmin_row['StartTime'],startmin_row['#Network'],startmin_row['Station']))
+                self.write_strings("Maximum endtime for the retrieved stations {} ({}-{})".format(endmax_row['EndTime'],endmax_row['#Network'],endmax_row['Station']))
+                self.write_strings("Longest operating station: {}-{}".format(maxdur_row['#Network'],maxdur_row['Station']))
 
     def write_sks_meas_sum(self,measure_loc,trace_loc_ENZ,trace_loc_RTZ,trigger_loc):
         self.newline()
