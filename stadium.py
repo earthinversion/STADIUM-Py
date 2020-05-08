@@ -112,6 +112,8 @@ def main():
             response = input("Are you sure you want to start fresh? (Input 'yes' to continue): ")
             if response == "yes":
                 oss.rem_dir(res_dir)
+            elif response == "no":
+                pass
             else:
                 print(f"Response: {response}, Exiting!")
                 sys.exit()

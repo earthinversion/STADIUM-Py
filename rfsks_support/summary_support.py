@@ -85,28 +85,29 @@ class sum_support:
         min_evs,max_evs = 999999,-10
         for ff in all_events_file_list:
             dff = pd.read_csv(ff,sep=",")
-            total_events+=dff.shape[0]
-            if dff.shape[0] < min_evs:
-                min_evs = dff.shape[0]
-                min_ev_catlog = ff
-            if dff.shape[0] > max_evs:
-                max_evs = dff.shape[0]
-                max_ev_catlog = ff
-            ## magnitude
-            mag_array = dff['evmg'].values
-            minmag = np.min(mag_array)
-            maxmag = np.max(mag_array)
-            if minmag < minmg:
-                minmg = minmag
-            if maxmag > maxmg:
-                maxmg = maxmag
-            ## depth
-            mindep = dff['evdp'].min()
-            maxdep = dff['evdp'].max()
-            if mindep < mindp:
-                mindp = mindep
-            if maxdep > maxdp:
-                maxdp = maxdep
+            if dff.shape[0]>0:
+                total_events+=dff.shape[0]
+                if dff.shape[0] < min_evs:
+                    min_evs = dff.shape[0]
+                    min_ev_catlog = ff
+                if dff.shape[0] > max_evs:
+                    max_evs = dff.shape[0]
+                    max_ev_catlog = ff
+                ## magnitude
+                mag_array = dff['evmg'].values
+                minmag = np.min(mag_array)
+                maxmag = np.max(mag_array)
+                if minmag < minmg:
+                    minmg = minmag
+                if maxmag > maxmg:
+                    maxmg = maxmag
+                ## depth
+                mindep = dff['evdp'].min()
+                maxdep = dff['evdp'].max()
+                if mindep < mindp:
+                    mindp = mindep
+                if maxdep > maxdp:
+                    maxdp = maxdep
 
 
         self.write_strings("Total event catalogs generated: {}".format(len(all_events_file_list)))

@@ -9,7 +9,7 @@ makeRF: 1
 makeSKS: 1
 
 ##  Define the geographical region
-mnlong: 6 #minimum longitude
-mxlong: 15 #maximum longitude
-mnlat: 47 #minimum latitude
-mxlat: 56 #maximum latitude
+mnlong: 0 #minimum longitude
+mxlong: 20 #maximum longitude
+mnlat: 45 #minimum latitude
+mxlat: 60 #maximum latitude
