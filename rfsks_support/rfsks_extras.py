@@ -43,13 +43,13 @@ def filter_traces_rf(stream,pharr = None):
         edtime = tr.stats.endtime
         allsttimes.append(sttime)
         alledtimes.append(edtime)
+
+    startpoint,endpoint = 75, 25
+    lenphase = startpoint+endpoint
+    if minendtime(alledtimes)-pharr>=startpoint and pharr - maxstarttime(allsttimes)>=endpoint:
         
-    
-    if minendtime(alledtimes)-pharr>=75 and pharr - maxstarttime(allsttimes)>=25:
-        
-        stream = stream.trim(pharr - 25, pharr+ 75)
+        stream = stream.trim(pharr - endpoint, pharr+ startpoint)
         for tr in stream:
-        
             if tr.stats.sampling_rate < 20:
                 logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}, required >= 20Hz")
                 stream.remove(tr)
@@ -59,11 +59,18 @@ def filter_traces_rf(stream,pharr = None):
                     factor = int(tr.stats.sampling_rate / 20)
                     # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
                     tr.decimate(factor, strict_length=False, no_filter=True) 
+                    if tr.stats.npts>tr.stats.sampling_rate*lenphase:
+                        t = tr.stats.starttime
+                        tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
+                        # print("Downsampling to 20 Hz",tr.stats.npts)
                     continue 
                     # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
                 else:
                     tr.resample(20.0)
-                    logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
+                    if tr.stats.npts>tr.stats.sampling_rate*lenphase:
+                        t = tr.stats.starttime
+                        tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
+                    # logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
                     # stream.remove(tr)
                     continue
             else:
