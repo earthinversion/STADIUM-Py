@@ -42,34 +42,26 @@ def compute_rf(dataRFfileloc):
                     lentr=tr.stats.npts
                     lengt= tr.stats.sampling_rate * lenphase
                     if lentr != lengt:
-                        continue
-                
-                # for tr in stream:
-                    if tr.stats.sampling_rate < 20:
-                        logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}, required >= 20Hz")
-                        stream.remove(tr)
-                        continue
-                    elif tr.stats.sampling_rate >= 20:
-                        if tr.stats.sampling_rate % 20 == 0:
-                            factor = int(tr.stats.sampling_rate / 20)
-                            # logger.warning(f"Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}, factor: {factor}")
-                            tr.decimate(factor, strict_length=False, no_filter=True) 
-                            if tr.stats.npts>tr.stats.sampling_rate*lenphase:
-                                t = tr.stats.starttime
-                                tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
-                                # print("Downsampling to 20 Hz",tr.stats.npts)
-                            continue 
-                            # logger.warning(f"After Downsampling to 20 Hz, current sr: {tr.stats.sampling_rate}")
-                        else:
-                            tr.resample(20.0)
-                            if tr.stats.npts>tr.stats.sampling_rate*lenphase:
-                                t = tr.stats.starttime
-                                tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
-                            # logger.warning(f"Resampling traces; New sampling rate: {tr.stats.sampling_rate}")
-                            # stream.remove(tr)
+                        if tr.stats.sampling_rate < 20:
+                            logger.warning(f"Sampling rate too low: {tr.stats.sampling_rate}, required >= 20Hz")
+                            stream3c.remove(tr)
                             continue
-                    else:
-                        pass
+                        elif tr.stats.sampling_rate >= 20:
+                            if tr.stats.sampling_rate % 20 == 0:
+                                factor = int(tr.stats.sampling_rate / 20)
+                                tr.decimate(factor, strict_length=False, no_filter=True) 
+                                if tr.stats.npts>tr.stats.sampling_rate*lenphase:
+                                    t = tr.stats.starttime
+                                    tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
+                                continue 
+                            else:
+                                tr.resample(20.0)
+                                if tr.stats.npts>tr.stats.sampling_rate*lenphase:
+                                    t = tr.stats.starttime
+                                    tr.trim(t, t + lenphase-(1/tr.stats.sampling_rate))
+                                continue
+                        else:
+                            pass
 
                 
                 stream3c.filter('bandpass', freqmin=float(inpRFdict['rf_filter_settings']['minfreq']), freqmax=float(inpRFdict['rf_filter_settings']['maxfreq']))
