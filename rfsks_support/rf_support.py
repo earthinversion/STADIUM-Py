@@ -62,6 +62,15 @@ def compute_rf(dataRFfileloc):
                                 continue
                         else:
                             pass
+                    
+                    test_npts = []
+                    for tr in stream3c:
+                        lentr=tr.stats.npts
+                        test_npts.append(lentr)
+                    if len(set(test_npts))>1:
+                        continue
+
+
 
                 
                 stream3c.filter('bandpass', freqmin=float(inpRFdict['rf_filter_settings']['minfreq']), freqmax=float(inpRFdict['rf_filter_settings']['maxfreq']))
