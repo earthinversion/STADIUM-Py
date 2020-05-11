@@ -100,15 +100,17 @@ def write_profile_boxes(outputfile,stream,azimuth,stlat,stlon,initdiv,enddiv,wid
             # logger.info(f'For az: {azimuth} startlat: {initdiv}, startlon: {stlon}, endlat: {enddiv}, length: {widthprof}')
             logger.info('For az: {} startlat: {:.4f}, startlon: {:.4f}, endlat: {:.4f}, length: {}'.format(azimuth,initdiv,stlon,enddiv,widthprof))
             boxes = get_profile_boxes((initdiv, stlon), azimuth, np.linspace(0, widthprof, int((widthprof)/5)), width=mxbin)
-            
-        pstream = profile(tqdm.tqdm(stream), boxes)
-        if len(pstream):
-            logger.info("------> Calculated profile for azimuth {}: {}; Number of traces in the box: {}\n".format(azimuth,outputfile,len(pstream)))
-            pstream.write(outputfile, 'H5')
-            dbff.write("{}\n".format(outputfile))
-        else:
-            logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
-            dbff.write("{}\n".format(outputfile))
+        try:
+            pstream = profile(tqdm.tqdm(stream), boxes)
+            if len(pstream):
+                logger.info("------> Calculated profile for azimuth {}: {}; Number of traces in the box: {}\n".format(azimuth,outputfile,len(pstream)))
+                pstream.write(outputfile, 'H5')
+                dbff.write("{}\n".format(outputfile))
+            else:
+                logger.warning(f"------> No output file written for {outputfile}; Number of traces in the box: {len(pstream)}\n")
+                dbff.write("{}\n".format(outputfile))
+        except Exception as e:
+            logger.error(e)
     else:
         logger.info(f"----> {outputfile} already exists!")
 

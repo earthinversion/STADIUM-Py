@@ -106,7 +106,6 @@ def profile(stream, boxes, crs=None):
         comp = tr.stats.channel[-1]
         key = (pos, comp)
         if key not in stack:
-            
             header = {'box_pos': pos,
                     'box_length': box['length'],
                     'box_latitude': box['latlon'][0],
