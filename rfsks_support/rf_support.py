@@ -49,7 +49,7 @@ def compute_rf(dataRFfileloc):
                 try:
                     stream3c.rf()
                 except Exception as e:
-                    logger.error("Problem applying rf method", exc_info=True)
+                    logger.warning("Problem applying rf method", exc_info=True)
                 stream3c.moveout()
                 stream.extend(stream3c)
             stream.write(rffile, 'H5')
