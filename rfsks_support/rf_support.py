@@ -62,7 +62,6 @@ def compute_rf(dataRFfileloc):
                                 continue
                         else:
                             pass
-                    
                     test_npts = []
                     for tr in stream3c:
                         lentr=tr.stats.npts
