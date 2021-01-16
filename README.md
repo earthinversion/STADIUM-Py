@@ -1,4 +1,6 @@
 # Receiver Function and SKS automatic measurement - Seismological Tools Automated Download, processing & Imaging Using Mostly Python (STADIUM - Py)
+![visitors](https://visitor-badge.glitch.me/badge?page_id=earthinversion.STADIUM-Py)
+
 - By Cédric P Legendre (@cplegendre) and Utpal Kumar (@utpalrai)
 - Based on RF analyses by: Tom Eulenfeld (@trichter); https://github.com/trichter/rf
 - Based on SKS analyses by: Jack Walpole (@JackWalpole); https://github.com/JackWalpole/splitwavepy
