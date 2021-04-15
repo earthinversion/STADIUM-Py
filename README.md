@@ -334,3 +334,5 @@ We implemented several picking options from [ObsPy](https://github.com/obspy/obs
 <img src="wikiimage/SKSMap2.png" width="150" alt="All stations with data">
  </p>
 
+## Cite as
+Kumar, Utpal, & Legendre, Cédric P. (2021, January 16). STADIUM-Py: Python Command-line Interface for automated Receiver Functions and Shear-Wave Splitting Measurements (Version 1.0). Zenodo. http://doi.org/10.5281/zenodo.4686103
