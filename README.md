@@ -1,6 +1,7 @@
 # Receiver Function and SKS automatic measurement - Seismological Tools Automated Download, processing & Imaging Using Mostly Python (STADIUM - Py)
 ![visitors](https://visitor-badge.glitch.me/badge?page_id=earthinversion.STADIUM-Py) 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4686103.svg)](https://doi.org/10.5281/zenodo.4686103)
+<a href="https://doi.org/10.5281/zenodo.4686103"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4686103.svg" alt="DOI"></a>
+
 
 
 
